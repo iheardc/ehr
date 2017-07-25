@@ -1,0 +1,192 @@
+
+
+
+/*Menu bar*/
+
+@media (max-width: 767px) {
+    .verticalMenu {
+        display: none !important;
+    }
+    .customContainer{
+        margin-bottom: 5em;
+    }
+}
+@media (min-width: 768px) {
+    .horizontalMenu {
+        display: none !important;
+    }
+    .customContainer{
+        margin-bottom: 8em;
+    }
+}
+
+.footer {
+    position: relative;
+    padding: 5px;
+    align-content: center;
+    text-align: center;
+    margin-top: 1em;
+    left: 0;
+    right: 0;
+
+    background:#ccc;
+}
+html {
+    height: 100%;
+}
+
+html, body {
+    margin:0;
+    padding:0;
+}
+
+.myLabel{
+    background: #f6f6f6;
+}
+
+.ui-carousel-header {
+    margin: 0px 1px;
+    height: 0px;
+    overflow: hidden;
+    padding: 7px 10px 8px;
+    display: none !important;
+    border: 0;
+}
+
+.ui-panelmenu-panel .ui-state-default{
+    background-color: #f6f6f6;
+    background-image: none;
+    background-repeat: none;
+    border: 0px;
+    border-radius: 0px;
+    /*border-bottom: 0.5px solid #e1e1e1;*/
+    border-right: 0.5px solid #e1e1e1;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 14px;
+}
+.ui-panelmenu-panel .ui-state-hover{
+    background-color: #eaeaea;
+    background-image: none;
+    background-repeat: none;
+    border: 0px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 14px;
+}
+
+.ui-panelmenu .ui-panelmenu-header .ui-icon{
+    right: 0.5em;
+    left: auto;
+}
+.ui-panelmenu .ui-menu-parent .ui-panelmenu-icon.ui-icon{
+    left:auto;
+    right: 0.5em;
+}
+
+.ui-panelmenu-panel .ui-widget-content{
+    background-color: #f6f6f6;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border:0px;
+    border-right: 0.5px solid #e1e1e1;
+    border-bottom: 0.5px solid #e1e1e1;
+}
+
+.ui-widget-content a{
+    font-size: 14px;
+    /*color: #2965a8*/
+    color: #0088CC;
+}
+
+.ui-panelmenu .ui-panelmenu-header a{
+    padding-left: 2em;
+}
+
+.ui-panelmenu .ui-menuitem-link{
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 3.2em;
+    border: 0px;
+}
+
+.ui-panelmenu .ui-menu-parent .ui-menu-list{
+    margin-left: 0px;
+    padding-left: 25px;
+}
+
+.ui-panelmenu .ui-icon{
+    left: 2em;
+}
+
+.ui-panelmenu .ui-panelmenu-panel{
+    border-bottom: 0.5px solid #e1e1e1;
+}
+
+/*Footer MenuBar*/
+.ui-slidemenu-backward{
+    margin: 0px;
+    width: 100%;
+}
+.ui-menu .ui-menu-dynamic{
+    padding: 0px;
+}
+.ui-menu .ui-widget li > .ui-menuitem-link{
+    padding: 0.6em 0;
+}
+/*.ui-menubutton{
+    width: 100%;
+    height: 100%;
+}
+.ui-menubutton .ui-button{
+    background: none;
+    background-color: darkblue;
+    border: 0px;
+    border-radius: 0px;
+    width: 100%;
+    height: 100%;
+}*/
+
+/*Table*/
+.ui-paginator{
+    background: none;
+    border: 0px;
+}
+
+.ui-datatable-resizable th.ui-resizable-column{
+    background: none;
+    border-left: 0px;
+    border-right: 0px;
+/*    -webkit-box-shadow: 0px;
+    box-shadow: 0px;*/
+}
+
+.ui-datatable thead th, .ui-datatable tfoot td{
+    text-align: left;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd){
+    background-color: transparent;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.ui-datatable-odd{
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.ui-datatable tbody.ui-datatable-data{
+    border: 0px;
+}
+
+tr.ui-widget-content td{
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom-color: #ddd;
+}

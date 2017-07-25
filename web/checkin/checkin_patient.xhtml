@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/employee-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile" 
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <ui:define name="title">Register page</ui:define>
+    <ui:define name="content"> 
+
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>Check-In Patient</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data" id="form">
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Select Patient(*)</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="name" value="Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:inputText value="#{patientBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <!--<p:inputText value="#{patientBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
+                                    <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true">
+                                        <!--<p:ajax event="dateSelect" listener="#{patientBean.onDateSelect}" />-->
+                                    </p:calendar>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <b:column col-md="6" offset-md="2">
+                                    <p:commandButton class="btn btn-primary" value="Search" action="#{patientBean.findPatient()}" update=":form:patientData"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+
+                                <p:dataTable var="p" value="#{patientBean.findList}" id="patientData" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+
+                                    <p:column headerText="Id">
+                                        <h:outputText value="#{p.id}" />
+                                    </p:column>
+                                    <p:column headerText="Email">
+                                        <h:outputText value="#{p.email}" />
+                                    </p:column>
+                                    <p:column headerText="Name">
+                                        <h:outputText value="#{p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Date of Birth">
+                                        <h:outputText value="#{p.dobString}" />
+                                    </p:column>
+                                    <p:column style="width:32px;text-align: center" headerText="Select">
+                                        <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.test()}">
+                                            <f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+
+                            </div>
+                        </b:column>
+
+                        <br></br>
+
+                        <b:column col-md="11" offset-md="1">
+
+                            <h3>Remaining Balance</h3>
+                            <hr></hr>
+
+
+
+                        </b:column>
+
+                        <b:column col-md="11" offset-md="1">
+
+                            <h3>Appointment Information</h3>
+                            <hr></hr>
+
+
+
+                        </b:column>
+
+                        <b:column col-md="11" offset-md="1">
+
+                            <h3>View Demographic</h3>
+                            <hr></hr>
+                            <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="View" title="View" class="btn btn-primary">
+                                <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->
+                            </p:commandButton>
+
+
+                        </b:column>
+
+                        <br></br>
+
+                        <b:column col-md="12">
+                            <hr></hr>
+                            <p:commandButton class="btn btn-primary" value="Check-In" action="#{patientBean.checkIn()}"/>
+                        </b:column>
+
+                    </b:column>
+
+
+                    <p:dialog header="Patient Info" widgetVar="pDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="pDetail" style="text-align:center;">
+
+                            <p:panelGrid  columns="2" rendered="#{not empty patientBean.selectedP}" columnClasses="label,value">
+
+                                <h:outputText value=""/>
+                                <p:graphicImage value="/images/nopic.png"/> 
+
+                                <h:outputText value="ID: " />
+                                <h:outputText value="#{patientBean.selectedP.id}" />
+
+                                <h:outputText value="Email: " />
+                                <h:outputText value="#{patientBean.selectedP.email}" />
+
+                                <h:outputText value="Name: " />
+                                <h:outputText value="#{patientBean.selectedP.name}" />
+
+                                <h:outputText value="Gender: " />
+                                <h:outputText value="#{patientBean.selectedP.gender}" />
+
+                                <h:outputText value="Phone: " />
+                                <h:outputText value="#{patientBean.selectedP.phone}" />
+
+                                <h:outputText value="Date of Birth: " />
+                                <h:outputText value="#{patientBean.selectedP.dobString}" />
+
+                                <h:outputText value="Occupation: " />
+                                <h:outputText value="#{patientBean.selectedP.occupation}" />
+
+                                <h:outputText value="Religion: " />
+                                <h:outputText value="#{patientBean.selectedP.religion}" />
+
+                                <h:outputText value="Country: " />
+                                <h:outputText value="#{patientBean.selectedP.country}" />
+
+                                <h:outputText value="Address: " />
+                                <h:outputText value="#{patientBean.selectedP.address}" />
+
+                                <h:outputText value="City: " />
+                                <h:outputText value="#{patientBean.selectedP.city}" />
+
+                                <h:outputText value="State: " />
+                                <h:outputText value="#{patientBean.selectedP.state}" />
+
+                                <h:outputText value="Zip: " />
+                                <h:outputText value="#{patientBean.selectedP.zip}" />
+
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:define>
+
+</ui:composition>

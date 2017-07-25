@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/employee-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile" 
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <ui:define name="title">Register page</ui:define>
+    <ui:define name="content"> 
+
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>Create Patient</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data">
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>General Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="firstname" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText value="#{signupBean.fn}" id="firstname" autocomplete="off" class="form-control" placeholder="First Name"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="lastname" value="Last Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText value="#{signupBean.ln}" id="lastname" autocomplete="off" class="form-control" placeholder="Last Name"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="email" value="Email" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText value="#{signupBean.email}" id="email" autocomplete="off" class="form-control" placeholder="Email">
+                                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                    </p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="password" value="Password" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:password value="#{signupBean.password}" id="password" class="form-control" placeholder="Password" match="confirm" feedback="true" inline="true">
+                                        <f:validateLength minimum="6"/>
+                                    </p:password>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="confirm" value="Confirm Password" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:password value="#{signupBean.rePassword}" id="confirm" class="form-control" placeholder="Confirm Password" feedback="false"></p:password>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="gender" value="Gender" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:selectOneRadio value="#{signupBean.gender}"  id="gender">
+                                        <f:selectItem itemLabel="Male" itemValue="male"/>
+                                        <f:selectItem itemLabel="Female" itemValue="female"/>
+                                        <f:selectItem itemLabel="Unknown" itemValue="unknown"/>
+                                    </p:selectOneRadio>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="phone" value="Phone" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="phone" autocomplete="off" value="#{signupBean.phone}" class="form-control" mask="(999) 999-9999" placeholder="Phone"></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <!--<p:inputText value="#{signupBean.dob}" id="dob" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
+                                    <p:calendar id="dob" value="#{signupBean.dob2}" navigator="true" pattern="dd-MM-yyyy" mask="true">
+                                        <p:ajax event="dateSelect" listener="#{signupBean.onDateSelect}" />
+                                    </p:calendar>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="occupation" value="Occupation" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText value="#{signupBean.occupation}" id="occupation" autocomplete="off" class="form-control" placeholder="Occupation"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Address Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="address" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="address" autocomplete="off" value="#{signupBean.address}" class="form-control" placeholder="Address" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="city" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="city" autocomplete="off" value="#{signupBean.city}" class="form-control" placeholder="City" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="state" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="state" autocomplete="off" value="#{signupBean.state}" class="form-control" mask="**" size="2" placeholder="State"></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="zip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="zip" autocomplete="off" value="#{signupBean.zip}" class="form-control" mask="99999" size="5" placeholder="Zip" ></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="country" value="Country" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="country" autocomplete="off" value="#{signupBean.country}" class="form-control" placeholder="Country" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="religion" value="Religion" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="religion" autocomplete="off" value="#{signupBean.religion}" class="form-control" placeholder="Religion" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Emergency Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emFN" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="emFN" autocomplete="off" value="#{signupBean.emFN}" class="form-control" placeholder="Emergency First Name" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emLN" value="Last Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="emLN" autocomplete="off" value="#{signupBean.emLN}" class="form-control" placeholder="Emergency Last Name" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emEmail" value="Email" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText value="#{signupBean.emEmail}" id="emEmail" autocomplete="off" class="form-control" placeholder="Emergency Email">
+                                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                    </p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emPhone" value="Phone" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="emPhone" autocomplete="off" value="#{signupBean.emPhone}" class="form-control" mask="(999) 999-9999" placeholder="Emergency Phone"></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emAddress" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="emAddress" autocomplete="off" value="#{signupBean.emAddress}" class="form-control" placeholder="Emergency Address" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emCity" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="emCity" autocomplete="off" value="#{signupBean.emCity}" class="form-control" placeholder="Emergency City" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emState" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="emState" autocomplete="off" value="#{signupBean.emState}" class="form-control" mask="**" size="2" placeholder="Emergency State"></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emZip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="emZip" autocomplete="off" value="#{signupBean.emZip}" class="form-control" mask="99999" size="5" placeholder="Emergency Zip" ></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emRelationship" value="Relationship" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="emRelationship" autocomplete="off" value="#{signupBean.emRelationship}" class="form-control" placeholder="Emergency Relationship" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Postal Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posAddress" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="posAddress" autocomplete="off" value="#{signupBean.posAddress}" class="form-control" placeholder="Postal Address" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posCity" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="posCity" autocomplete="off" value="#{signupBean.posCity}" class="form-control" placeholder="Postal City" type="text"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posState" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="posState" autocomplete="off" value="#{signupBean.posState}" class="form-control" mask="**" size="2" placeholder="Postal State"></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posZip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputMask id="posZip" autocomplete="off" value="#{signupBean.posZip}" class="form-control" mask="99999" size="5" placeholder="Postal Zip" ></p:inputMask>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="12">
+                        <hr></hr>
+                        <p:commandButton class="btn btn-primary" action="#{signupBean.registrationPatient()}" value="Submit" ajax="false"/>
+
+                        <!--<b:button class="btn btn-primary" onclick="../home.xhtml?faces-redirect=true" value="Submit"></b:button>-->
+                        <br></br>
+                        <br></br>
+                    </b:column>
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:define>
+
+</ui:composition>

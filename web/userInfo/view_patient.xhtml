@@ -1,0 +1,324 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/employee-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile" 
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <ui:define name="title">Register page</ui:define>
+    <ui:define name="content"> 
+
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>View Patient Demographics</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data">
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>General Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="firstname" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{patientBean.p.fn}" id="firstname"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="lastname" value="Last Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{patientBean.p.ln}" id="lastname"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="email" value="Email" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{patientBean.p.email}" id="email"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+<!--                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="password" value="Password" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:password value="#{patientBean.p.password}" id="password"  placeholder="Password" match="confirm" feedback="true" inline="true">
+                                        <f:validateLength minimum="6"/>
+                                    </p:password>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="confirm" value="Confirm Password" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:password value="#{patientBean.p.rePassword}" id="confirm"  placeholder="Confirm Password" feedback="false"></p:password>
+                                </b:column>
+                            </div>
+                        </b:column>-->
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel value="Gender" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{patientBean.p.gender}" />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="phone" value="Phone" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="phone" value="#{patientBean.p.phone}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <!--<p:outputLabel value="#{patientBean.p.dob}" id="dob" autocomplete="off"  placeholder="Date of Birth"></p:outputLabel>-->
+                                    <p:outputLabel id="dob" value="#{patientBean.p.dob2}" />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="occupation" value="Occupation" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{patientBean.p.occupation}" id="occupation"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Address Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="address" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="address" value="#{patientBean.p.address}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="city" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="city" value="#{patientBean.p.city}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="state" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="state" value="#{patientBean.p.state}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="zip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="zip" value="#{patientBean.p.zip}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="country" value="Country" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="country" value="#{patientBean.p.country}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="religion" value="Religion" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="religion" value="#{patientBean.p.religion}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Emergency Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emFN" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emFN" value="#{patientBean.p.emFN}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emLN" value="Last Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emLN" value="#{patientBean.p.emLN}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emEmail" value="Email" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{patientBean.p.emEmail}" id="emEmail"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emPhone" value="Phone" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emPhone" value="#{patientBean.p.emPhone}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emAddress" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emAddress" value="#{patientBean.p.emAddress}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emCity" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emCity" value="#{patientBean.p.emCity}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emState" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emState" value="#{patientBean.p.emState}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emZip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emZip" value="#{patientBean.p.emZip}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="emRelationship" value="Relationship" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="emRelationship" value="#{patientBean.p.emRelationship}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Postal Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posAddress" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="posAddress" value="#{patientBean.p.posAddress}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posCity" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="posCity" value="#{patientBean.p.posCity}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posState" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="posState" value="#{patientBean.p.posState}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="posZip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="posZip" value="#{patientBean.p.posZip}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+<!--                    <b:column col-md="12">
+                        <hr></hr>
+                        <p:commandButton class="btn btn-primary" action="#{patientBean.p.registrationPatient()}" value="Submit" ajax="false"/>
+
+                        <b:button class="btn btn-primary" onclick="../home.xhtml?faces-redirect=true" value="Submit"></b:button>
+                        <br></br>
+                        <br></br>
+                    </b:column>-->
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:define>
+
+</ui:composition>

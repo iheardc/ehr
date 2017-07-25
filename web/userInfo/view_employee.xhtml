@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/employee-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile" 
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <ui:define name="title">Register page</ui:define>
+    <ui:define name="content"> 
+
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>View Demographics</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data">
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>General Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="firstname" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{employeeBean.em.fn}" id="firstname"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="lastname" value="Last Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{employeeBean.em.ln}" id="lastname"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="email" value="Email" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{employeeBean.em.email}" id="email"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+<!--                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="password" value="Password" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:password value="#{employeeBean.em.password}" id="password"   placeholder="Password" match="confirm" feedback="true" inline="true">
+                                        <f:validateLength minimum="6"/>
+                                    </p:password>
+                                </b:column>
+                            </div>
+                        </b:column>-->
+
+<!--                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="confirm" value="Confirm Password" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:password value="#{employeeBean.em.rePassword}" id="confirm"   placeholder="Confirm Password" feedback="false"></p:password>
+                                </b:column>
+                            </div>
+                        </b:column>-->
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel value="Gender" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <outputLabel value="#{employeeBean.em.gender}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="phone" value="Phone" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="phone" value="#{employeeBean.em.phone}"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Employee Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="location" value="Location" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel value="#{employeeBean.em.location}" id="location"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="role" value="Role" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="role" value="#{employeeBean.em.role}" />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="license" value="License" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="license" value="#{employeeBean.em.license}"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+<!--                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel value="Specialty" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                <p:autoComplete multiple="true"
+                                                value="#{employeeBean.em.specialty}"
+                                                completeMethod="#{employeeBean.em.specCompleteItem}" var="it"
+                                                itemLabel="#{it}" itemValue="#{it}" forceSelection="true"
+                                                class="col-sm-10">
+                                    <p:ajax event="itemSelect" />
+                                    <p:ajax event="itemUnselect" />
+                                    <p:column>
+                                        <h:outputText value="#{it}" />
+                                    </p:column>
+                                </p:autoComplete>
+                                </b:column>
+                            </div>
+                        </b:column>-->
+
+
+                    </b:column>
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Address Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="address" value="Address" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="address" value="#{employeeBean.em.address}"  />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="city" value="City" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="city" value="#{employeeBean.em.city}"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="state" value="State" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="state" value="#{employeeBean.em.state}"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="zip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="zip" value="#{employeeBean.em.zip}"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="country" value="Country" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:outputLabel id="country" value="#{employeeBean.em.country}"   />
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+<!--                    <b:column col-md="12">
+                        <hr></hr>
+                        <p:commandButton class="btn btn-primary" action="#{employeeBean.em.registrationEmployee()}" value="Submit" ajax="false"/>
+                    </b:column>-->
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:define>
+
+</ui:composition>

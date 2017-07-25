@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+        <h:form>
+            <p:slideMenu overlay="true" trigger="dynaButton" my="left top" at="left bottom" style="width:180px;" >
+                <p:submenu label="User Information"  expanded="false" class="sub-bottom-line">
+                    <p:submenu label="Patient" expanded="false">
+                        <p:menuitem value="View"  icon="fa fa-info" action="#{menuBean.viewPatientDemographics()}"/>
+                        <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                        <p:menuitem value="Change Password"  icon="fa fa-edit"/>
+                        <p:menuitem value="View Financial Account"  icon="fa fa-edit"/>
+                        <p:submenu label="Insurance" expanded="false">
+                            <p:menuitem value="View"  icon="fa fa-info"/>
+                            <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                        </p:submenu>
+                        <p:submenu label="Clinical" expanded="false">
+                            <p:menuitem value="Vital Sign"  icon="fa fa-info"/>
+                            <p:menuitem value="Medical History"  icon="fa fa-edit"/>
+                            <p:menuitem value="Surgery"  icon="fa fa-edit"/>
+                            <p:menuitem value="Prescription"  icon="fa fa-edit"/>
+                        </p:submenu>
+                    </p:submenu>
+                    <p:submenu label="Employee" expanded="false">
+                        <p:menuitem value="View"  icon="fa fa-info" action="#{menuBean.viewEmployeeDemographics()}" />
+                        <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                        <p:menuitem value="Change Password"  icon="fa fa-edit"/>
+                        <p:menuitem value="Find"  icon="fa fa-edit" action="#{menuBean.findEmployee()}"/>
+                        <p:submenu label="Clinical" expanded="false">
+                            <p:menuitem value="View Visit Summary"  icon="fa fa-info"/>
+                            <p:menuitem value="View My Patient"  icon="fa fa-edit"/>
+                        </p:submenu>
+                    </p:submenu>
+                </p:submenu>
+                <p:submenu label="Patient Check-In"  expanded="false" >
+                    <p:menuitem value="Create Patient"  icon="fa fa-info" action="#{menuBean.newPatient()}"/>
+                    <p:menuitem value="Check-In Patient"  icon="fa fa-edit" action="#{menuBean.checkinPatient()}"/>
+                </p:submenu>
+                <p:submenu label="Nursing Station"  expanded="false" >
+                    <p:menuitem value="Patient Status"  icon="fa fa-info"/>
+                    <p:menuitem value="Triage"  icon="fa fa-edit"/>
+                    <p:menuitem value="Make Appointment"  icon="fa fa-edit"/>
+                    <p:menuitem value="Doctor Schedule"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Treatment"  expanded="false" >
+                    <p:menuitem value="View Waiting Patients"  icon="fa fa-info"/>
+                    <p:menuitem value="Diagnosis Patient"  icon="fa fa-edit"/>
+                    <p:menuitem value="Place Order"  icon="fa fa-edit"/>
+                    <p:menuitem value="Write Prescription"  icon="fa fa-edit"/>
+                    <p:menuitem value="Write Visit Summary"  icon="fa fa-edit"/>
+                    <p:menuitem value="View Referral"  icon="fa fa-edit"/>
+                    <p:menuitem value="Refer to Specialist"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Order" expanded="false">
+                    <p:submenu label="Lab Test" expanded="false">
+                        <p:menuitem value="View"  icon="fa fa-info"/>
+                        <p:menuitem value="Search"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Radiology" expanded="false">
+                        <p:menuitem value="View"  icon="fa fa-info"/>
+                        <p:menuitem value="Search"  icon="fa fa-edit"/>
+                    </p:submenu>
+                </p:submenu>
+                <p:submenu label="Operation"  expanded="false" >
+                    <p:menuitem value="Prepare"  icon="fa fa-info"/>
+                    <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                    <p:menuitem value="Search"  icon="fa fa-edit"/>
+                    <p:menuitem value="Write Summary"  icon="fa fa-edit"/>
+                    <p:menuitem value="End"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Prescription"  expanded="false" >
+                    <p:menuitem value="Fulfill Prescription"  icon="fa fa-info"/>
+                    <p:menuitem value="Search"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Emergency"  expanded="false" >
+                    <p:menuitem value="Create Emergency"  icon="fa fa-info"/>
+                    <p:menuitem value="View Emergency List"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Inpatient"  expanded="false" >
+                    <p:submenu label="Write Doc"  expanded="false" >
+                        <p:menuitem value="Write Admission Doc"  icon="fa fa-info"/>
+                        <p:menuitem value="Write Progress Doc"  icon="fa fa-edit"/>
+                        <p:menuitem value="Write Discharge Doc"  icon="fa fa-edit"/>
+                        <p:menuitem value="Write Transfer Doc"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Ward Management"  expanded="false" >
+                        <p:menuitem value="View Status"  icon="fa fa-info"/>
+                        <p:menuitem value="Manage Patient"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:menuitem value="Write Charge Code"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Payment"  expanded="false" >
+                    <p:menuitem value="View Patient Bill"  icon="fa fa-info"/>
+                    <p:menuitem value="Payment History"  icon="fa fa-edit"/>
+                </p:submenu>
+                <p:submenu label="Inventory" expanded="false">
+                    <p:submenu label="Clinical" expanded="false">
+                        <p:menuitem value="Manage"  icon="fa fa-info"/>
+                        <p:menuitem value="Create"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Regular" expanded="false">
+                        <p:menuitem value="Manage"  icon="fa fa-info"/>
+                        <p:menuitem value="Create"  icon="fa fa-edit"/>
+                    </p:submenu>
+                </p:submenu>
+                <p:submenu label="Admin"  expanded="false" >
+                    <p:menuitem value="Create Employee"  icon="fa fa-info" action="#{menuBean.newEmployee()}"/>
+                    <p:menuitem value="Modify Employee"  icon="fa fa-edit"/>
+                    <p:menuitem value="Delete Employee"  icon="fa fa-edit"/>
+                    <p:menuitem value="Approve Inventory Request"  icon="fa fa-edit"/>
+                    <p:menuitem value="Order Clinical Item"  icon="fa fa-edit"/>
+                    <p:menuitem value="Order Regular Item"  icon="fa fa-edit"/>
+                    <p:menuitem value="Manage Location"  icon="fa fa-edit"/>
+                    <p:menuitem value="Manage Room &#38; Bed"  icon="fa fa-edit"/>
+                </p:submenu>
+            </p:slideMenu>
+
+            <div class="myLabel horizontalMenu" style="position: fixed; bottom: 0; width: 100%; height: 50px; z-index: 999;">
+                <div style="width: 50px; height: 100%; background-color: red; left: 0;">
+                    <p:commandButton id="dynaButton" value="" type="button" icon="fa fa-bars fa-center center" style="
+                                     width: 100%;
+                                     height: 100%;
+                                     background: none;
+                                     background-color: #e1e1e1;
+                                     border: 0px;
+                                     border-radius: 0px;
+                                     align-content: center;
+                                     text-align: center;
+                                     "/>
+
+                </div>
+
+            </div>
+
+            <div class="myLabel">
+                <div>
+                    <!--                    <center>
+                                            <p:inputText style="margin: 10px; width: 80%;"/>
+                                        </center>-->
+                </div>
+                <p:panelMenu id='docPanel' style=" width: 100%" styleClass="verticalMenu" widgetVar="leftMenuUser">
+                    <p:submenu label="User Information"  expanded="false" class="sub-bottom-line">
+                        <p:submenu label="Patient" expanded="false">
+                            <p:menuitem value="View"  icon="fa fa-info" action="#{menuBean.viewPatientDemographics()}"/>
+                            <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                            <p:menuitem value="Change Password"  icon="fa fa-edit"/>
+                            <p:menuitem value="View Financial Account"  icon="fa fa-edit"/>
+                            <p:submenu label="Insurance" expanded="false">
+                                <p:menuitem value="View"  icon="fa fa-info"/>
+                                <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                            </p:submenu>
+                            <p:submenu label="Clinical" expanded="false">
+                                <p:menuitem value="Vital Sign"  icon="fa fa-info"/>
+                                <p:menuitem value="Medical History"  icon="fa fa-edit"/>
+                                <p:menuitem value="Surgery"  icon="fa fa-edit"/>
+                                <p:menuitem value="Prescription"  icon="fa fa-edit"/>
+                            </p:submenu>
+                        </p:submenu>
+                        <p:submenu label="Employee" expanded="false">
+                            <p:menuitem value="View"  icon="fa fa-info" action="#{menuBean.viewEmployeeDemographics()}"/>
+                            <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                            <p:menuitem value="Change Password"  icon="fa fa-edit"/>
+                            <p:menuitem value="Find"  icon="fa fa-edit" action="#{menuBean.findEmployee()}"/>
+                            <p:submenu label="Clinical" expanded="false">
+                                <p:menuitem value="View Visit Summary"  icon="fa fa-info"/>
+                                <p:menuitem value="View My Patient"  icon="fa fa-edit"/>
+                            </p:submenu>
+                        </p:submenu>
+                    </p:submenu>
+                    <p:submenu label="Patient Check-In"  expanded="false" >
+                        <p:menuitem value="Create Patient"  icon="fa fa-info" action="#{menuBean.newPatient()}"/>
+                        <p:menuitem value="Check-In Patient"  icon="fa fa-edit" action="#{menuBean.checkinPatient()}"/>
+                    </p:submenu>
+                    <p:submenu label="Nursing Station"  expanded="false" >
+                        <p:menuitem value="Patient Status"  icon="fa fa-info"/>
+                        <p:menuitem value="Triage"  icon="fa fa-edit"/>
+                        <p:menuitem value="Make Appointment"  icon="fa fa-edit"/>
+                        <p:menuitem value="Doctor Schedule"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Treatment"  expanded="false" >
+                        <p:menuitem value="View Waiting Patients"  icon="fa fa-info"/>
+                        <p:menuitem value="Diagnosis Patient"  icon="fa fa-edit"/>
+                        <p:menuitem value="Place Order"  icon="fa fa-edit"/>
+                        <p:menuitem value="Write Prescription"  icon="fa fa-edit"/>
+                        <p:menuitem value="Write Visit Summary"  icon="fa fa-edit"/>
+                        <p:menuitem value="View Referral"  icon="fa fa-edit"/>
+                        <p:menuitem value="Refer to Specialist"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Order" expanded="false">
+                        <p:submenu label="Lab Test" expanded="false">
+                            <p:menuitem value="View"  icon="fa fa-info"/>
+                            <p:menuitem value="Search"  icon="fa fa-edit"/>
+                        </p:submenu>
+                        <p:submenu label="Radiology" expanded="false">
+                            <p:menuitem value="View"  icon="fa fa-info"/>
+                            <p:menuitem value="Search"  icon="fa fa-edit"/>
+                        </p:submenu>
+                    </p:submenu>
+                    <p:submenu label="Operation"  expanded="false" >
+                        <p:menuitem value="Prepare"  icon="fa fa-info"/>
+                        <p:menuitem value="Edit"  icon="fa fa-edit"/>
+                        <p:menuitem value="Search"  icon="fa fa-edit"/>
+                        <p:menuitem value="Write Summary"  icon="fa fa-edit"/>
+                        <p:menuitem value="End"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Prescription"  expanded="false" >
+                        <p:menuitem value="Fulfill Prescription"  icon="fa fa-info"/>
+                        <p:menuitem value="Search"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Emergency"  expanded="false" >
+                        <p:menuitem value="Create Emergency"  icon="fa fa-info"/>
+                        <p:menuitem value="View Emergency List"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Inpatient"  expanded="false" >
+                        <p:submenu label="Write Doc"  expanded="false" >
+                            <p:menuitem value="Write Admission Doc"  icon="fa fa-info"/>
+                            <p:menuitem value="Write Progress Doc"  icon="fa fa-edit"/>
+                            <p:menuitem value="Write Discharge Doc"  icon="fa fa-edit"/>
+                            <p:menuitem value="Write Transfer Doc"  icon="fa fa-edit"/>
+                        </p:submenu>
+                        <p:submenu label="Ward Management"  expanded="false" >
+                            <p:menuitem value="View Status"  icon="fa fa-info"/>
+                            <p:menuitem value="Manage Patient"  icon="fa fa-edit"/>
+                        </p:submenu>
+                        <p:menuitem value="Write Charge Code"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Payment"  expanded="false" >
+                        <p:menuitem value="View Patient Bill"  icon="fa fa-info"/>
+                        <p:menuitem value="Payment History"  icon="fa fa-edit"/>
+                    </p:submenu>
+                    <p:submenu label="Inventory" expanded="false">
+                        <p:submenu label="Clinical" expanded="false">
+                            <p:menuitem value="Manage"  icon="fa fa-info"/>
+                            <p:menuitem value="Create"  icon="fa fa-edit"/>
+                        </p:submenu>
+                        <p:submenu label="Regular" expanded="false">
+                            <p:menuitem value="Manage"  icon="fa fa-info"/>
+                            <p:menuitem value="Create"  icon="fa fa-edit"/>
+                        </p:submenu>
+                    </p:submenu>
+                    <p:submenu label="Admin"  expanded="false" >
+                        <p:menuitem value="Create Employee"  icon="fa fa-info" action="#{menuBean.newEmployee()}"/>
+                        <p:menuitem value="Modify Employee"  icon="fa fa-edit"/>
+                        <p:menuitem value="Delete Employee"  icon="fa fa-edit"/>
+                        <p:menuitem value="Approve Inventory Request"  icon="fa fa-edit"/>
+                        <p:menuitem value="Order Clinical Item"  icon="fa fa-edit"/>
+                        <p:menuitem value="Order Regular Item"  icon="fa fa-edit"/>
+                        <p:menuitem value="Manage Location"  icon="fa fa-edit"/>
+                        <p:menuitem value="Manage Room &#38; Bed"  icon="fa fa-edit"/>
+                    </p:submenu>
+                </p:panelMenu>
+            </div>
+        </h:form>
+    </ui:composition>
+
+</html>
+
+
+

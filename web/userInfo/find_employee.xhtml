@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/employee-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile" 
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <ui:define name="title">Register page</ui:define>
+    <ui:define name="content"> 
+
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>Find Employee</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data" id="form">
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Search</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="type" value="Search Type" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:selectOneRadio id="type" value="#{employeeBean.findType}">
+                                        <f:selectItem itemValue="or" itemLabel="Or" />
+                                        <f:selectItem itemValue="and" itemLabel="And"/>
+                                    </p:selectOneRadio>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="id" value="ID" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:inputText value="#{employeeBean.findId}" id="id" autocomplete="off" class="form-control" placeholder="ID"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="name" value="Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:inputText value="#{employeeBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Name"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="email" value="Email" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:inputText value="#{employeeBean.findEmail}" id="email" autocomplete="off" class="form-control" placeholder="Email"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="role" value="Role" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:selectOneMenu id="role" value="#{employeeBean.findRole}" placeholder="Role">
+                                        <f:selectItem itemValue="all" itemLabel="All"/>
+                                        <f:selectItem itemValue="doctor" itemLabel="Doctor"/>
+                                        <f:selectItem itemValue="nurse" itemLabel="Nurse"/>
+                                        <f:selectItem itemValue="pharmacist" itemLabel="Pharmacist"/>
+                                        <f:selectItem itemValue="radiologist" itemLabel="Radiologist"/>
+                                        <f:selectItem itemValue="lab" itemLabel="Lab Technician"/>
+                                        <f:selectItem itemValue="receptionist" itemLabel="Receptionist"/>
+                                        <f:selectItem itemValue="accountant" itemLabel="Accountant"/>
+                                    </p:selectOneMenu>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="specialty" value="Specialty" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:inputText value="#{employeeBean.findSpecialty}" id="specialty" autocomplete="off" class="form-control" placeholder="Specialty"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <hr></hr>
+                        <b:column col-md="6" offset-md="2">
+                            <p:commandButton class="btn btn-primary" value="Search" action="#{employeeBean.findEmployee()}" update=":result:resultTable"/>
+                        </b:column>
+
+                    </b:column>
+
+
+                </h:form>
+
+
+                <b:column col-md="11" offset-md="1">
+                    <h2>Result</h2>
+                    <hr></hr>
+
+                    <h:form id="result">
+
+                        <p:dataTable var="em" value="#{employeeBean.findList}" id="resultTable" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped">
+
+                            <p:column headerText="Id">
+                                <h:outputText value="#{em.id}" />
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText value="#{em.name}" />
+                            </p:column>
+                            <p:column headerText="Email">
+                                <h:outputText value="#{em.email}" />
+                            </p:column>
+                            <p:column headerText="Role">
+                                <h:outputText value="#{em.role}" />
+                            </p:column>
+                            <p:column headerText="Specialty">
+                                <h:outputText value="#{em.specialty}" />
+                            </p:column>
+                            <p:column style="width:32px;text-align: center" headerText="Detail">
+                                <p:commandButton update=":result:emDetail" oncomplete="PF('emDialog').show()" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{em}" target="#{employeeBean.selectedEm}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:dialog header="Employee Info" widgetVar="emDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                            <p:outputPanel id="emDetail" style="text-align:center;">
+
+                                <p:panelGrid  columns="2" rendered="#{not empty employeeBean.selectedEm}" columnClasses="label,value">
+                                    <!--                                    <f:facet name="header">
+                                                                            <p:graphicImage name="demo/images/car/#{dtSelectionView.selectedCar.brand}-big.gif"/> 
+                                                                        </f:facet>-->
+
+                                    <h:outputText value=""/>
+                                    <p:graphicImage value="/images/nopic.png"/> 
+
+                                    <h:outputText value="Email: " />
+                                    <h:outputText value="#{employeeBean.selectedEm.email}" />
+
+                                    <h:outputText value="Name: " />
+                                    <h:outputText value="#{employeeBean.selectedEm.name}" />
+
+                                    <h:outputText value="Gender: " />
+                                    <h:outputText value="#{employeeBean.selectedEm.gender}" />
+
+                                    <h:outputText value="Role: " />
+                                    <h:outputText value="#{employeeBean.selectedEm.role}" />
+                                    
+                                    <h:outputText value="Specialty: " />
+                                    <h:outputText value="#{employeeBean.selectedEm.specialty}" />
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+
+                    </h:form>
+
+                </b:column>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:define>
+
+</ui:composition>
