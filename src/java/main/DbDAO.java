@@ -340,6 +340,49 @@ public class DbDAO {
         }
         return list;
     }
+    
+    public void loginPatient(Patient p){
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try{
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(LOGIN_PATIENT);
+            pstmt.setString(1, p.email);
+            pstmt.setString(2, p.password);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                p.buildPatient(rs);
+                p.errormsg = "Success";    
+            }
+        }
+        catch(Exception e){
+        }
+        finally{
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
+    
+    public void loginEmployee(Employee em){
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try{
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(LOGIN_EMPLOYEE);
+            pstmt.setString(1, em.email);
+            pstmt.setString(2, em.password);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){   
+                em.buildEmployee(rs);
+                em.errormsg = "Success";
+            }
+        }
+        catch(Exception e){
+            System.out.println("ERROR login Employee dao " + e.toString());
+        }
+        finally{
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
 
     public void checkInPatient(Patient p) {
         PreparedStatement pstmt = null;
