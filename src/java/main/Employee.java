@@ -23,7 +23,6 @@ public class Employee {
     int authority;
     List<String> specialtyList;
     String specialty;
-
     String errormsg;
 
     public Employee() {

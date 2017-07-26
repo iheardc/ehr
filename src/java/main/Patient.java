@@ -26,7 +26,6 @@ public class Patient {
     String occupation, religion;
     String emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip;
     String posAddress, posCity, posState, posZip;
-
     String errormsg;
 
     public Patient() {

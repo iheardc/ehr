@@ -12,6 +12,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import java.util.*;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -26,9 +28,46 @@ public class patientBean implements Serializable {
     // Find Patient
     private List<Patient> findList;
     private Patient selectedP;
+    String email; 
+    String password;
     String findName;
+    String msg;
+    String page;
     Date findDoB;
-
+    
+    public String login(){
+        RequestContext context = RequestContext.getCurrentInstance();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().clear();
+        FacesMessage message;
+        boolean loggedIn = false;
+        
+        msg = "";
+        p = new Patient(email, password);
+        DbDAO dao = new DbDAO();
+        dao.loginPatient(p);
+        if (p.errormsg == null || p.errormsg.equals("")){
+            // can be invalidate
+            msg = "Wrong password or user name";
+            password = "";
+            email = "";
+            p = null;
+            loggedIn = false;
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
+        }
+        else{
+            page = "home";
+            loggedIn = true;
+            context.addCallbackParam("loggedIn", loggedIn);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+            message = new FacesMessage("Welcome ", p.fn);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            return "/home.xhtml?faces-redirect=true";
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        context.addCallbackParam("loggedIn", loggedIn);
+        return "";
+    }
+    
     public void findPatient() {
 //        System.out.println(findId + ", " + findName + ", " + findEmail + ", " + findRole + ", " + findSpecialty);
         DbDAO dao = new DbDAO();
@@ -116,5 +155,36 @@ public class patientBean implements Serializable {
     public Patient getSelectedP() {
         return selectedP;
     }
+    
+    public void setEmail(String email){
+        this.email=email;
+    }
 
+    public String getEmail(){
+        return email;
+    }
+    
+    public void setPassword(String password){
+        this.password=password;
+    }
+    
+    public String getPassword(){
+        return password;
+    }
+    
+    public void setMsg(String msg){
+        this.msg=msg;
+    }
+    
+    public String getMsg(){
+        return msg;
+    }
+    
+    public void setPage(String page){
+        this.page=page;
+    }
+    
+    public String getPage(){
+        return page;
+    }
 }

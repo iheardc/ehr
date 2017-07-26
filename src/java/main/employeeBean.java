@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -30,8 +31,49 @@ public class employeeBean implements Serializable {
     // Find Employee
     private List<Employee> findList;
     private Employee selectedEm;
+    String email;
+    String password;
     String findType="or", findId, findName, findEmail, findRole, findSpecialty;
-
+    String page;
+    String msg;
+    boolean inUserAccnt = false;
+    
+    public String login(){
+        RequestContext context = RequestContext.getCurrentInstance();
+        FacesMessage message = null;
+        boolean loggedIn = false;
+        
+        page = "homeDoc";
+        msg = "";
+        em = new Employee(email, password);
+        DbDAO dao = new DbDAO();
+        dao.loginEmployee(em);
+        if (em.errormsg == null || em.errormsg.equals("")){
+            msg = "Wrong password or user name";
+            password = "";
+            email = "";
+            em = null;
+            loggedIn = false;
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
+//            return "/loginEmployee.xhtml?faces-redirect=true";
+        }
+        else{
+            System.out.println("CHECK@@@");
+            System.out.println("CHECK@@@ " + em.fn);
+            System.out.println("CHECK@@@ " + em.accessToken);
+            loggedIn = true;
+            
+            context.addCallbackParam("loggedIn", loggedIn);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+            message = new FacesMessage("Welcome ", em.fn);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            return "/home.xhtml?faces-redirect=true";
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        context.addCallbackParam("loggedIn", loggedIn);
+        return "/home.xhtml?faces-redirect=true";
+    }
+    
     public void findEmployee() {
 //        System.out.println(findId + ", " + findName + ", " + findEmail + ", " + findRole + ", " + findSpecialty);
         DbDAO dao = new DbDAO();
@@ -131,6 +173,46 @@ public class employeeBean implements Serializable {
 
     public String getFindSpecialty() {
         return findSpecialty;
+    }
+    
+    public boolean isInUserAccnt() {
+        return inUserAccnt;
+    }
+
+    public void setInUserAccnt(boolean inUserAccnt) {
+        this.inUserAccnt = inUserAccnt;
+    }
+    
+    public void setEmail(String email){
+        this.email=email;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+    
+    public void setPassword(String password){
+        this.password=password;
+    }
+    
+    public String getPassword(){
+        return password;
+    }
+    
+    public void setMsg(String msg){
+        this.msg=msg;
+    }
+    
+    public String getMsg(){
+        return msg;
+    }
+    
+    public void setPage(String page){
+        this.page=page;
+    }
+    
+    public String getPage(){
+        return page;
     }
 
 }
