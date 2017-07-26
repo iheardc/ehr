@@ -56,52 +56,27 @@ public class signupBean implements Serializable {
 
     Employee em = new Employee();
     Patient p = new Patient();
-
+    
     public signupBean() {
         setAllSpecialty();
     }
 
     public String registrationEmployee() throws IOException {
-//        fileUpload = service.getFileUpload();
+        
         DbDAO dao = new DbDAO();
-//        if(!dao.checkLicense(license)){
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Wrong License number!", "Check License number");
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//            return "";
-//        }
 
         em = new Employee(id, email, password, fn, ln, name, gender, phone, pic,
                 role, license, location,
                 address, city, state, zip, country,
                 accessToken, authority, specialty);
-//        byte[] arr = service.getData();
-//        d = new Doc(firstName, lastName, DOB, gender, address, city, state, zip, email, phone,
-//                userName, password, specialty, description, arr, primeDoc, capacity, access_token);
-        //System.out.println("Speciality Signup = " + specialty);
-        //d = new Doc(firstName, lastName,email, userName, password,specialty, description);
-//        service.reset();
-//        DbDAO dao = new DbDAO();
-//        HashMap<String, Object> geoData = dao.getGeomatryValue(d.address, d.city, d.state, d.zip);
-//        if ((boolean) geoData.get("status")) {
-//            dao.insertNewDoc(d);
-//        } else {
-//            msg = d.errormsg;
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Address is not valiable.");
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//            return "";
-//        }
 
         dao.insertNewEmployee(em);
 
         //failed
         if (em.errormsg.length() > 0) {
-//            reset();
             msg = em.errormsg;
             password = "";
             rePassword = "";
-            email = "";
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", em.errormsg);
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -126,38 +101,19 @@ public class signupBean implements Serializable {
                 emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip,
                 posAddress, posCity, posState, posZip,
                 accessToken);
-//        byte[] arr = service.getData();
-//        d = new Doc(firstName, lastName, DOB, gender, address, city, state, zip, email, phone,
-//                userName, password, specialty, description, arr, primeDoc, capacity, access_token);
-        //System.out.println("Speciality Signup = " + specialty);
-        //d = new Doc(firstName, lastName,email, userName, password,specialty, description);
-//        service.reset();
-//        DbDAO dao = new DbDAO();
-//        HashMap<String, Object> geoData = dao.getGeomatryValue(d.address, d.city, d.state, d.zip);
-//        if ((boolean) geoData.get("status")) {
-//            dao.insertNewDoc(d);
-//        } else {
-//            msg = d.errormsg;
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Address is not valiable.");
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//            return "";
-//        }
 
         dao.insertNewPatient(p);
 
         //failed
         if (p.errormsg.length() > 0) {
-//            reset();
             msg = p.errormsg;
             password = "";
             rePassword = "";
-            email = "";
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", em.errormsg);
             FacesContext.getCurrentInstance().addMessage(null, message);
             return "";
-        } else {
+        } else { // success
             reset();
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage("Successfylly registered ", "Your registration has been successfully completed!");
@@ -166,11 +122,11 @@ public class signupBean implements Serializable {
         }
 
     }
-    
-    private Double dateToDouble(Date date){
-        return Double.parseDouble(dob2.getTime()+"");
+
+    private Double dateToDouble(Date date) {
+        return Double.parseDouble(dob2.getTime() + "");
     }
-    
+
     public void onDateSelect(SelectEvent event) {
         dob = Double.parseDouble(Long.toString(dob2.getTime()));
         System.out.println(Double.toString(dob));
@@ -203,6 +159,7 @@ public class signupBean implements Serializable {
         authority = 0;
         specialty = null;
         dob = null;
+        dob2 = null;
         occupation = null;
         religion = null;
         emFN = null;
@@ -218,11 +175,17 @@ public class signupBean implements Serializable {
         posCity = null;
         posState = null;
         posZip = null;
+        
+        setAllSpecialty();
 
         System.out.println("Reset all form.");
     }
 
     private void setAllSpecialty() {
+        specItems = new ArrayList<String>();
+        specialty = new ArrayList<String>();
+        specAllItems = new ArrayList<String>();
+        
         specAllItems.add("Allergy and immunology");
         specAllItems.add("Adolescent medicine");
         specAllItems.add("Anaesthesiology");

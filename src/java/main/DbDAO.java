@@ -9,7 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,8 +68,42 @@ public class DbDAO {
             + "GROUP BY A.id;";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
-            + "WHERE first_name like ? or last_name like ? and date_of_birth like ?";
+            + "WHERE id like ? and (first_name like ? or last_name like ?) and date_of_birth like ?";
+    private static final String CHECK_IN_PATIENT
+            = "INSERT INTO outpatient_dynamic(patient_id, date, status) VALUES(?, ?, ?);";
+    private static final String MAKE_NEW_BILLING
+            = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
 
+    // Additional
+    public static String[] DYNAMIN_DATA = {
+        "WFN", // waiting for nurse
+        "WFNI" // waiting for nurse(injection)
+    };
+
+    public static double getTodayMilliseconds() {
+        Calendar now = Calendar.getInstance();
+        return (double) ((long) getMilliseconds(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH)));
+    }
+
+    public static long getMilliseconds(int year, int month, int day) {
+
+        long days = 0;
+
+        try {
+            String cdate = String.format("%d%02d%02d", year, month, day);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date date = sdf.parse(cdate);
+            days = date.getTime();
+//            System.out.println(days);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return days;
+
+    }
+
+    // Query Function
     private boolean checkEmployeeEmailDuplicate(Employee em) {
 
         boolean isDuplicate = false;
@@ -263,12 +301,14 @@ public class DbDAO {
         }
         return list;
     }
-    
+
 //    private static final String FIND_PATIENT
 //            = "SELECT * FROM patient "
 //            + "WHERE first_name like ? or last_name like ? and date_of_birth like ?";
-
-    public List<Patient> findPatient(String findName, String findDoB) {
+    public List<Patient> findPatient(String findId, String findName, String findDoB) {
+        if (findId == null || "".equals(findId)) {
+            findId = "%";
+        }
         if (findName == null || "".equals(findName)) {
             findName = "%";
         }
@@ -281,10 +321,11 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT);
-            pstmt.setString(1, findName);
+            pstmt.setString(1, findId);
             pstmt.setString(2, findName);
-            pstmt.setString(3, findDoB);
-            
+            pstmt.setString(3, findName);
+            pstmt.setString(4, findDoB);
+
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Patient p = new Patient();
@@ -298,6 +339,50 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
         return list;
+    }
+
+    public void checkInPatient(Patient p) {
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(CHECK_IN_PATIENT);
+
+            pstmt.setInt(1, Integer.parseInt(p.id));
+            pstmt.setDouble(2, getTodayMilliseconds());
+            pstmt.setString(3, DYNAMIN_DATA[0]);
+
+            pstmt.executeUpdate();
+
+            p.errormsg = "";//"Thank you for registering with us!";
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            p.errormsg = "Failed to Check-In";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        makeNewBillingInfo(p); // When patient Check-In, billing information is created automatically.
+    }
+    
+    public void makeNewBillingInfo(Patient p){
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(MAKE_NEW_BILLING);
+
+            pstmt.setInt(1, Integer.parseInt(p.id));
+            pstmt.setDouble(2, getTodayMilliseconds());
+
+            pstmt.executeUpdate();
+
+            p.errormsg += "";//"Thank you for registering with us!";
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            p.errormsg += "Failed to Make Billing Info";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
     }
 
 }

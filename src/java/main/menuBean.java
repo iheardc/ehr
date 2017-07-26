@@ -22,31 +22,36 @@ public class menuBean implements Serializable {
     }
     
     // Header
-    public String redirectHome(){
+    public static String redirectHome(){
         return "/home.xhtml?faces-redirect=true";
     }
     
     // User Information
-    public String viewPatientDemographics(){
+    public static String viewPatientDemographics(){
         return "/userInfo/view_patient.xhtml?faces-redirect=true";
     }
-    public String viewEmployeeDemographics(){
+    public static String viewEmployeeDemographics(){
         return "/userInfo/view_employee.xhtml?faces-redirect=true";
     }
-    public String findEmployee(){
+    public static String findEmployee(){
         return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
     
     // Patient Check-In
-    public String newPatient(){
+    public static String newPatient(){
         return "/checkin/create_patient?faces-redirect=true";
     }
-    public String checkinPatient(){
+    public static String checkinPatient(){
         return "/checkin/checkin_patient?faces-redirect=true";
     }
     
+    // Nursing Station
+    public static String triage(){
+        return "/nursing_station/triage?faces-redirect=true";
+    }
+    
     // Admin
-    public String newEmployee(){
+    public static String newEmployee(){
         return "/admin/create_employee?faces-redirect=true";
     }
 }
