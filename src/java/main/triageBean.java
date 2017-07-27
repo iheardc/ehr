@@ -22,19 +22,18 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class triageBean implements Serializable {
     
-    
-    private Patient selectedP;
+    String patientStatus;
     
     private List<DynamicInfo> findWNFList;
     private List<DynamicInfo> findWNFIList;
     private DynamicInfo selectedD;
-    String patientStatus;
 
     // View result table when click Search
     boolean isShowWFNTable;
     boolean isShowWFNITable;
-    // View more information when patient Check-In
-    boolean isShowMoreInfo;
+    
+    boolean isShowAssignInfo;
+    boolean isShowInjectionInfo;
     
     // Enter Chief Complaint
     // The items currently available for selection
@@ -79,17 +78,26 @@ public class triageBean implements Serializable {
         isShowWFNTable = findWNFList.size() > 0;
         isShowWFNITable = findWNFIList.size() > 0;
         
-        resetFindItem();
+//        resetFindItem();
         RequestContext.getCurrentInstance().update("form");
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
 
-    public void selectDynaPatient() {
-        isShowMoreInfo = true;
+    public void selectDynaAssignPatient() {
+        isShowAssignInfo = true;
+        isShowInjectionInfo = false;
+        resetMoreForm();
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
     }
-    
+
+    public void selectDynaInjectionPatient() {
+        isShowAssignInfo = false;
+        isShowInjectionInfo = true;
+        resetMoreForm();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form");
+    }
 
     public void findDoctor() {
 
@@ -113,33 +121,39 @@ public class triageBean implements Serializable {
     }
     
     public String assignDoctor(){
-        
-        
-        return menuBean.triage();
+        return "";
+    }
+    
+    public String finishInjection(){
+        return "";
     }
 
     public void reset() {
-        resetFindItem();
-//        findList = null;
-//        selectedP = null;
-        findWNFList = null;
-        findWNFIList = null;
-        selectedD = null;
-        isShowMoreInfo = false;
-        isShowWFNTable = false;
-        isShowWFNITable = false;
-        findDocList = null;
-        selectedDoc = null;
-        setAllScode();
+        resetPatientFindItem();
+        resetMoreForm();
     }
 
-    public void resetFindItem() {
-//        findId = null;
-//        findName = null;
-//        findDoB = null;
+    public void resetPatientFindItem() {
         patientStatus = null;
+        findWNFList = null;
+        findWNFIList = null;
+        isShowAssignInfo = false;
+        isShowInjectionInfo = false;
+        isShowWFNTable = false;
+        isShowWFNITable = false;
+        selectedD = null;
+    }
+    
+    public void resetMoreForm(){
         findDocName = null;
         findDocSpecialty = null;
+        findDocList = null;
+        selectedDoc = null;
+        temperature = null;
+        weight = null;
+        spo2 = null;
+        bloodPressure = null;
+        setAllScode();
     }
     
     private void setAllScode(){
@@ -164,14 +178,6 @@ public class triageBean implements Serializable {
             }
         }
         return filteredList;
-    }
-
-    public Patient getSelectedP() {
-        return selectedP;
-    }
-
-    public void setSelectedP(Patient selectedP) {
-        this.selectedP = selectedP;
     }
 
     public List<DynamicInfo> getFindWNFList() {
@@ -222,12 +228,20 @@ public class triageBean implements Serializable {
         this.isShowWFNITable = isShowWFNITable;
     }
 
-    public boolean isIsShowMoreInfo() {
-        return isShowMoreInfo;
+    public boolean isIsShowAssignInfo() {
+        return isShowAssignInfo;
     }
 
-    public void setIsShowMoreInfo(boolean isShowMoreInfo) {
-        this.isShowMoreInfo = isShowMoreInfo;
+    public void setIsShowAssignInfo(boolean isShowAssignInfo) {
+        this.isShowAssignInfo = isShowAssignInfo;
+    }
+
+    public boolean isIsShowInjectionInfo() {
+        return isShowInjectionInfo;
+    }
+
+    public void setIsShowInjectionInfo(boolean isShowInjectionInfo) {
+        this.isShowInjectionInfo = isShowInjectionInfo;
     }
 
     public String getFindDocName() {
@@ -318,7 +332,9 @@ public class triageBean implements Serializable {
         this.bloodPressure = bloodPressure;
     }
     
-    
+    public boolean getIsShowMoreInfo(){
+        return isShowAssignInfo || isShowInjectionInfo;
+    }
     
     
     
