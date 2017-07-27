@@ -17,6 +17,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.UploadedFile;
@@ -56,13 +57,19 @@ public class signupBean implements Serializable {
 
     Employee em = new Employee();
     Patient p = new Patient();
-    
+
     public signupBean() {
         setAllSpecialty();
     }
 
+    public void uploadImg() {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Notice", "It does not work yet.");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
     public String registrationEmployee() throws IOException {
-        
+
         DbDAO dao = new DbDAO();
 
         em = new Employee(id, email, password, fn, ln, name, gender, phone, pic,
@@ -134,8 +141,18 @@ public class signupBean implements Serializable {
 //        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 //        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
     }
+    
+    public String cancelPatient(){
+        reset();
+        return menuBean.newPatient();
+    }
+    
+    public String cancelEmployee(){
+        reset();
+        return menuBean.newEmployee();
+    }
 
-    private void reset() {
+    public void reset() {
         msg = null;
         id = null;
         email = null;
@@ -175,7 +192,7 @@ public class signupBean implements Serializable {
         posCity = null;
         posState = null;
         posZip = null;
-        
+
         setAllSpecialty();
 
         System.out.println("Reset all form.");
@@ -185,7 +202,7 @@ public class signupBean implements Serializable {
         specItems = new ArrayList<String>();
         specialty = new ArrayList<String>();
         specAllItems = new ArrayList<String>();
-        
+
         specAllItems.add("Allergy and immunology");
         specAllItems.add("Adolescent medicine");
         specAllItems.add("Anaesthesiology");

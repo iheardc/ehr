@@ -53,18 +53,18 @@ public class DbDAO {
     private static final String FIND_EMPLOYEE_OR
             = "SELECT  A.*, B.specialty as specialty "
             + "FROM employee as A LEFT OUTER JOIN ("
-            + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ',') AS specialty "
+            + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) or A.id like ? or A.first_name like ? or A.last_name like ? or A.email like ? or A.role like ? "
+            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) or A.id like ? or (A.first_name like ? or A.last_name like ?) or A.email like ? or A.role like ? "
             + "GROUP BY A.id;";
     private static final String FIND_EMPLOYEE_AND
             = "SELECT  A.*, B.specialty as specialty "
             + "FROM employee as A LEFT OUTER JOIN ("
-            + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ',') AS specialty "
+            + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and A.first_name like ? and A.last_name like ? and A.email like ? and A.role like ? "
+            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ?) and A.email like ? and A.role like ? "
             + "GROUP BY A.id;";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
@@ -75,6 +75,16 @@ public class DbDAO {
             = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
             = "SELECT * FROM outpatient_dynamic WHERE status like ?";
+    private static final String FIND_DOCTOR
+            = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ?)";
+    private static final String FIND_DOCTOR_WITH_SPECIALTY
+            = "SELECT  A.*, B.specialty as specialty "
+            + "FROM employee as A LEFT OUTER JOIN ( "
+            + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
+            + "FROM specialty "
+            + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
+            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and (A.first_name like ? or A.last_name like ?) "
+            + "GROUP BY A.id;";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -452,8 +462,8 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
-    
-    public List<DynamicInfo> searchPatientInDynamic(String status){
+
+    public List<DynamicInfo> searchPatientInDynamic(String status) {
         if (status == null || "".equals(status)) {
             status = "%";
         }
@@ -473,6 +483,66 @@ public class DbDAO {
             }
         } catch (Exception e) {
             System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<Employee> findDoctor(String findDocName) {
+        if (findDocName == null || "".equals(findDocName)) {
+            findDocName = "%";
+        }
+        List<Employee> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_DOCTOR);
+            pstmt.setString(1, findDocName);
+            pstmt.setString(2, findDocName);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Employee em = new Employee();
+                em.buildEmployee(rs);
+                list.add(em);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findDoctor : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<Employee> findDoctor(String findDocName, String findDocSpecialty) {
+        if (findDocName == null || "".equals(findDocName)) {
+            findDocName = "%";
+        }
+        if (findDocSpecialty == null || "".equals(findDocSpecialty)) {
+            findDocSpecialty = "%";
+        }
+        List<Employee> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_DOCTOR_WITH_SPECIALTY);
+            pstmt.setString(1, findDocSpecialty);
+            pstmt.setString(2, findDocName);
+            pstmt.setString(3, findDocName);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Employee em = new Employee();
+                em.buildEmployee(rs);
+                list.add(em);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findDoctorWithSpecialty : " + e.toString());
             e.printStackTrace();
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);

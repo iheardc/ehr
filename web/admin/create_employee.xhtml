@@ -100,6 +100,16 @@
                             </div>
                         </b:column>
 
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="upload" value="Photo" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:fileUpload id="upload" auto="true" fileUploadListener="#{signupBean.uploadImg()}" 
+                                                  allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
                     </b:column>
 
                     <b:column col-md="11" offset-md="1">
@@ -217,6 +227,7 @@
                     <b:column col-md="12">
                         <hr></hr>
                         <p:commandButton class="btn btn-primary" action="#{signupBean.registrationEmployee()}" value="Submit" ajax="false"/>
+                        <p:commandButton class="btn btn-danger" action="#{signupBean.cancelEmployee()}" value="Cancel" ajax="false" immediate="true"/>
                     </b:column>
 
                 </h:form>

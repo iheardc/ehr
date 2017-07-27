@@ -33,22 +33,27 @@ public class employeeBean implements Serializable {
     private Employee selectedEm;
     String email;
     String password;
-    String findType="or", findId, findName, findEmail, findRole, findSpecialty;
+    String findType = "or", findId, findName, findEmail, findRole, findSpecialty;
     String page;
     String msg;
     boolean inUserAccnt = false;
-    
-    public String login(){
+
+    // Find Doctor
+    String findDocName, findDocSpecialty;
+    List<Employee> findDocList;
+    Employee selectedDoc;
+
+    public String login() {
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage message = null;
         boolean loggedIn = false;
-        
+
         page = "homeDoc";
         msg = "";
         em = new Employee(email, password);
         DbDAO dao = new DbDAO();
         dao.loginEmployee(em);
-        if (em.errormsg == null || em.errormsg.equals("")){
+        if (em.errormsg == null || em.errormsg.equals("")) {
             msg = "Wrong password or user name";
             password = "";
             email = "";
@@ -56,13 +61,12 @@ public class employeeBean implements Serializable {
             loggedIn = false;
             message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
 //            return "/loginEmployee.xhtml?faces-redirect=true";
-        }
-        else{
+        } else {
             System.out.println("CHECK@@@");
             System.out.println("CHECK@@@ " + em.fn);
             System.out.println("CHECK@@@ " + em.accessToken);
             loggedIn = true;
-            
+
             context.addCallbackParam("loggedIn", loggedIn);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             message = new FacesMessage("Welcome ", em.fn);
@@ -73,25 +77,55 @@ public class employeeBean implements Serializable {
         context.addCallbackParam("loggedIn", loggedIn);
         return "/home.xhtml?faces-redirect=true";
     }
-    
+
     public void findEmployee() {
-//        System.out.println(findId + ", " + findName + ", " + findEmail + ", " + findRole + ", " + findSpecialty);
         DbDAO dao = new DbDAO();
         findList = dao.findEmployee(findType, findId, findName, findEmail, findRole, findSpecialty);
-//        System.out.println(findList.size());
-//        for (Employee em : findList) {
-//            System.out.println(em.getEmail());
-//        }
+
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
-        if(findList.size() > 0){
+        if (findList.size() > 0) {
             message = new FacesMessage("Search ", "There are " + findList.size() + " results.");
-        }else{
+        } else {
             message = new FacesMessage("Search ", "There are no matching results.");
         }
         FacesContext.getCurrentInstance().addMessage(null, message);
 //        resetFindItem();
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
+    }
+
+    public void findDoctor() {
+
+        DbDAO dao = new DbDAO();
+        findDocList = dao.findDoctor(findDocName, findDocSpecialty);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message;
+        if (findDocList.size() > 0) {
+            message = new FacesMessage("Search ", "There are " + findDocList.size() + " results.");
+        } else {
+            message = new FacesMessage("Search ", "There are no matching results.");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+
+    }
+
+    public void selectDoctor() {
+        
+        
+    }
+
+    public void resetAllItem() {
+        // Find Employee
+        findList = null;
+        selectedEm = null;
+        email = null;
+        password = null;
+        page = null;
+        msg = null;
+        findDocList = null;
+        selectedDoc = null;
+        resetFindItem();
     }
 
     public void resetFindItem() {
@@ -101,6 +135,8 @@ public class employeeBean implements Serializable {
         findEmail = null;
         findRole = null;
         findSpecialty = null;
+        findDocName = null;
+        findDocSpecialty = null;
     }
 
     public void setEm(Employee em) {
@@ -126,12 +162,12 @@ public class employeeBean implements Serializable {
     public Employee getSelectedEm() {
         return selectedEm;
     }
-    
-    public void setFindType(String findType){
+
+    public void setFindType(String findType) {
         this.findType = findType;
     }
-    
-    public String getFindType(){
+
+    public String getFindType() {
         return findType;
     }
 
@@ -174,7 +210,7 @@ public class employeeBean implements Serializable {
     public String getFindSpecialty() {
         return findSpecialty;
     }
-    
+
     public boolean isInUserAccnt() {
         return inUserAccnt;
     }
@@ -182,37 +218,69 @@ public class employeeBean implements Serializable {
     public void setInUserAccnt(boolean inUserAccnt) {
         this.inUserAccnt = inUserAccnt;
     }
-    
-    public void setEmail(String email){
-        this.email=email;
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
-    
-    public void setPassword(String password){
-        this.password=password;
+
+    public void setPassword(String password) {
+        this.password = password;
     }
-    
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
-    
-    public void setMsg(String msg){
-        this.msg=msg;
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
-    
-    public String getMsg(){
+
+    public String getMsg() {
         return msg;
     }
-    
-    public void setPage(String page){
-        this.page=page;
+
+    public void setPage(String page) {
+        this.page = page;
     }
-    
-    public String getPage(){
+
+    public String getPage() {
         return page;
+    }
+
+    public String getFindDocName() {
+        return findDocName;
+    }
+
+    public void setFindDocName(String findDocName) {
+        this.findDocName = findDocName;
+    }
+
+    public String getFindDocSpecialty() {
+        return findDocSpecialty;
+    }
+
+    public void setFindDocSpecialty(String findDocSpecialty) {
+        this.findDocSpecialty = findDocSpecialty;
+    }
+
+    public List<Employee> getFindDocList() {
+        return findDocList;
+    }
+
+    public void setFindDocList(List<Employee> findDocList) {
+        this.findDocList = findDocList;
+    }
+
+    public Employee getSelectedDoc() {
+        return selectedDoc;
+    }
+
+    public void setSelectedDoc(Employee selectedDoc) {
+        this.selectedDoc = selectedDoc;
     }
 
 }

@@ -159,6 +159,12 @@ public class patientBean implements Serializable {
 
         return "/checkin/checkin_patient?faces-redirect=true";
     }
+    
+    public String assignDoctor(){
+        
+        
+        return menuBean.triage();
+    }
 
     public void reset() {
         resetFindItem();

@@ -23,7 +23,7 @@
                 <hr></hr>
 
 
-                <h:form enctype="multipart/form-data">
+                <h:form enctype="multipart/form-data" id="form">
 
                     <b:column col-md="11" offset-md="1">
                         <h2>General Information</h2>
@@ -117,6 +117,16 @@
                                 <p:outputLabel for="occupation" value="Occupation" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
                                     <p:inputText value="#{signupBean.occupation}" id="occupation" autocomplete="off" class="form-control" placeholder="Occupation"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="upload" value="Photo" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:fileUpload id="upload" auto="true" fileUploadListener="#{signupBean.uploadImg()}" 
+                                                  allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
                                 </b:column>
                             </div>
                         </b:column>
@@ -317,6 +327,7 @@
                     <b:column col-md="12">
                         <hr></hr>
                         <p:commandButton class="btn btn-primary" action="#{signupBean.registrationPatient()}" value="Submit" ajax="false"/>
+                        <p:commandButton class="btn btn-danger" action="#{signupBean.cancelPatient()}" value="Cancel" ajax="false" immediate="true"/>
 
                         <!--<b:button class="btn btn-primary" onclick="../home.xhtml?faces-redirect=true" value="Submit"></b:button>-->
                         <br></br>

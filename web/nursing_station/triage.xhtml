@@ -14,6 +14,11 @@
     <ui:define name="title">Register page</ui:define>
     <ui:define name="content"> 
 
+        <f:metadata>
+            <f:viewAction action="#{employeeBean.resetAllItem()}"/>
+            <f:viewAction action="#{signupBean.reset()}"/>
+        </f:metadata>
+
 
         <b:container fluid="true" class="customContainer">
 
@@ -84,75 +89,75 @@
                             <b:column col-md="12" rendered="#{patientBean.isShowWFNTable}">
                                 <hr></hr>
 
-                                <b:column col-md="12" class="form-horizontal">
-                                    <div class="form-group">
+                                <!--                                <b:column col-md="12" class="form-horizontal">
+                                                                    <div class="form-group">-->
 
-                                        <p:dataTable var="d" value="#{patientBean.findWNFList}" id="searchTable1" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+                                <p:dataTable var="d" value="#{patientBean.findWNFList}" id="searchTable1" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
 
-                                            <p:column headerText="Patient ID">
-                                                <h:outputText value="#{d.p.id}" />
-                                            </p:column>
-                                            <p:column headerText="Name">
-                                                <h:outputText value="#{d.p.name}" />
-                                            </p:column>
-                                            <p:column headerText="Date of Birth">
-                                                <h:outputText value="#{d.p.dobString}" />
-                                            </p:column>
-                                            <p:column headerText="Gender">
-                                                <h:outputText value="#{d.p.gender}" />
-                                            </p:column>
-                                            <p:column headerText="Date">
-                                                <h:outputText value="#{d.dateString}" />
-                                            </p:column>
-                                            <p:column headerText="Status">
-                                                <h:outputText value="#{d.statusFull}" />
-                                            </p:column>
-                                            <p:column style="width:32px;text-align: center" headerText="Select">
-                                                <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectDynaPatient()}">
-                                                    <f:setPropertyActionListener value="#{d}" target="#{patientBean.selectedD}" />
-                                                </p:commandButton>
-                                            </p:column>
-                                        </p:dataTable>
+                                    <p:column headerText="Patient ID">
+                                        <h:outputText value="#{d.p.id}" />
+                                    </p:column>
+                                    <p:column headerText="Name">
+                                        <h:outputText value="#{d.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Date of Birth">
+                                        <h:outputText value="#{d.p.dobString}" />
+                                    </p:column>
+                                    <p:column headerText="Gender">
+                                        <h:outputText value="#{d.p.gender}" />
+                                    </p:column>
+                                    <p:column headerText="Date">
+                                        <h:outputText value="#{d.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Status">
+                                        <h:outputText value="#{d.statusFull}" />
+                                    </p:column>
+                                    <p:column style="width:32px;text-align: center" headerText="Select">
+                                        <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectDynaPatient()}">
+                                            <f:setPropertyActionListener value="#{d}" target="#{patientBean.selectedD}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
 
-                                    </div>
-                                </b:column>
+                                <!--                                    </div>
+                                                                </b:column>-->
                             </b:column>
 
                             <b:column col-md="12" rendered="#{patientBean.isShowWFNITable}">
                                 <hr></hr>
 
-                                <b:column col-md="12" class="form-horizontal">
-                                    <div class="form-group">
+                                <!--                                <b:column col-md="12" class="form-horizontal">
+                                                                    <div class="form-group">-->
 
-                                        <p:dataTable var="d" value="#{patientBean.findWNFIList}" id="searchTable2" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+                                <p:dataTable var="d" value="#{patientBean.findWNFIList}" id="searchTable2" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
 
-                                            <p:column headerText="Patient ID">
-                                                <h:outputText value="#{d.p.id}" />
-                                            </p:column>
-                                            <p:column headerText="Patient Name">
-                                                <h:outputText value="#{d.p.name}" />
-                                            </p:column>
-                                            <p:column headerText="Doctor Name">
-                                                <h:outputText value="#{d.doc.name}" />
-                                            </p:column>
-                                            <p:column headerText="Nurse Name">
-                                                <h:outputText value="#{d.n.name}" />
-                                            </p:column>
-                                            <p:column headerText="Date">
-                                                <h:outputText value="#{d.dateString}" />
-                                            </p:column>
-                                            <p:column headerText="Status">
-                                                <h:outputText value="#{d.statusFull}" />
-                                            </p:column>
-                                            <p:column style="width:32px;text-align: center" headerText="Select">
-                                                <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectDynaPatient()}">
-                                                    <f:setPropertyActionListener value="#{d}" target="#{patientBean.selectedD}" />
-                                                </p:commandButton>
-                                            </p:column>
-                                        </p:dataTable>
+                                    <p:column headerText="Patient ID">
+                                        <h:outputText value="#{d.p.id}" />
+                                    </p:column>
+                                    <p:column headerText="Patient Name">
+                                        <h:outputText value="#{d.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Doctor Name">
+                                        <h:outputText value="#{d.doc.name}" />
+                                    </p:column>
+                                    <p:column headerText="Nurse Name">
+                                        <h:outputText value="#{d.n.name}" />
+                                    </p:column>
+                                    <p:column headerText="Date">
+                                        <h:outputText value="#{d.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Status">
+                                        <h:outputText value="#{d.statusFull}" />
+                                    </p:column>
+                                    <p:column style="width:32px;text-align: center" headerText="Select">
+                                        <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectDynaPatient()}">
+                                            <f:setPropertyActionListener value="#{d}" target="#{patientBean.selectedD}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
 
-                                    </div>
-                                </b:column>
+                                <!--                                    </div>
+                                                                </b:column>-->
                             </b:column>
                         </b:column>
 
@@ -188,10 +193,63 @@
 
                                 <h3>Assign Doctor</h3>
                                 <hr></hr>
-                                <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="View" title="View" class="btn btn-primary">
-                                    <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->
-                                </p:commandButton>
+                                <h:form id="assignForm" >
 
+
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="doc_name" value="Doctor Name" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:inputText id="doc_name" autocomplete="off" value="#{employeeBean.findDocName}" class="form-control" placeholder="Doctor Name" type="text"></p:inputText>
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="doc_specialty" value="Specialty" class="col-sm-2 control-label"></p:outputLabel>
+                                            <!--                                            <b:column col-sm="10">
+                                                                                            <p:inputText id="doc_specialty" autocomplete="off" value="#{employeeBean.findDocSpecialty}" class="form-control" placeholder="Specialty" type="text"></p:inputText>
+                                                                                        </b:column>-->
+                                            <p:autoComplete id="doc_specialty"
+                                                            value="#{employeeBean.findDocSpecialty}"
+                                                            completeMethod="#{signupBean.specCompleteItem}"
+                                                            class="col-sm-10">
+                                            </p:autoComplete>
+                                        </div>
+                                    </b:column>
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <b:column col-md="6" offset-md="2">
+                                                <p:commandButton value="Search" title="Search" class="btn btn-default" action="#{employeeBean.findDoctor()}" update="searchDocTable"></p:commandButton>
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+
+                                    <b:column col-md="12" class="form-horizontal">
+
+                                        <p:dataTable var="doc" value="#{employeeBean.findDocList}" id="searchDocTable" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+
+                                            <p:column headerText="Doctor ID">
+                                                <h:outputText value="#{doc.id}" />
+                                            </p:column>
+                                            <p:column headerText="Name">
+                                                <h:outputText value="#{doc.name}" />
+                                            </p:column>
+                                            <p:column headerText="Specialty">
+                                                <h:outputText value="#{doc.specialty}" />
+                                            </p:column>
+                                            <p:column style="width:32px;text-align: center" headerText="Select">
+                                                <p:commandButton update=":form:pDetail" title="Select" value="Select" action="#{employeeBean.selectDoctor()}">
+                                                    <f:setPropertyActionListener value="#{doc}" target="#{employeeBean.selectedDoc}" />
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+
+                                    </b:column>
+
+                                </h:form>
 
                             </b:column>
                         </h:form>
@@ -200,7 +258,7 @@
 
                         <b:column col-md="12" rendered="#{patientBean.isShowMoreInfo}">
                             <hr></hr>
-                            <p:commandButton class="btn btn-primary" value="Check-In" action="#{patientBean.checkIn()}"/>
+                            <p:commandButton class="btn btn-primary" value="Assign Doctor" action="#{patientBean.assignDoctor()}"/>
                         </b:column>
 
                     </b:column>
