@@ -25,31 +25,31 @@
                 <b:column col-md="6" offset-md="3">
                     <div class="panel panel-login">
                         <div class="panel-heading">
-                            <div class="row">
-                                <b:column col-xs="6">
-                                    <a href="#" class="active" id="login-form-link">Patient</a>
+                            <h:form class="row">
+                                <b:column col-xs="6"><!--class="active" id="login-form-link"-->
+                                    <p:commandButton value="Patient"  action="#{signinBean.selectlogin('patient')}" immediate="true" />
                                 </b:column>
-                                <b:column col-xs="6">
-                                    <a href="#" id="register-form-link">Clinician</a>
+                                <b:column col-xs="6"><!--id="register-form-link-->
+                                    <p:commandButton value="Clinician"  action="#{signinBean.selectlogin('clinician')}" immediate="true" />
                                 </b:column>
-                            </div>
+                            </h:form>
                             <hr></hr>
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <b:column col-lg="12">
-                                    <h:form id="login-form"  role="form" style="display: block;">
+                                <b:column col-lg="12"> 
+                                    <h:form id="login-form" role="form">
                                         <div class="form-group">
-                                            <p:inputText id="email" class="form-control" placeholder="Username" autocomplete="off" value="#{patientBean.email}" required="true" />
+                                            <p:inputText id="email" class="form-control" placeholder="Username" autocomplete="off" value="#{signinBean.email}" required="true"/>
                                         </div>
                                         <div class="form-group">
-                                            <p:password id="password"  class="form-control" placeholder="Password" autocomplete="off" value="#{patientBean.password}" required="true" />
+                                            <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
                                         </div>
                                         
                                         <div class="form-group">
                                             <div class="row">
                                                 <b:column col-sm="6" offset-sm="3">
-                                                    <p:commandButton process="@this" value="Login" id="login-submit" action="#{patientBean.login()}" class="form-control btn btn-login" ajax="false"/>
+                                                    <p:commandButton process="@this" value="Login" id="login-submit" action="#{signinBean.login()}" class="form-control btn btn-login" ajax="false"/>
                                                 </b:column>
                                             </div>
                                         </div>
@@ -58,37 +58,13 @@
                                                 <b:column col-lg="12">
                                                     <div class="text-center">
                                                         <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
-                                                        <p:commandButton process="@this" value="temp login" action="#{menuBean.redirectHome()}" class="form-control btn btn-login" />
+                                                        <p:commandButton process="@this" value="temp login" action="#{menuBean.redirectHome()}" class="form-control btn btn-login" immediate="true" />
                                                     </div>
                                                 </b:column>
                                             </div>
                                         </div>
                                     </h:form>
-                                    <h:form id="register-form"  role="form" style="display: block;" rendered="false">
-                                        <div class="form-group">
-                                            <p:inputText id="email" class="form-control" placeholder="Username" value="#{employeeBean.email}" required="true" autocomplete="off" />
-                                        </div>
-                                        <div class="form-group">
-                                            <p:password id="password" class="form-control" placeholder="Password" value="#{employeeBean.password}" required="true" autocomplete="off" />
-                                        </div>
-                                         
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <b:column col-sm="6" offset-sm="3">
-                                                    <p:commandButton process="@this" value="Login" action="#{employeeBean.login()}" id="register-submit" class="form-control btn btn-register" ajax="false"/>
-                                                </b:column>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <b:column col-lg="12">
-                                                    <div class="text-center">
-                                                        <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
-                                                    </div>
-                                                </b:column>
-                                            </div>
-                                        </div>
-                                    </h:form>
+                                    
                                 </b:column>
                             </div>
                         </div>
@@ -98,7 +74,7 @@
         </div>
         <style type="text/css"> 
             .container{
-                padding-top : 100px;
+                padding-top : 150px;
             }
             .panel-login {
                 border-color: #ccc;
