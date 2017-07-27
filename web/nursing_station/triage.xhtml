@@ -42,72 +42,124 @@
                             </div>
                         </b:column>
 
-                        <b:column col-md="12" class="form-horizontal">
-                            <div class="form-group">
-                                <p:outputLabel for="id" value="ID" class="col-sm-2 control-label"></p:outputLabel>
-                                <b:column col-sm="6">
-                                    <p:inputText value="#{patientBean.findId}" id="id" autocomplete="off" class="form-control" placeholder="Patient ID"></p:inputText>
-                                </b:column>
-                            </div>
-                        </b:column>
-
-                        <b:column col-md="12" class="form-horizontal">
-                            <div class="form-group">
-                                <p:outputLabel for="name" value="Name" class="col-sm-2 control-label"></p:outputLabel>
-                                <b:column col-sm="6">
-                                    <p:inputText value="#{patientBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>
-                                </b:column>
-                            </div>
-                        </b:column>
-
-                        <b:column col-md="12" class="form-horizontal">
-                            <div class="form-group">
-                                <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
-                                <b:column col-sm="6">
-                                    <!--<p:inputText value="#{patientBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
-                                    <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
-                                        <!--<p:ajax event="dateSelect" listener="#{patientBean.onDateSelect}" />-->
-                                    </p:calendar>
-                                </b:column>
-                            </div>
-                        </b:column>
+                        <!--                        <b:column col-md="12" class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <p:outputLabel for="id" value="ID" class="col-sm-2 control-label"></p:outputLabel>
+                                                        <b:column col-sm="6">
+                                                            <p:inputText value="#{patientBean.findId}" id="id" autocomplete="off" class="form-control" placeholder="Patient ID"></p:inputText>
+                                                        </b:column>
+                                                    </div>
+                                                </b:column>
+                        
+                                                <b:column col-md="12" class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <p:outputLabel for="name" value="Name" class="col-sm-2 control-label"></p:outputLabel>
+                                                        <b:column col-sm="6">
+                                                            <p:inputText value="#{patientBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>
+                                                        </b:column>
+                                                    </div>
+                                                </b:column>
+                        
+                                                <b:column col-md="12" class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
+                                                        <b:column col-sm="6">
+                                                            <p:inputText value="#{patientBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>
+                                                            <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
+                                                                <p:ajax event="dateSelect" listener="#{patientBean.onDateSelect}" />
+                                                            </p:calendar>
+                                                        </b:column>
+                                                    </div>
+                                                </b:column>-->
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
                                 <b:column col-md="6" offset-md="2">
-                                    <p:commandButton class="btn btn-primary" value="Search" action="#{patientBean.findPatient()}" update=":form:patientData"/>
+                                    <p:commandButton class="btn btn-primary" value="Search" action="#{patientBean.findDynaPatient()}" update=":form:searchTables"/>
                                 </b:column>
                             </div>
                         </b:column>
 
-                        <b:column col-md="12" class="form-horizontal">
-                            <div class="form-group">
+                        <b:column id="searchTables">
+                            <b:column col-md="12" rendered="#{patientBean.isShowWFNTable}">
+                                <hr></hr>
 
-                                <p:dataTable var="p" value="#{patientBean.findList}" id="patientData" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
 
-                                    <p:column headerText="ID">
-                                        <h:outputText value="#{p.id}" />
-                                    </p:column>
-                                    <p:column headerText="Email">
-                                        <h:outputText value="#{p.email}" />
-                                    </p:column>
-                                    <p:column headerText="Name">
-                                        <h:outputText value="#{p.name}" />
-                                    </p:column>
-                                    <p:column headerText="Gender">
-                                        <h:outputText value="#{p.gender}" />
-                                    </p:column>
-                                    <p:column headerText="Date of Birth">
-                                        <h:outputText value="#{p.dobString}" />
-                                    </p:column>
-                                    <p:column style="width:32px;text-align: center" headerText="Select">
-                                        <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectPatient()}">
-                                            <f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />
-                                        </p:commandButton>
-                                    </p:column>
-                                </p:dataTable>
+                                        <p:dataTable var="d" value="#{patientBean.findWNFList}" id="searchTable1" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
 
-                            </div>
+                                            <p:column headerText="Patient ID">
+                                                <h:outputText value="#{d.p.id}" />
+                                            </p:column>
+                                            <p:column headerText="Name">
+                                                <h:outputText value="#{d.p.name}" />
+                                            </p:column>
+                                            <p:column headerText="Date of Birth">
+                                                <h:outputText value="#{d.p.dobString}" />
+                                            </p:column>
+                                            <p:column headerText="Gender">
+                                                <h:outputText value="#{d.p.gender}" />
+                                            </p:column>
+                                            <p:column headerText="Date">
+                                                <h:outputText value="#{d.dateString}" />
+                                            </p:column>
+                                            <p:column headerText="Status">
+                                                <h:outputText value="#{d.statusFull}" />
+                                            </p:column>
+                                            <p:column style="width:32px;text-align: center" headerText="Select">
+                                                <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectDynaPatient()}">
+                                                    <f:setPropertyActionListener value="#{d}" target="#{patientBean.selectedD}" />
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+
+                                    </div>
+                                </b:column>
+                            </b:column>
+
+                            <b:column col-md="12" rendered="#{patientBean.isShowWFNITable}">
+                                <hr></hr>
+
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+
+                                        <p:dataTable var="d" value="#{patientBean.findWNFIList}" id="searchTable2" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+
+                                            <p:column headerText="Patient ID">
+                                                <h:outputText value="#{d.p.id}" />
+                                            </p:column>
+                                            <p:column headerText="Patient Name">
+                                                <h:outputText value="#{d.p.name}" />
+                                            </p:column>
+                                            <p:column headerText="Doctor Name">
+                                                <h:outputText value="#{d.doc.name}" />
+                                            </p:column>
+                                            <p:column headerText="Nurse Name">
+                                                <h:outputText value="#{d.n.name}" />
+                                            </p:column>
+                                            <p:column headerText="Date">
+                                                <h:outputText value="#{d.dateString}" />
+                                            </p:column>
+                                            <p:column headerText="Status">
+                                                <h:outputText value="#{d.statusFull}" />
+                                            </p:column>
+                                            <p:column style="width:32px;text-align: center" headerText="Select">
+                                                <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectDynaPatient()}">
+                                                    <f:setPropertyActionListener value="#{d}" target="#{patientBean.selectedD}" />
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+
+                                    </div>
+                                </b:column>
+                            </b:column>
+                        </b:column>
+
+
+
+                        <b:column col-md="12">
+                            <hr></hr>
                         </b:column>
 
                         <br></br>
@@ -116,7 +168,7 @@
 
                             <b:column col-md="11" offset-md="1">
 
-                                <h3>Remaining Balance</h3>
+                                <h3>Enter Chief Complaint</h3>
                                 <hr></hr>
 
 
@@ -125,7 +177,7 @@
 
                             <b:column col-md="11" offset-md="1">
 
-                                <h3>Appointment Information</h3>
+                                <h3>Enter Vital Sign</h3>
                                 <hr></hr>
 
 
@@ -134,7 +186,7 @@
 
                             <b:column col-md="11" offset-md="1">
 
-                                <h3>View Demographic</h3>
+                                <h3>Assign Doctor</h3>
                                 <hr></hr>
                                 <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="View" title="View" class="btn btn-primary">
                                     <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->

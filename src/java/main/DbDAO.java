@@ -70,9 +70,11 @@ public class DbDAO {
             = "SELECT * FROM patient "
             + "WHERE id like ? and (first_name like ? or last_name like ?) and date_of_birth like ?";
     private static final String CHECK_IN_PATIENT
-            = "INSERT INTO outpatient_dynamic(patient_id, date, status) VALUES(?, ?, ?);";
+            = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status) VALUES(?, ?, ?, ?, ?, ?, ?);";
     private static final String MAKE_NEW_BILLING
             = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
+    private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
+            = "SELECT * FROM outpatient_dynamic WHERE status like ?";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -80,9 +82,14 @@ public class DbDAO {
         "WFNI" // waiting for nurse(injection)
     };
 
-    public static double getTodayMilliseconds() {
+    public static double getTodayMillisecondsWithOutTime() {
         Calendar now = Calendar.getInstance();
         return (double) ((long) getMilliseconds(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH)));
+    }
+
+    public static double getTodayMillisecondsWithTime() {
+        Calendar now = Calendar.getInstance();
+        return (double) ((long) getMilliseconds(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND)));
     }
 
     public static long getMilliseconds(int year, int month, int day) {
@@ -92,6 +99,24 @@ public class DbDAO {
         try {
             String cdate = String.format("%d%02d%02d", year, month, day);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date date = sdf.parse(cdate);
+            days = date.getTime();
+//            System.out.println(days);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return days;
+
+    }
+
+    public static long getMilliseconds(int year, int month, int day, int hour, int min, int sec) {
+
+        long days = 0;
+
+        try {
+            String cdate = String.format("%d%02d%02d%02d%02d%02d", year, month, day, hour, min, sec);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = sdf.parse(cdate);
             days = date.getTime();
 //            System.out.println(days);
@@ -340,46 +365,42 @@ public class DbDAO {
         }
         return list;
     }
-    
-    public void loginPatient(Patient p){
+
+    public void loginPatient(Patient p) {
         PreparedStatement pstmt = null;
         Connection connect = null;
-        try{
+        try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(LOGIN_PATIENT);
             pstmt.setString(1, p.email);
             pstmt.setString(2, p.password);
             ResultSet rs = pstmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 p.buildPatient(rs);
-                p.errormsg = "Success";    
+                p.errormsg = "Success";
             }
-        }
-        catch(Exception e){
-        }
-        finally{
+        } catch (Exception e) {
+        } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
-    
-    public void loginEmployee(Employee em){
+
+    public void loginEmployee(Employee em) {
         PreparedStatement pstmt = null;
         Connection connect = null;
-        try{
+        try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(LOGIN_EMPLOYEE);
             pstmt.setString(1, em.email);
             pstmt.setString(2, em.password);
             ResultSet rs = pstmt.executeQuery();
-            while(rs.next()){   
+            while (rs.next()) {
                 em.buildEmployee(rs);
                 em.errormsg = "Success";
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("ERROR login Employee dao " + e.toString());
-        }
-        finally{
+        } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
@@ -392,8 +413,12 @@ public class DbDAO {
             pstmt = connect.prepareStatement(CHECK_IN_PATIENT);
 
             pstmt.setInt(1, Integer.parseInt(p.id));
-            pstmt.setDouble(2, getTodayMilliseconds());
-            pstmt.setString(3, DYNAMIN_DATA[0]);
+            pstmt.setString(2, p.fn);
+            pstmt.setString(3, p.ln);
+            pstmt.setString(4, p.getGender());
+            pstmt.setDouble(5, p.getDob());
+            pstmt.setDouble(6, getTodayMillisecondsWithTime());
+            pstmt.setString(7, DYNAMIN_DATA[0]);
 
             pstmt.executeUpdate();
 
@@ -406,8 +431,8 @@ public class DbDAO {
         }
         makeNewBillingInfo(p); // When patient Check-In, billing information is created automatically.
     }
-    
-    public void makeNewBillingInfo(Patient p){
+
+    public void makeNewBillingInfo(Patient p) {
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
@@ -415,7 +440,7 @@ public class DbDAO {
             pstmt = connect.prepareStatement(MAKE_NEW_BILLING);
 
             pstmt.setInt(1, Integer.parseInt(p.id));
-            pstmt.setDouble(2, getTodayMilliseconds());
+            pstmt.setDouble(2, getTodayMillisecondsWithTime());
 
             pstmt.executeUpdate();
 
@@ -426,6 +451,33 @@ public class DbDAO {
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
+    }
+    
+    public List<DynamicInfo> searchPatientInDynamic(String status){
+        if (status == null || "".equals(status)) {
+            status = "%";
+        }
+        List<DynamicInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
+            pstmt.setString(1, status);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                DynamicInfo d = new DynamicInfo();
+                d.buildDynamicInfo(rs);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
     }
 
 }

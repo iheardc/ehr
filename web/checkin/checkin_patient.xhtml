@@ -68,9 +68,10 @@
                         </b:column>
 
                         <b:column col-md="12" class="form-horizontal">
+                            
                             <div class="form-group">
 
-                                <p:dataTable var="p" value="#{patientBean.findList}" id="patientData" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped" >
+                                <p:dataTable var="p" value="#{patientBean.findList}" id="patientData" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped"  >
 
                                     <p:column headerText="ID">
                                         <h:outputText value="#{p.id}" />
@@ -103,12 +104,27 @@
 
                             <b:column col-md="11" offset-md="1">
 
+                                <h3>View Demographic</h3>
+                                <hr></hr>
+                                <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="View #{patientBean.selectedP.name}'s Detail" title="View" class="btn btn-primary">
+                                    <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->
+                                </p:commandButton>
+
+
+                            </b:column>
+                            
+                            <br></br>
+
+                            <b:column col-md="11" offset-md="1">
+
                                 <h3>Remaining Balance</h3>
                                 <hr></hr>
 
 
 
                             </b:column>
+                            
+                            <br></br>
 
                             <b:column col-md="11" offset-md="1">
 
@@ -119,16 +135,6 @@
 
                             </b:column>
 
-                            <b:column col-md="11" offset-md="1">
-
-                                <h3>View Demographic</h3>
-                                <hr></hr>
-                                <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="View" title="View" class="btn btn-primary">
-                                    <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->
-                                </p:commandButton>
-
-
-                            </b:column>
                         </h:form>
 
                         <br></br>
