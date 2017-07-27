@@ -36,11 +36,22 @@ public class triageBean implements Serializable {
     // View more information when patient Check-In
     boolean isShowMoreInfo;
     
+    // Enter Chief Complaint
+    // The items currently available for selection
+    private List<SynomedCT> scodeItems = new ArrayList<SynomedCT>();
+    // Current selected specialty
+    private List<SynomedCT> findScodeList;
+    // All the items available in the application
+    private List<SynomedCT> scodeAllItems = new ArrayList<SynomedCT>();
+    
     
     // Find Doctor
     String findDocName, findDocSpecialty;
     List<Employee> findDocList;
     Employee selectedDoc;
+    
+    Double temperature, weight, spo2;
+    String bloodPressure;
     
     
     public void findDynaPatient() {
@@ -119,6 +130,7 @@ public class triageBean implements Serializable {
         isShowWFNITable = false;
         findDocList = null;
         selectedDoc = null;
+        setAllScode();
     }
 
     public void resetFindItem() {
@@ -128,6 +140,30 @@ public class triageBean implements Serializable {
         patientStatus = null;
         findDocName = null;
         findDocSpecialty = null;
+    }
+    
+    private void setAllScode(){
+        
+        scodeItems = new ArrayList<SynomedCT>();
+        findScodeList = new ArrayList<SynomedCT>();
+        scodeAllItems = new ArrayList<SynomedCT>();
+        
+        scodeAllItems = SynomedService.getAllList();
+        scodeItems.addAll(scodeAllItems);
+    }
+
+    public List<SynomedCT> scodeCompleteItem(String query) {
+        if(findScodeList == null){
+            findScodeList = new ArrayList<>();
+        }
+        query = query.toLowerCase();
+        List<SynomedCT> filteredList = new ArrayList<SynomedCT>();
+        for (SynomedCT item : scodeAllItems) {
+            if (item.isContain(query) && !findScodeList.contains(item)) {
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
     }
 
     public Patient getSelectedP() {
@@ -225,6 +261,64 @@ public class triageBean implements Serializable {
     public void setSelectedDoc(Employee selectedDoc) {
         this.selectedDoc = selectedDoc;
     }
+
+    public List<SynomedCT> getScodeItems() {
+        return scodeItems;
+    }
+
+    public void setScodeItems(List<SynomedCT> scodeItems) {
+        this.scodeItems = scodeItems;
+    }
+
+    public List<SynomedCT> getFindScodeList() {
+        return findScodeList;
+    }
+
+    public void setFindScodeList(List<SynomedCT> findScodeList) {
+        this.findScodeList = findScodeList;
+    }
+
+    public List<SynomedCT> getScodeAllItems() {
+        return scodeAllItems;
+    }
+
+    public void setScodeAllItems(List<SynomedCT> scodeAllItems) {
+        this.scodeAllItems = scodeAllItems;
+    }
+
+    public Double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Double temperature) {
+        this.temperature = temperature;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public Double getSpo2() {
+        return spo2;
+    }
+
+    public void setSpo2(Double spo2) {
+        this.spo2 = spo2;
+    }
+
+    public String getBloodPressure() {
+        return bloodPressure;
+    }
+
+    public void setBloodPressure(String bloodPressure) {
+        this.bloodPressure = bloodPressure;
+    }
+    
+    
     
     
     

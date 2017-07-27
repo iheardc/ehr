@@ -179,19 +179,34 @@
 
                                     <h3>Enter Chief Complaint</h3>
                                     <hr></hr>
-<!--                                    <h:form id="chiefComplaintForm">
+                                    <h:form id="chiefComplaintForm">
                                         <b:column col-md="12" class="form-horizontal">
                                             <div class="form-group">
-                                                <p:outputLabel for="chief" value="Enter Chief Complaint" class="col-sm-2 control-label"></p:outputLabel>
-                                                <b:column col-sm="10">
-                                                    <p:inputText id="chief" autocomplete="off" value="#{triageBean.findDocName}" class="form-control" placeholder="Enter SYNOMED-CT code or Description" type="text"></p:inputText>
-                                                </b:column>
+                                                <p:outputLabel value="Enter Chief Complaint" class="col-sm-2 control-label"></p:outputLabel>
+                                                <!--<b:column col-sm="10">-->
+                                                    <!--<p:inputText id="chief" autocomplete="off" value="#{triageBean.findDocName}" class="form-control" placeholder="Enter SYNOMED-CT code or Description" type="text"></p:inputText>-->
+                                                    <p:autoComplete multiple="true"
+                                                                    value="#{triageBean.findScodeList}" converter="synomedConverter"
+                                                                    completeMethod="#{triageBean.scodeCompleteItem}" var="it"
+                                                                    itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                                    class="col-sm-10">
+                                                        <p:ajax event="itemSelect"/>
+                                                        <p:ajax event="itemUnselect" />
+                                                        <p:column style="width: 30%;">
+                                                            <h:outputText value="#{it.code}" />
+                                                        </p:column>
+                                                        <p:column style="width: 70%;">
+                                                            <h:outputText value="#{it.description}" />
+                                                        </p:column>
+                                                    </p:autoComplete>
+                                                <!--</b:column>-->
+
                                             </div>
                                         </b:column>
-                                        
-                                        
-                                        
-                                    </h:form>-->
+
+
+
+                                    </h:form>
 
 
 
@@ -201,7 +216,47 @@
 
                                     <h3>Enter Vital Sign</h3>
                                     <hr></hr>
-
+                                    
+                                    <h:form id="vitalForm">
+                                        
+                                        
+                                        <b:column col-md="12" class="form-horizontal">
+                                            <div class="form-group">
+                                                <p:outputLabel for="temperature" value="Temperature" class="col-sm-2 control-label"></p:outputLabel>
+                                                <b:column col-sm="6">
+                                                    <p:inputMask id="temperature" autocomplete="off" value="#{triageBean.temperature}" class="form-control" mask="99.99" placeholder="Temperature"></p:inputMask>
+                                                </b:column>
+                                            </div>
+                                        </b:column>
+                                        
+                                        <b:column col-md="12" class="form-horizontal">
+                                            <div class="form-group">
+                                                <p:outputLabel for="pressure" value="Blood Pressure" class="col-sm-2 control-label"></p:outputLabel>
+                                                <b:column col-sm="6">
+                                                    <p:inputMask id="pressure" autocomplete="off" value="#{triageBean.bloodPressure}" class="form-control" mask="999/999" placeholder="Blood Pressure"></p:inputMask>
+                                                </b:column>
+                                            </div>
+                                        </b:column>
+                                        
+                                        <b:column col-md="12" class="form-horizontal">
+                                            <div class="form-group">
+                                                <p:outputLabel for="weight" value="Weight" class="col-sm-2 control-label"></p:outputLabel>
+                                                <b:column col-sm="6">
+                                                    <p:inputMask id="weight" autocomplete="off" value="#{triageBean.weight}" class="form-control" mask="999.99" placeholder="Weight"></p:inputMask>
+                                                </b:column>
+                                            </div>
+                                        </b:column>
+                                        
+                                        <b:column col-md="12" class="form-horizontal">
+                                            <div class="form-group">
+                                                <p:outputLabel for="spo2" value="SpO2" class="col-sm-2 control-label"></p:outputLabel>
+                                                <b:column col-sm="6">
+                                                    <p:inputMask id="spo2" autocomplete="off" value="#{triageBean.spo2}" class="form-control" mask="999" placeholder="SpO2"></p:inputMask>
+                                                </b:column>
+                                            </div>
+                                        </b:column>
+                                        
+                                    </h:form>
 
 
                                 </b:column>
