@@ -38,11 +38,6 @@ public class employeeBean implements Serializable {
     String msg;
     boolean inUserAccnt = false;
 
-    // Find Doctor
-    String findDocName, findDocSpecialty;
-    List<Employee> findDocList;
-    Employee selectedDoc;
-
     public String login() {
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage message = null;
@@ -94,27 +89,6 @@ public class employeeBean implements Serializable {
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
 
-    public void findDoctor() {
-
-        DbDAO dao = new DbDAO();
-        findDocList = dao.findDoctor(findDocName, findDocSpecialty);
-
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        FacesMessage message;
-        if (findDocList.size() > 0) {
-            message = new FacesMessage("Search ", "There are " + findDocList.size() + " results.");
-        } else {
-            message = new FacesMessage("Search ", "There are no matching results.");
-        }
-        FacesContext.getCurrentInstance().addMessage(null, message);
-
-    }
-
-    public void selectDoctor() {
-        
-        
-    }
-
     public void resetAllItem() {
         // Find Employee
         findList = null;
@@ -123,8 +97,6 @@ public class employeeBean implements Serializable {
         password = null;
         page = null;
         msg = null;
-        findDocList = null;
-        selectedDoc = null;
         resetFindItem();
     }
 
@@ -135,8 +107,6 @@ public class employeeBean implements Serializable {
         findEmail = null;
         findRole = null;
         findSpecialty = null;
-        findDocName = null;
-        findDocSpecialty = null;
     }
 
     public void setEm(Employee em) {
@@ -249,38 +219,6 @@ public class employeeBean implements Serializable {
 
     public String getPage() {
         return page;
-    }
-
-    public String getFindDocName() {
-        return findDocName;
-    }
-
-    public void setFindDocName(String findDocName) {
-        this.findDocName = findDocName;
-    }
-
-    public String getFindDocSpecialty() {
-        return findDocSpecialty;
-    }
-
-    public void setFindDocSpecialty(String findDocSpecialty) {
-        this.findDocSpecialty = findDocSpecialty;
-    }
-
-    public List<Employee> getFindDocList() {
-        return findDocList;
-    }
-
-    public void setFindDocList(List<Employee> findDocList) {
-        this.findDocList = findDocList;
-    }
-
-    public Employee getSelectedDoc() {
-        return selectedDoc;
-    }
-
-    public void setSelectedDoc(Employee selectedDoc) {
-        this.selectedDoc = selectedDoc;
     }
 
 }
