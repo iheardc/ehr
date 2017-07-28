@@ -20,7 +20,8 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class signinBean implements Serializable {
 
-    String email;
+    String id;
+//    String email;
     String password;
     String msg;
     String page;
@@ -53,40 +54,40 @@ public class signinBean implements Serializable {
         boolean loggedIn = false;
         msg = "";
         DbDAO dao = new DbDAO();
-        if ("patient".equals(loginType)) {
-                p = new Patient(email, password);
-                dao.loginPatient(p);
-                if (p.errormsg == null || p.errormsg.equals("")) {
-                    // can be invalidate
-                    msg = "Wrong password or user name";
-                    password = "";
-                    email = "";
-                    p = null;
-                    loggedIn = false;
-                    message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    context.addCallbackParam("loggedIn", loggedIn);
-                    return "";
-                } else {
-                    page = "home";
-                    loggedIn = true;
-                    context.addCallbackParam("loggedIn", loggedIn);
-                    FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-                    message = new FacesMessage("Welcome ", p.fn);
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    isPatientLogin = true;
-                    return "/home.xhtml?faces-redirect=true";
-                }
-
-        } 
-        else {
+//        if ("patient".equals(loginType)) {
+//                p = new Patient(email, password);
+//                dao.loginPatient(p);
+//                if (p.errormsg == null || p.errormsg.equals("")) {
+//                    // can be invalidate
+//                    msg = "Wrong password or user name";
+//                    password = "";
+//                    email = "";
+//                    p = null;
+//                    loggedIn = false;
+//                    message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                    context.addCallbackParam("loggedIn", loggedIn);
+//                    return "";
+//                } else {
+//                    page = "home";
+//                    loggedIn = true;
+//                    context.addCallbackParam("loggedIn", loggedIn);
+//                    FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+//                    message = new FacesMessage("Welcome ", p.fn);
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                    isPatientLogin = true;
+//                    return "/home.xhtml?faces-redirect=true";
+//                }
+//
+//        } 
+//        else {
             page = "homeEmployee";
-            em = new Employee(email, password);
+            em = new Employee(id, password);
             dao.loginEmployee(em);
             if (em.errormsg == null || em.errormsg.equals("")) {
                 msg = "Wrong password or user name";
                 password = "";
-                email = "";
+//                email = "";
                 em = null;
                 loggedIn = false;
                 message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
@@ -106,16 +107,23 @@ public class signinBean implements Serializable {
                 return "/home.xhtml?faces-redirect=true";
             }
             
-        }
+//        }
     }
     
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(String id) {
+        this.id = id;
     }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public String getPassword() {
         return password;

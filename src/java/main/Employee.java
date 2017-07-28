@@ -29,8 +29,8 @@ public class Employee {
 
     }
 
-    public Employee(String email, String password) {
-        this.email = email;
+    public Employee(String id, String password) {
+        this.id = id;
         this.password = password;
     }
 //    public Employee(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String pic,
@@ -64,8 +64,8 @@ public class Employee {
             String address, String city, String state, String zip, String country,
             String accessToken, int authority, List<String> specialtyList) {
 
-        this(email, password);
-        this.id = id;
+        this(id, password);
+        this.email = email;
         this.fn = fn;
         this.ln = ln;
 //        this.name = name;

@@ -25,13 +25,13 @@
                 <b:column col-md="6" offset-md="3">
                     <div class="panel panel-login">
                         <div class="panel-heading">
-                            <h:form class="row">
-                                <b:column col-xs="6"><!--class="active" id="login-form-link"-->
-                                    <p:commandButton value="Patient"  action="#{signinBean.selectlogin('patient')}" immediate="true" />
-                                </b:column>
-                                <b:column col-xs="6"><!--id="register-form-link-->
-                                    <p:commandButton value="Clinician"  action="#{signinBean.selectlogin('clinician')}" immediate="true" />
-                                </b:column>
+                            <h:form class="row" id="loginmessage">
+                                <!--<b:column col-xs="6">class="active" id="login-form-link"-->
+                                    <!--<p:commandButton value="Patient" class="active" id="login-form-link" action="#{signinBean.selectlogin('patient')}" immediate="true" />-->
+                                <!--</b:column>-->
+                                <!--<b:column col-xs="6">id="register-form-link-->
+                                    Please Login
+                                <!--</b:column>-->
                             </h:form>
                             <hr></hr>
                         </div>
@@ -40,7 +40,7 @@
                                 <b:column col-lg="12"> 
                                     <h:form id="login-form" role="form">
                                         <div class="form-group">
-                                            <p:inputText id="email" class="form-control" placeholder="Username" autocomplete="off" value="#{signinBean.email}" required="true"/>
+                                            <p:inputText id="id" class="form-control" placeholder="ID" autocomplete="off" value="#{signinBean.id}" required="true"/>
                                         </div>
                                         <div class="form-group">
                                             <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
@@ -58,7 +58,7 @@
                                                 <b:column col-lg="12">
                                                     <div class="text-center">
                                                         <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
-                                                        <p:commandButton process="@this" value="temp login" action="#{menuBean.redirectHome()}" class="form-control btn btn-login" immediate="true" />
+<!--                                                        <p:commandButton process="@this" value="temp login" action="#{menuBean.redirectHome()}" class="form-control btn btn-login" immediate="true" />-->
                                                     </div>
                                                 </b:column>
                                             </div>
@@ -97,9 +97,16 @@
                 -moz-transition: all 0.1s linear;
                 transition: all 0.1s linear;
             }
-            .panel-login>.panel-heading a.active{
-                color: #029f5b;
-                font-size: 18px;
+            .active{
+                font-size:18px;
+                width:274px;
+                height:50px;
+                
+            }
+            .actives{
+                font-size:18px;
+                width:274px;
+                height:50px;
             }
             .panel-login>.panel-heading hr{
                 margin-top: 10px;
@@ -172,8 +179,12 @@
                 background-color: #1CA347;
                 border-color: #1CA347;
             }
+            #loginmessage{
+                font-size:25px;
+                color:gray;
+            }
         </style>
-     
+        
     </ui:define>
 
 </ui:composition>
