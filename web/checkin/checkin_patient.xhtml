@@ -13,7 +13,7 @@
 
     <ui:define name="title">Register page</ui:define>
     <ui:define name="content"> 
-        
+
         <f:metadata>
             <f:viewAction action="#{patientBean.reset()}"/>
         </f:metadata>
@@ -46,7 +46,19 @@
                             <div class="form-group">
                                 <p:outputLabel for="name" value="Name" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="6">
-                                    <p:inputText value="#{patientBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>
+                                    <!--<p:inputText value="#{patientBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>-->
+                                    <p:autoComplete id="name"
+                                                    value="#{patientBean.findName}" converter="patientConverter"
+                                                    completeMethod="#{patientBean.patientCompleteItem}" var="it"
+                                                    itemLabel="#{it.name}" itemValue="#{it}" forceSelection="false"
+                                                    >
+                                        <p:ajax event="itemSelect"/>
+                                        <p:ajax event="itemUnselect" />
+                                        <!--<p:ajax event="change" listener="patientBean.changeFindNameListener"/>-->
+                                        <p:column >
+                                            <h:outputText value="#{it.name}" />
+                                        </p:column>
+                                    </p:autoComplete>
                                 </b:column>
                             </div>
                         </b:column>
@@ -72,7 +84,7 @@
                         </b:column>
 
                         <b:column col-md="12" class="form-horizontal">
-                            
+
                             <div class="form-group">
 
                                 <p:dataTable var="p" value="#{patientBean.findList}" id="patientData" paginator="true" rows="10"
@@ -81,16 +93,13 @@
                                     <p:column headerText="ID" style="width:10%">
                                         <h:outputText value="#{p.id}" />
                                     </p:column>
-                                    <p:column headerText="Email" style="width:20%">
-                                        <h:outputText value="#{p.email}" />
-                                    </p:column>
-                                    <p:column headerText="Name" style="width:20%">
+                                    <p:column headerText="Name" style="width:30%">
                                         <h:outputText value="#{p.name}" />
                                     </p:column>
                                     <p:column headerText="Gender" style="width:20%">
                                         <h:outputText value="#{p.gender}" />
                                     </p:column>
-                                    <p:column headerText="Date of Birth" style="width:20%">
+                                    <p:column headerText="Date of Birth" style="width:30%">
                                         <h:outputText value="#{p.dobString}" />
                                     </p:column>
                                     <p:column style="width:10%; text-align: center" headerText="Select">
@@ -117,7 +126,7 @@
 
 
                             </b:column>
-                            
+
                             <br></br>
 
                             <b:column col-md="11" offset-md="1">
@@ -128,7 +137,7 @@
 
 
                             </b:column>
-                            
+
                             <br></br>
 
                             <b:column col-md="11" offset-md="1">

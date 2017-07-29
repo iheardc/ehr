@@ -112,24 +112,25 @@
 
                     <h:form id="result">
 
-                        <p:dataTable var="em" value="#{employeeBean.findList}" id="resultTable" paginator="true" rows="10" resizableColumns="true" tableStyle="width:auto;"  tableStyleClass="table table-striped">
+                        <p:dataTable var="em" value="#{employeeBean.findList}" id="resultTable" paginator="true" rows="10"
+                                     resizableColumns="true" tableStyleClass="table table-striped">
 
-                            <p:column headerText="Id">
+                            <p:column headerText="Employee Id" style="width:10%;">
                                 <h:outputText value="#{em.id}" />
                             </p:column>
                             <p:column headerText="Name">
-                                <h:outputText value="#{em.name}" />
+                                <h:outputText value="#{em.name}" style="width:20%;" />
                             </p:column>
-                            <p:column headerText="Email">
+                            <p:column headerText="Email" style="width:20%;">
                                 <h:outputText value="#{em.email}" />
                             </p:column>
-                            <p:column headerText="Role">
+                            <p:column headerText="Role" style="width:10%;">
                                 <h:outputText value="#{em.role}" />
                             </p:column>
-                            <p:column headerText="Specialty">
+                            <p:column headerText="Specialty" style="width:20%;">
                                 <h:outputText value="#{em.specialty}" />
                             </p:column>
-                            <p:column style="width:32px;text-align: center" headerText="Detail">
+                            <p:column style="width:10%; text-align: center" headerText="Detail">
                                 <p:commandButton update=":result:emDetail" oncomplete="PF('emDialog').show()" icon="ui-icon-search" title="View">
                                     <f:setPropertyActionListener value="#{em}" target="#{employeeBean.selectedEm}" />
                                 </p:commandButton>

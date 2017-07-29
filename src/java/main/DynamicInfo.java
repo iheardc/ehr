@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -24,9 +25,16 @@ public class DynamicInfo {
     Employee n;
     Double date;
     
+    // Cheif Complaint
+    List<SynomedCT> cheifComplaintList;
+    
+    // Vital Sign
+    String temperature, spo2, weight, bloodPressure;
+    
     // Injection
-    String injectionMedicine;
-    Double injectionDose;
+    ArrayList<String[]> injectionList;
+    
+    String errormsg;
 
     public DynamicInfo() {
         p = new Patient();
@@ -34,16 +42,20 @@ public class DynamicInfo {
         n = new Employee();
     }
 
-    public DynamicInfo(String id, String status, Patient p, Employee doc, Employee n, Double date, String injectionMedicine, Double injectionDose) {
-        this();
+    public DynamicInfo(String id, String status, Patient p, Employee doc, Employee n, Double date, List<SynomedCT> cheifComplaintList, String temperature, String spo2, String weight, String bloodPressure, ArrayList<String[]> injectionList, String errormsg) {
         this.id = id;
         this.status = status;
         this.p = p;
         this.doc = doc;
         this.n = n;
         this.date = date;
-        this.injectionMedicine = injectionMedicine;
-        this.injectionDose = injectionDose;
+        this.cheifComplaintList = cheifComplaintList;
+        this.temperature = temperature;
+        this.spo2 = spo2;
+        this.weight = weight;
+        this.bloodPressure = bloodPressure;
+        this.injectionList = injectionList;
+        this.errormsg = errormsg;
     }
 
     public ArrayList<String> getKeySet(ResultSet rs) {
@@ -126,13 +138,21 @@ public class DynamicInfo {
                 if (columnName.contains(column)) {
                     this.n.ln = rs.getString(column);
                 }
-                column = "injeaction_medicine";
+                column = "temperature";
                 if (columnName.contains(column)) {
-                    this.injectionMedicine = rs.getString(column);
+                    this.temperature = rs.getString(column);
                 }
-                column = "injection_dose";
+                column = "SPO2";
                 if (columnName.contains(column)) {
-                    this.injectionDose = rs.getDouble(column);
+                    this.spo2 = rs.getString(column);
+                }
+                column = "weight";
+                if (columnName.contains(column)) {
+                    this.weight = rs.getString(column);
+                }
+                column = "blood_pressure";
+                if (columnName.contains(column)) {
+                    this.bloodPressure = rs.getString(column);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -210,22 +230,63 @@ public class DynamicInfo {
         this.date = date;
     }
 
-    public String getInjectionMedicine() {
-        return injectionMedicine;
+    public List<SynomedCT> getCheifComplaintList() {
+        return cheifComplaintList;
     }
 
-    public void setInjectionMedicine(String injectionMedicine) {
-        this.injectionMedicine = injectionMedicine;
+    public void setCheifComplaintList(List<SynomedCT> cheifComplaintList) {
+        this.cheifComplaintList = cheifComplaintList;
     }
 
-    public Double getInjectionDose() {
-        return injectionDose;
+    public String getTemperature() {
+        return temperature;
     }
 
-    public void setInjectionDose(Double injectionDose) {
-        this.injectionDose = injectionDose;
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
     }
 
+    public String getSpo2() {
+        return spo2;
+    }
+
+    public void setSpo2(String spo2) {
+        this.spo2 = spo2;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getBloodPressure() {
+        return bloodPressure;
+    }
+
+    public void setBloodPressure(String bloodPressure) {
+        this.bloodPressure = bloodPressure;
+    }
+
+    public ArrayList<String[]> getInjectionList() {
+        return injectionList;
+    }
+
+    public void setInjectionList(ArrayList<String[]> injectionList) {
+        this.injectionList = injectionList;
+    }
+
+    public String getErrormsg() {
+        return errormsg;
+    }
+
+    public void setErrormsg(String errormsg) {
+        this.errormsg = errormsg;
+    }
+    
+    
     
     
 }

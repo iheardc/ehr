@@ -8,11 +8,13 @@ package main;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -21,9 +23,9 @@ import org.primefaces.context.RequestContext;
 @Named(value = "triageBean")
 @SessionScoped
 public class triageBean implements Serializable {
-    
+
     String patientStatus;
-    
+
     private List<DynamicInfo> findWNFList;
     private List<DynamicInfo> findWNFIList;
     private DynamicInfo selectedD;
@@ -31,10 +33,10 @@ public class triageBean implements Serializable {
     // View result table when click Search
     boolean isShowWFNTable;
     boolean isShowWFNITable;
-    
+
     boolean isShowAssignInfo;
     boolean isShowInjectionInfo;
-    
+
     // Enter Chief Complaint
     // The items currently available for selection
     private List<SynomedCT> scodeItems = new ArrayList<SynomedCT>();
@@ -42,17 +44,17 @@ public class triageBean implements Serializable {
     private List<SynomedCT> findScodeList;
     // All the items available in the application
     private List<SynomedCT> scodeAllItems = new ArrayList<SynomedCT>();
-    
-    
+
     // Find Doctor
     String findDocName, findDocSpecialty;
     List<Employee> findDocList;
     Employee selectedDoc;
-    
-    Double temperature, weight, spo2;
-    String bloodPressure;
-    
-    
+    // All the items available in the application
+    private List<String> specAllItems = new ArrayList<String>();
+    private List<Employee> allEmployeeNames = new ArrayList<Employee>();
+
+    String temperature, weight, spo2, bloodPressure;
+
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
         List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus);
@@ -65,19 +67,19 @@ public class triageBean implements Serializable {
             message = new FacesMessage("Search ", "There are no matching results.");
         }
         FacesContext.getCurrentInstance().addMessage(null, message);
-        
+
         findWNFList = new ArrayList<DynamicInfo>();
         findWNFIList = new ArrayList<DynamicInfo>();
-        for(DynamicInfo dy : dList){
-            if(DbDAO.DYNAMIN_DATA[0].equals(dy.status)){
+        for (DynamicInfo dy : dList) {
+            if (DbDAO.DYNAMIN_DATA[0].equals(dy.status)) {
                 findWNFList.add(dy);
-            }else if(DbDAO.DYNAMIN_DATA[1].equals(dy.status)){
+            } else if (DbDAO.DYNAMIN_DATA[1].equals(dy.status)) {
                 findWNFIList.add(dy);
             }
         }
         isShowWFNTable = findWNFList.size() > 0;
         isShowWFNITable = findWNFIList.size() > 0;
-        
+
 //        resetFindItem();
         RequestContext.getCurrentInstance().update("form");
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
@@ -104,7 +106,6 @@ public class triageBean implements Serializable {
         DbDAO dao = new DbDAO();
         findDocList = dao.findDoctor(findDocName, findDocSpecialty);
 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
         if (findDocList.size() > 0) {
             message = new FacesMessage("Search ", "There are " + findDocList.size() + " results.");
@@ -114,18 +115,78 @@ public class triageBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
 
     }
+    
+    public void onDoctorSelectRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Doctor Selected", ((Employee) event.getObject()).getName());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 
-    public void selectDoctor() {
-        
-        
+    public String assignDoctor() {
+        boolean isEnterChiefComplaint;
+        if (findScodeList == null) {
+            isEnterChiefComplaint = false;
+        } else {
+            isEnterChiefComplaint = findScodeList.size() > 0;
+        }
+        boolean isEnterAssignDoc = selectedDoc != null;
+        if (isEnterChiefComplaint && isEnterAssignDoc) {
+
+            ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+            signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+            DbDAO dao = new DbDAO();
+            dao.assignDoctor(selectedD, selectedDoc, sBean.em, findScodeList, temperature, spo2, weight, bloodPressure);
+
+            if (selectedD.errormsg.length() > 0) {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", selectedD.errormsg);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return "";
+            } else { // success
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+                FacesMessage message = new FacesMessage("Successfylly assigned ", selectedD.p.getName() + " to " + selectedDoc.getName());
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                reset();
+                return menuBean.triage();
+            }
+
+        } else {
+            if (!isEnterChiefComplaint) {
+                FacesMessage message = new FacesMessage("Error ", "Cheif Complaint");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            if (!isEnterAssignDoc) {
+                FacesMessage message = new FacesMessage("Error ", "Doctor");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            return "";
+        }
     }
-    
-    public String assignDoctor(){
+
+    public String finishInjection() {
         return "";
     }
-    
-    public String finishInjection(){
-        return "";
+
+    public List<String> specCompleteItem(String query) {
+        query = query.toLowerCase();
+        List<String> filteredList = new ArrayList<String>();
+        for (String item : specAllItems) {
+            if (item.toLowerCase().startsWith(query)) {
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
+    }
+
+    public List<Employee> employeeCompleteItem(String query) {
+        query = query.toLowerCase();
+        findDocName = query;
+        List<Employee> filteredList = new ArrayList<>();
+        for (Employee item : allEmployeeNames) {
+            if (item.isSameName(query)) {
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
     }
 
     public void reset() {
@@ -143,8 +204,8 @@ public class triageBean implements Serializable {
         isShowWFNITable = false;
         selectedD = null;
     }
-    
-    public void resetMoreForm(){
+
+    public void resetMoreForm() {
         findDocName = null;
         findDocSpecialty = null;
         findDocList = null;
@@ -153,21 +214,23 @@ public class triageBean implements Serializable {
         weight = null;
         spo2 = null;
         bloodPressure = null;
+        allEmployeeNames = EmployeeService.getRoleList("doctor");
         setAllScode();
+        setAllSpecialty();
     }
-    
-    private void setAllScode(){
-        
+
+    private void setAllScode() {
+
         scodeItems = new ArrayList<SynomedCT>();
         findScodeList = new ArrayList<SynomedCT>();
         scodeAllItems = new ArrayList<SynomedCT>();
-        
+
         scodeAllItems = SynomedService.getAllList();
         scodeItems.addAll(scodeAllItems);
     }
 
     public List<SynomedCT> scodeCompleteItem(String query) {
-        if(findScodeList == null){
+        if (findScodeList == null) {
             findScodeList = new ArrayList<>();
         }
         query = query.toLowerCase();
@@ -178,6 +241,70 @@ public class triageBean implements Serializable {
             }
         }
         return filteredList;
+    }
+
+    private void setAllSpecialty() {
+        findDocSpecialty = null;
+        specAllItems = new ArrayList<String>();
+
+        specAllItems.add("Allergy and immunology");
+        specAllItems.add("Adolescent medicine");
+        specAllItems.add("Anaesthesiology");
+        specAllItems.add("Aerospace medicine");
+        specAllItems.add("Pathology");
+        specAllItems.add("Cardiology");
+        specAllItems.add("Cardiothoracic surgery");
+        specAllItems.add("Child and adolescent psychiatry and psychotherapy");
+        specAllItems.add("Clinical neurophysiology");
+        specAllItems.add("Colon and Rectal Surgery");
+        specAllItems.add("Dermatology-Venereology");
+        specAllItems.add("Emergency medicine");
+        specAllItems.add("Endocrinology");
+        specAllItems.add("Gastroenterology");
+        specAllItems.add("General practice");
+        specAllItems.add("Geriatrics");
+        specAllItems.add("Obstetrics and gynaecology");
+        specAllItems.add("Health informatics");
+        specAllItems.add("Hospice and palliative medicine");
+        specAllItems.add("Infectious disease");
+        specAllItems.add("Internal medicine");
+        specAllItems.add("Interventional radiology");
+        specAllItems.add("Vascular medicine");
+        specAllItems.add("Microbiology");
+        specAllItems.add("Nephrology");
+        specAllItems.add("Neurology");
+        specAllItems.add("Neurosurgery");
+        specAllItems.add("Nuclear medicine");
+        specAllItems.add("Occupational medicine");
+        specAllItems.add("Ophthalmology");
+        specAllItems.add("Orthodontics");
+        specAllItems.add("Orthopaedics");
+        specAllItems.add("Oral and maxillofacial surgery");
+        specAllItems.add("Otorhinolaryngology");
+        specAllItems.add("Paediatrics");
+        specAllItems.add("Paediatric allergology");
+        specAllItems.add("Paediatric cardiology");
+        specAllItems.add("Paediatric endocrinology and diabetes");
+        specAllItems.add("Paediatric gastroenterology, hepatology and nutrition");
+        specAllItems.add("Paediatric haematology and oncology");
+        specAllItems.add("Paediatric infectious diseases");
+        specAllItems.add("Neonatology");
+        specAllItems.add("Paediatric nephrology");
+        specAllItems.add("Paediatric respiratory medicine");
+        specAllItems.add("Paediatric rheumatology");
+        specAllItems.add("Paediatric surgery");
+        specAllItems.add("Physical medicine and rehabilitation");
+        specAllItems.add("Plastic, reconstructive and aesthetic surgery");
+        specAllItems.add("Pulmonology");
+        specAllItems.add("Psychiatry");
+        specAllItems.add("Public Health");
+        specAllItems.add("Radiation Oncology");
+        specAllItems.add("Radiology");
+        specAllItems.add("Sports medicine");
+        specAllItems.add("Neuroradiology");
+        specAllItems.add("General surgery");
+        specAllItems.add("Urology");
+        specAllItems.add("Vascular surgery");
     }
 
     public List<DynamicInfo> getFindWNFList() {
@@ -249,6 +376,9 @@ public class triageBean implements Serializable {
     }
 
     public void setFindDocName(String findDocName) {
+        if (findDocName == null) {
+            return;
+        }
         this.findDocName = findDocName;
     }
 
@@ -266,6 +396,14 @@ public class triageBean implements Serializable {
 
     public void setFindDocList(List<Employee> findDocList) {
         this.findDocList = findDocList;
+    }
+
+    public List<Employee> getAllEmployeeNames() {
+        return allEmployeeNames;
+    }
+
+    public void setAllEmployeeNames(List<Employee> allEmployeeNames) {
+        this.allEmployeeNames = allEmployeeNames;
     }
 
     public Employee getSelectedDoc() {
@@ -300,27 +438,27 @@ public class triageBean implements Serializable {
         this.scodeAllItems = scodeAllItems;
     }
 
-    public Double getTemperature() {
+    public String getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Double temperature) {
+    public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
 
-    public Double getWeight() {
+    public String getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 
-    public Double getSpo2() {
+    public String getSpo2() {
         return spo2;
     }
 
-    public void setSpo2(Double spo2) {
+    public void setSpo2(String spo2) {
         this.spo2 = spo2;
     }
 
@@ -331,12 +469,17 @@ public class triageBean implements Serializable {
     public void setBloodPressure(String bloodPressure) {
         this.bloodPressure = bloodPressure;
     }
-    
-    public boolean getIsShowMoreInfo(){
+
+    public boolean getIsShowMoreInfo() {
         return isShowAssignInfo || isShowInjectionInfo;
     }
-    
-    
-    
-    
+
+    public List<String> getSpecAllItems() {
+        return specAllItems;
+    }
+
+    public void setSpecAllItems(List<String> specAllItems) {
+        this.specAllItems = specAllItems;
+    }
+
 }

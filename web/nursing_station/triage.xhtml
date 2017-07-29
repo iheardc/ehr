@@ -48,36 +48,6 @@
                             </div>
                         </b:column>
 
-                        <!--                        <b:column col-md="12" class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <p:outputLabel for="id" value="ID" class="col-sm-2 control-label"></p:outputLabel>
-                                                        <b:column col-sm="6">
-                                                            <p:inputText value="#{patientBean.findId}" id="id" autocomplete="off" class="form-control" placeholder="Patient ID"></p:inputText>
-                                                        </b:column>
-                                                    </div>
-                                                </b:column>
-                        
-                                                <b:column col-md="12" class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <p:outputLabel for="name" value="Name" class="col-sm-2 control-label"></p:outputLabel>
-                                                        <b:column col-sm="6">
-                                                            <p:inputText value="#{patientBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>
-                                                        </b:column>
-                                                    </div>
-                                                </b:column>
-                        
-                                                <b:column col-md="12" class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
-                                                        <b:column col-sm="6">
-                                                            <p:inputText value="#{patientBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>
-                                                            <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
-                                                                <p:ajax event="dateSelect" listener="#{patientBean.onDateSelect}" />
-                                                            </p:calendar>
-                                                        </b:column>
-                                                    </div>
-                                                </b:column>-->
-
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
                                 <b:column col-md="6" offset-md="2">
@@ -95,6 +65,9 @@
 
                                 <p:dataTable var="d" value="#{triageBean.findWNFList}" id="searchTable1" paginator="true" rows="10"
                                              resizableColumns="true"  tableStyleClass="table table-striped" >
+                                    <f:facet name="header">
+                                        Waiting for Nurse
+                                    </f:facet>
 
                                     <p:column headerText="Patient ID" style="width: 10%">
                                         <h:outputText value="#{d.p.id}" />
@@ -133,6 +106,9 @@
 
                                 <p:dataTable var="d" value="#{triageBean.findWNFIList}" id="searchTable2" paginator="true" rows="10"
                                              resizableColumns="true" tableStyleClass="table table-striped" >
+                                    <f:facet name="header">
+                                        Waiting for Nurse(Injection)
+                                    </f:facet>
 
                                     <p:column headerText="Patient ID" style="width:10%">
                                         <h:outputText value="#{d.p.id}" />
@@ -173,7 +149,7 @@
                         <br></br>
 
                         <div>
-                            <h:form id="assign" rendered="#{triageBean.isShowAssignInfo}">
+                            <b:column id="assign" rendered="#{triageBean.isShowAssignInfo}">
 
                                 <b:column col-md="11" offset-md="1">
 
@@ -185,14 +161,14 @@
                                         <p:outputLabel value="Patient Gender : #{triageBean.selectedD.p.gender} " class="col-sm-6"/>
                                         <p:outputLabel value="Status : #{triageBean.selectedD.statusFull} " class="col-sm-6"/>
                                     </b:column>
-                                    
+
                                 </b:column>
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3>Enter Chief Complaint</h3>
+                                    <h3>Enter Chief Complaint(*)</h3>
                                     <hr></hr>
-                                    <h:form id="chiefComplaintForm">
+                                    <p:column id="chiefComplaintForm">
                                         <b:column col-md="12" class="form-horizontal">
                                             <div class="form-group">
                                                 <p:outputLabel value="Enter Chief Complaint" class="col-sm-2 control-label"></p:outputLabel>
@@ -219,7 +195,7 @@
 
 
 
-                                    </h:form>
+                                    </p:column>
 
 
 
@@ -230,14 +206,14 @@
                                     <h3>Enter Vital Sign</h3>
                                     <hr></hr>
 
-                                    <h:form id="vitalForm">
+                                    <b:column id="vitalForm">
 
 
                                         <b:column col-md="12" class="form-horizontal">
                                             <div class="form-group">
                                                 <p:outputLabel for="temperature" value="Temperature" class="col-sm-2 control-label"></p:outputLabel>
                                                 <b:column col-sm="6">
-                                                    <p:inputMask id="temperature" autocomplete="off" value="#{triageBean.temperature}" class="form-control" mask="99.99" placeholder="Temperature"></p:inputMask>
+                                                    <p:inputMask id="temperature" autocomplete="off" value="#{triageBean.temperature}" class="form-control" mask="99.9" placeholder="Temperature"></p:inputMask>
                                                 </b:column>
                                             </div>
                                         </b:column>
@@ -255,7 +231,7 @@
                                             <div class="form-group">
                                                 <p:outputLabel for="weight" value="Weight" class="col-sm-2 control-label"></p:outputLabel>
                                                 <b:column col-sm="6">
-                                                    <p:inputMask id="weight" autocomplete="off" value="#{triageBean.weight}" class="form-control" mask="999.99" placeholder="Weight"></p:inputMask>
+                                                    <p:inputText id="weight" autocomplete="off" value="#{triageBean.weight}" class="form-control" placeholder="Weight"></p:inputText>
                                                 </b:column>
                                             </div>
                                         </b:column>
@@ -264,27 +240,39 @@
                                             <div class="form-group">
                                                 <p:outputLabel for="spo2" value="SpO2" class="col-sm-2 control-label"></p:outputLabel>
                                                 <b:column col-sm="6">
-                                                    <p:inputMask id="spo2" autocomplete="off" value="#{triageBean.spo2}" class="form-control" mask="999" placeholder="SpO2"></p:inputMask>
+                                                    <p:inputText id="spo2" autocomplete="off" value="#{triageBean.spo2}" class="form-control" placeholder="SpO2"></p:inputText>
                                                 </b:column>
                                             </div>
                                         </b:column>
 
-                                    </h:form>
+                                    </b:column>
 
 
                                 </b:column>
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3>Assign Doctor</h3>
+                                    <h3>Assign Doctor(*)</h3>
                                     <hr></hr>
-                                    <h:form id="assignForm" >
+                                    <div>
 
                                         <b:column col-md="12" class="form-horizontal">
                                             <div class="form-group">
                                                 <p:outputLabel for="doc_name" value="Doctor Name" class="col-sm-2 control-label"></p:outputLabel>
                                                 <b:column col-sm="10">
-                                                    <p:inputText id="doc_name" autocomplete="off" value="#{triageBean.findDocName}" class="form-control" placeholder="Doctor Name" type="text"></p:inputText>
+                                                    <!--<p:inputText id="doc_name" autocomplete="off" value="#{triageBean.findDocName}" class="form-control" placeholder="Doctor Name" type="text"></p:inputText>-->
+                                                    <p:autoComplete id="doc_name"
+                                                                    value="#{triageBean.findDocName}" converter="employeeConverter"
+                                                                    completeMethod="#{triageBean.employeeCompleteItem}" var="it"
+                                                                    itemLabel="#{it.name}" itemValue="#{it}" forceSelection="false"
+                                                                    >
+                                                        <p:ajax event="itemSelect"/>
+                                                        <p:ajax event="itemUnselect" />
+                                                        <!--<p:ajax event="change" listener="patientBean.changeFindNameListener"/>-->
+                                                        <p:column >
+                                                            <h:outputText value="#{it.name}" />
+                                                        </p:column>
+                                                    </p:autoComplete>
                                                 </b:column>
                                             </div>
                                         </b:column>
@@ -296,16 +284,17 @@
                                                                                             </b:column>-->
                                                 <p:autoComplete id="doc_specialty"
                                                                 value="#{triageBean.findDocSpecialty}"
-                                                                completeMethod="#{signupBean.specCompleteItem}"
+                                                                completeMethod="#{triageBean.specCompleteItem}"
                                                                 class="col-sm-10">
                                                 </p:autoComplete>
                                             </div>
                                         </b:column>
 
+
                                         <b:column col-md="12" class="form-horizontal">
                                             <div class="form-group">
                                                 <b:column col-md="6" offset-md="2">
-                                                    <p:commandButton value="Search" title="Search" process="@parent" class="btn btn-default" action="#{triageBean.findDoctor()}" update="searchDocTable" />
+                                                    <p:commandButton value="Search" title="Search" class="btn btn-default" action="#{triageBean.findDoctor()}" update="searchDocTable" />
                                                 </b:column>
                                             </div>
                                         </b:column>
@@ -313,48 +302,56 @@
                                         <b:column col-md="12" class="form-horizontal">
 
                                             <p:dataTable var="doc" value="#{triageBean.findDocList}" id="searchDocTable" paginator="true" rows="10"
-                                                         resizableColumns="true"  tableStyleClass="table table-striped"
+                                                         resizableColumns="true"  tableStyleClass="table table-striped" selectionMode="single"
                                                          selection="#{triageBean.selectedDoc}" rowKey="#{doc.id}">
+                                                <p:ajax event="rowSelect" listener="#{triageBean.onDoctorSelectRowSelect}" />
 
                                                 <p:column headerText="Doctor ID" style="width:10%;">
                                                     <h:outputText value="#{doc.id}" />
                                                 </p:column>
-                                                <p:column headerText="Name" style="width:20%;">
+                                                <p:column headerText="Name" style="width:30%;">
                                                     <h:outputText value="#{doc.name}" />
                                                 </p:column>
                                                 <p:column headerText="Specialty" style="width:60%;">
                                                     <h:outputText value="#{doc.specialty}" />
                                                 </p:column>
-                                                <p:column headerText="Select" selectionMode="single" style="width:10%; text-align:center;"/>
-                                                <!--                                            <p:column style="width:32px;text-align: center" headerText="Select">
-                                                                                                <p:commandButton update=":form:pDetail" title="Select" value="Select" action="#{triageBean.selectDoctor()}">
-                                                                                                    <f:setPropertyActionListener value="#{doc}" target="#{triageBean.selectedDoc}" />
-                                                                                                </p:commandButton>
-                                                                                            </p:column>-->
+                                                <p:columnGroup type="footer">
+                                                    <p:row>
+                                                        <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                                    </p:row>
+                                                </p:columnGroup>
+                                                <!--                                                                                                <p:column headerText="Select" selectionMode="single" style="width:10%; text-align:center;">
+                                                                                                                                                </p:column>-->
+                                                <!--                                                <p:column style="width:10%;text-align: center" headerText="Select">
+                                                                                                    <p:commandButton title="Select" value="Select">
+                                                                                                        <f:setPropertyActionListener value="#{doc}" target="#{triageBean.selectedDoc}" />
+                                                                                                    </p:commandButton>
+                                                                                                </p:column>-->
                                             </p:dataTable>
 
                                         </b:column>
 
-                                    </h:form>
+
+                                    </div>
 
                                 </b:column>
-                            </h:form>
-                            
-                            <h:form id="injection" rendered="#{triageBean.isShowInjectionInfo}">
-                                
+                            </b:column>
+
+                            <b:column id="injection" rendered="#{triageBean.isShowInjectionInfo}">
+
                                 <b:column col-md="11" offset-md="1">
 
                                     <h3>Selected Patient</h3>
                                     <hr></hr>
-                                    <b:column col-md="12" class="form-horizontal" id="patientInfo">
+                                    <b:column col-md="12" class="form-horizontal" id="patientInfoInject">
                                         <p:outputLabel value="Patient Id : #{triageBean.selectedD.p.id} " class="col-sm-6"/>
                                         <p:outputLabel value="Patient Name : #{triageBean.selectedD.p.name} " class="col-sm-6"/>
                                         <p:outputLabel value="Patient Gender : #{triageBean.selectedD.p.gender} " class="col-sm-6"/>
                                         <p:outputLabel value="Status : #{triageBean.selectedD.statusFull} " class="col-sm-6"/>
                                     </b:column>
-                                    
+
                                 </b:column>
-                                
+
                                 <b:column col-md="11" offset-md="1">
 
                                     <h3>Injection Information</h3>
@@ -363,80 +360,24 @@
                                         <p:outputLabel value="RxNORM Code : ###### " class="col-sm-6"/>
                                         <p:outputLabel value="Description : consectetur adipiscing elit " class="col-sm-6"/>
                                     </b:column>
-                                    
-                                </b:column>
-                                
-                            </h:form>
-                            
-                            
-                        </div>
 
-                        <div>
-                            <!--Injection Field HERE-->
+                                </b:column>
+
+                            </b:column>
+
+
                         </div>
 
                         <br></br>
 
                         <b:column col-md="12" rendered="#{triageBean.isShowMoreInfo}">
                             <hr></hr>
-                            <p:commandButton class="btn btn-primary" value="Assign Doctor" action="#{triageBean.assignDoctor()}" rendered="#{triageBean.isShowAssignInfo}"/>
-                            <p:commandButton class="btn btn-primary" value="Finish Inject" action="#{triageBean.finishInjection()}" rendered="#{triageBean.isShowInjectionInfo}"/>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Assign Doctor" action="#{triageBean.assignDoctor()}" rendered="#{triageBean.isShowAssignInfo}"/>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Finish Inject" action="#{triageBean.finishInjection()}" rendered="#{triageBean.isShowInjectionInfo}"/>
                             <p:commandButton class="btn btn-danger" value="Reset" action="#{triageBean.reset()}" update="form"/>
                         </b:column>
 
                     </b:column>
-
-
-<!--                    <p:dialog header="Patient Info" widgetVar="pDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                        <p:outputPanel id="pDetail" style="text-align:center;">
-
-                            <p:panelGrid  columns="2" rendered="#{not empty triageBean.selectedP}" columnClasses="label,value">
-
-                                <h:outputText value=""/>
-                                <p:graphicImage value="/images/nopic.png"/> 
-
-                                <h:outputText value="ID: " />
-                                <h:outputText value="#{triageBean.selectedP.id}" />
-
-                                <h:outputText value="Email: " />
-                                <h:outputText value="#{triageBean.selectedP.email}" />
-
-                                <h:outputText value="Name: " />
-                                <h:outputText value="#{triageBean.selectedP.name}" />
-
-                                <h:outputText value="Gender: " />
-                                <h:outputText value="#{triageBean.selectedP.gender}" />
-
-                                <h:outputText value="Phone: " />
-                                <h:outputText value="#{triageBean.selectedP.phone}" />
-
-                                <h:outputText value="Date of Birth: " />
-                                <h:outputText value="#{triageBean.selectedP.dobString}" />
-
-                                <h:outputText value="Occupation: " />
-                                <h:outputText value="#{triageBean.selectedP.occupation}" />
-
-                                <h:outputText value="Religion: " />
-                                <h:outputText value="#{triageBean.selectedP.religion}" />
-
-                                <h:outputText value="Country: " />
-                                <h:outputText value="#{triageBean.selectedP.country}" />
-
-                                <h:outputText value="Address: " />
-                                <h:outputText value="#{triageBean.selectedP.address}" />
-
-                                <h:outputText value="City: " />
-                                <h:outputText value="#{triageBean.selectedP.city}" />
-
-                                <h:outputText value="State: " />
-                                <h:outputText value="#{triageBean.selectedP.state}" />
-
-                                <h:outputText value="Zip: " />
-                                <h:outputText value="#{triageBean.selectedP.zip}" />
-
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>-->
 
                 </h:form>
 

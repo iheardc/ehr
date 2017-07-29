@@ -30,81 +30,13 @@ public class patientBean implements Serializable {
     private Patient selectedP;
 
     String findId, findName;
+    // Auto complete
+    private List<Patient> allPatientNames = new ArrayList<Patient>();
     
-//    String email; 
-//    String password;
-//    String msg;
-//    String page;
     Date findDoB;
 
     // View more information when patient Check-In
     boolean isShowMoreInfo;
-
-//    public String login() {
-//        RequestContext context = RequestContext.getCurrentInstance();
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().clear();
-//        FacesMessage message;
-//        boolean loggedIn = false;
-//
-//        msg = "";
-//        p = new Patient(email, password);
-//        DbDAO dao = new DbDAO();
-//        dao.loginPatient(p);
-//        if (p.errormsg == null || p.errormsg.equals("")) {
-//            // can be invalidate
-//            msg = "Wrong password or user name";
-//            password = "";
-//            email = "";
-//            p = null;
-//            loggedIn = false;
-//            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
-//        } else {
-//            page = "home";
-//            loggedIn = true;
-//            context.addCallbackParam("loggedIn", loggedIn);
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-//            message = new FacesMessage("Welcome ", p.fn);
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//            return "/home.xhtml?faces-redirect=true";
-//        }
-//        FacesContext.getCurrentInstance().addMessage(null, message);
-//        context.addCallbackParam("loggedIn", loggedIn);
-//        return "";
-//    }
-
-
-//    public String login(){
-//        RequestContext context = RequestContext.getCurrentInstance();
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().clear();
-//        FacesMessage message;
-//        boolean loggedIn = false;
-//        
-//        msg = "";
-//        p = new Patient(email, password);
-//        DbDAO dao = new DbDAO();
-//        dao.loginPatient(p);
-//        if (p.errormsg == null || p.errormsg.equals("")){
-//            // can be invalidate
-//            msg = "Wrong password or user name";
-//            password = "";
-//            email = "";
-//            p = null;
-//            loggedIn = false;
-//            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
-//        }
-//        else{
-//            page = "home";
-//            loggedIn = true;
-//            context.addCallbackParam("loggedIn", loggedIn);
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-//            message = new FacesMessage("Welcome ", p.fn);
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//            return "/home.xhtml?faces-redirect=true";
-//        }
-//        FacesContext.getCurrentInstance().addMessage(null, message);
-//        context.addCallbackParam("loggedIn", loggedIn);
-//        return "";
-//    }
     
 
     public void findPatient() {
@@ -156,9 +88,14 @@ public class patientBean implements Serializable {
         
         return menuBean.triage();
     }
+    
+    public void changeFindNameListener(String name){
+        this.findName = name;
+    }
 
     public void reset() {
         resetFindItem();
+        this.allPatientNames = PatientService.getList();
         findList = null;
         selectedP = null;
         isShowMoreInfo = false;
@@ -168,6 +105,18 @@ public class patientBean implements Serializable {
         findId = null;
         findName = null;
         findDoB = null;
+    }
+    
+    public List<Patient> patientCompleteItem(String query) {
+        query = query.toLowerCase();
+        findName = query;
+        List<Patient> filteredList = new ArrayList<>();
+        for (Patient item : allPatientNames) {
+            if (item.isSameName(query)) {
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
     }
 
     private String dateToDoubleString(Date date) {
@@ -195,6 +144,9 @@ public class patientBean implements Serializable {
     }
 
     public void setFindName(String findName) {
+        if(findName == null){
+            return;
+        }
         this.findName = findName;
     }
 
@@ -233,5 +185,15 @@ public class patientBean implements Serializable {
     public boolean getIsShowMoreInfo() {
         return isShowMoreInfo;
     }
+
+    public List<Patient> getAllPatientNames() {
+        return allPatientNames;
+    }
+
+    public void setAllPatientNames(List<Patient> allPatientNames) {
+        this.allPatientNames = allPatientNames;
+    }
+    
+    
 
 }

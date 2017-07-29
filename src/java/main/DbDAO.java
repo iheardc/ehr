@@ -56,7 +56,7 @@ public class DbDAO {
             + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) or A.id like ? or (A.first_name like ? or A.last_name like ?) or A.email like ? or A.role like ? "
+            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) or A.id like ? or (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) or A.email like ? or A.role like ? "
             + "GROUP BY A.id;";
     private static final String FIND_EMPLOYEE_AND
             = "SELECT  A.*, B.specialty as specialty "
@@ -64,11 +64,11 @@ public class DbDAO {
             + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ?) and A.email like ? and A.role like ? "
+            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) and (concat_ws(' ',first_name,last_name) like ?) and A.email like ? and A.role like ? "
             + "GROUP BY A.id;";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
-            + "WHERE id like ? and (first_name like ? or last_name like ?) and date_of_birth like ?";
+            + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
     private static final String CHECK_IN_PATIENT
             = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status) VALUES(?, ?, ?, ?, ?, ?, ?);";
     private static final String MAKE_NEW_BILLING
@@ -76,20 +76,35 @@ public class DbDAO {
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
             = "SELECT * FROM outpatient_dynamic WHERE status like ?";
     private static final String FIND_DOCTOR
-            = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ?)";
+            = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
     private static final String FIND_DOCTOR_WITH_SPECIALTY
             = "SELECT  A.*, B.specialty as specialty "
             + "FROM employee as A LEFT OUTER JOIN ( "
             + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and (A.first_name like ? or A.last_name like ?) "
+            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and role='doctor' and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) "
             + "GROUP BY A.id;";
+    private static final String FIND_ALL_PATIENT_NAME
+            = "SELECT id, first_name, last_name FROM patient";
+    private static final String FIND_ALL_EMPLOYEE_NAME_WITH_ROLE
+            = "SELECT id, first_name, last_name, role FROM employee WHERE role like ?";
+    private static final String ASSIGN_DOCTOR
+            = "UPDATE outpatient_dynamic SET "
+            + "doctor_id=?,doctor_fn=?,doctor_ln=?,nurse_id=?,nurse_fn=?,nurse_ln=?,status=? "
+            + "WHERE id=?";
+    private static final String ADD_CHEIF_COMPLAINT
+            = "INSERT INTO chief_complaint(outpatient_dynamic_id, patient_id, SNOMED_CT_Code, description) "
+            + "VALUES(?,?,?,?);";
+    private static final String ADD_VITAL_SIGN
+            = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
+            + "VALUES(?,?,?,?,?,?);";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
         "WFN", // waiting for nurse
-        "WFNI" // waiting for nurse(injection)
+        "WFNI", // waiting for nurse(injection)
+        "WFD" // waiting for doctor
     };
 
     public static double getTodayMillisecondsWithOutTime() {
@@ -216,25 +231,26 @@ public class DbDAO {
     }
 
     public void insertNewEmployeeSpecialty(Employee em, String id) {
-        for (String spec : em.getSpecialtyList()) {
-            PreparedStatement pstmt = null;
-            Connection connect = null;
-            try {
-                connect = DbConnectionPools.getPoolConnection();
+
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            for (String spec : em.getSpecialtyList()) {
                 pstmt = connect.prepareStatement(ADD_EMPLOYEE_SPECIALTY);
 
                 pstmt.setString(1, id);
                 pstmt.setString(2, spec);
 
                 pstmt.executeUpdate();
-
-                em.errormsg = "";//"Thank you for registering with us!";
-            } catch (Exception e) {
-                System.out.println("ERROR!!!!" + e.toString());
-                em.errormsg = "Failed to add specialty.Failed to add specialty.";
-            } finally {
-                DbConnectionPools.closeResources(connect, pstmt);
             }
+
+            em.errormsg = "";//"Thank you for registering with us!";
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            em.errormsg = "Failed to add specialty.Failed to add specialty.";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
         }
     }
 
@@ -295,6 +311,8 @@ public class DbDAO {
         }
         if (findName == null || "".equals(findName)) {
             findName = "%";
+        } else {
+            findName = "%" + findName + "%";
         }
         if (findEmail == null || "".equals(findEmail)) {
             findEmail = "%";
@@ -319,8 +337,9 @@ public class DbDAO {
             pstmt.setString(2, findId);
             pstmt.setString(3, findName);
             pstmt.setString(4, findName);
-            pstmt.setString(5, findEmail);
-            pstmt.setString(6, findRole);
+            pstmt.setString(5, findName);
+            pstmt.setString(6, findEmail);
+            pstmt.setString(7, findRole);
 //            pstmt.setString(6, findSpecialty);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -346,6 +365,8 @@ public class DbDAO {
         }
         if (findName == null || "".equals(findName)) {
             findName = "%";
+        } else {
+            findName = "%" + findName + "%";
         }
         if (findDoB == null || "".equals(findDoB) || "0".equals(findDoB)) {
             findDoB = "%";
@@ -359,7 +380,9 @@ public class DbDAO {
             pstmt.setString(1, findId);
             pstmt.setString(2, findName);
             pstmt.setString(3, findName);
-            pstmt.setString(4, findDoB);
+            pstmt.setString(4, findName);
+            pstmt.setString(5, findDoB);
+            System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -493,6 +516,8 @@ public class DbDAO {
     public List<Employee> findDoctor(String findDocName) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
+        } else {
+            findDocName = "%" + findDocName + "%";
         }
         List<Employee> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -502,6 +527,7 @@ public class DbDAO {
             pstmt = connect.prepareStatement(FIND_DOCTOR);
             pstmt.setString(1, findDocName);
             pstmt.setString(2, findDocName);
+            pstmt.setString(3, findDocName);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -521,9 +547,13 @@ public class DbDAO {
     public List<Employee> findDoctor(String findDocName, String findDocSpecialty) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
+        } else {
+            findDocName = "%" + findDocName + "%";
         }
         if (findDocSpecialty == null || "".equals(findDocSpecialty)) {
             findDocSpecialty = "%";
+        } else {
+            findDocSpecialty = "%" + findDocSpecialty + "%";
         }
         List<Employee> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -534,6 +564,7 @@ public class DbDAO {
             pstmt.setString(1, findDocSpecialty);
             pstmt.setString(2, findDocName);
             pstmt.setString(3, findDocName);
+            pstmt.setString(4, findDocName);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -548,6 +579,157 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
         return list;
+    }
+
+    public List<Patient> findAllPatientNames() {
+        List<Patient> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_ALL_PATIENT_NAME);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Patient p = new Patient();
+                p.buildPatient(rs);
+                list.add(p);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<Employee> findAllEmployeeNames(String role) {
+        if (role == null || "".equals(role)) {
+            role = "%";
+        }
+        List<Employee> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_ALL_EMPLOYEE_NAME_WITH_ROLE);
+            pstmt.setString(1, role);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Employee em = new Employee();
+                em.buildEmployee(rs);
+                list.add(em);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public void assignDoctor(DynamicInfo d, Employee doc, Employee nurse, List<SynomedCT> cheifList, String temperature, String spo2, String weight, String bloodPressure) {
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ASSIGN_DOCTOR);
+
+            pstmt.setString(1, doc.id);
+            pstmt.setString(2, doc.fn);
+            pstmt.setString(3, doc.ln);
+            pstmt.setString(4, nurse.id);
+            pstmt.setString(5, nurse.fn);
+            pstmt.setString(6, nurse.ln);
+            pstmt.setString(7, DYNAMIN_DATA[2]);
+            pstmt.setString(8, d.id);
+
+            pstmt.executeUpdate();
+
+            d.errormsg = "";//"Thank you for registering with us!";
+
+            if (!addCheifComplaint(connect, d, cheifList)) {
+                throw new Exception();
+            }
+            if (!addVitalSign(connect, d, temperature, spo2, weight, bloodPressure)) {
+                throw new Exception();
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            d.errormsg += " Fail to Assign Doctor";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
+
+    public boolean addCheifComplaint(Connection connect, DynamicInfo d, List<SynomedCT> cheifList) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+//        Connection connect = null;
+        try {
+//            connect = DbConnectionPools.getPoolConnection();
+            for (SynomedCT s : cheifList) {
+                pstmt = connect.prepareStatement(ADD_CHEIF_COMPLAINT);
+
+                pstmt.setString(1, d.id);
+                pstmt.setString(2, d.p.id);
+                pstmt.setString(3, s.code);
+                pstmt.setString(4, s.description);
+
+                pstmt.executeUpdate();
+            }
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            d.errormsg += " Fail to add Cheif complaint";
+        }
+        return result;
+    }
+
+//    private static final String ADD_VITAL_SIGN
+//            = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
+//            + "VALUES(?,?,?,?,?,?);";
+    public boolean addVitalSign(Connection connect, DynamicInfo d, String temperature, String spo2, String weight, String bloodPressure) {
+        if(temperature == null && spo2 == null && weight == null && bloodPressure == null){
+            return true;
+        }else{
+            if(temperature == null)
+                temperature = "";
+            if(spo2 == null)
+                spo2 = "";
+            if(weight == null)
+                weight = "";
+            if(bloodPressure == null)
+                bloodPressure = "";
+        }
+        boolean result = false;
+        PreparedStatement pstmt = null;
+//        Connection connect = null;
+        try {
+//            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ADD_VITAL_SIGN);
+
+            pstmt.setString(1, d.id);
+            pstmt.setString(2, d.p.id);
+            pstmt.setString(3, temperature);
+            pstmt.setString(4, spo2);
+            pstmt.setString(5, weight);
+            pstmt.setString(6, bloodPressure);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            d.errormsg += " Fail to add Vital Sign";
+        }
+        return result;
     }
 
 }

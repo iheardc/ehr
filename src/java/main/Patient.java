@@ -254,6 +254,16 @@ public class Patient {
             }
         }
     }
+    
+    public boolean isSameName(String query){
+        query = query.toLowerCase();
+        try{
+            return (fn.toLowerCase().startsWith(query) || ln.toLowerCase().startsWith(query));
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public void setId(String id) {
         this.id = id;

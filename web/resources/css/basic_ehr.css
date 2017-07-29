@@ -190,3 +190,23 @@ tr.ui-widget-content td{
     border-right: 0px;
     border-bottom-color: #ddd;
 }
+
+.ui-datatable .ui-datatable-header{
+    border: 0px;
+    background-color: white;
+}
+
+/*tfoot.ui-state-default{
+    background: none;
+    background-image: none;
+    background-color: white;
+    border: 1px solid white;
+    color: gray;
+}*/
+tfoot .ui-state-default{
+    background: none;
+    background-image: none;
+    background-color: white;
+    border: 1px solid white;
+    color: gray;
+}
