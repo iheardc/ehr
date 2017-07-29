@@ -23,14 +23,17 @@
         <div class="container">
             <div class="row">
                 <b:column col-md="6" offset-md="3">
-                    <div class="panel panel-login">
-                        <div class="panel-heading">
+                    <h:form>
+                        <p:commandButton class="btn btn-default" style="margin-bottom:10px;" value="Create Employee(temporary)" action="#{menuBean.newEmployee()}" immediate="true"/>
+                    </h:form>
+                    <div class="panel panel-login" style="padding:2em;">
+                        <div class="panel-heading" style="margin-bottom: 1em;">
                             <h:form class="row" id="loginmessage">
                                 <!--<b:column col-xs="6">class="active" id="login-form-link"-->
                                     <!--<p:commandButton value="Patient" class="active" id="login-form-link" action="#{signinBean.selectlogin('patient')}" immediate="true" />-->
                                 <!--</b:column>-->
                                 <!--<b:column col-xs="6">id="register-form-link-->
-                                    Please Login
+                                Please Login
                                 <!--</b:column>-->
                             </h:form>
                             <hr></hr>
@@ -45,7 +48,7 @@
                                         <div class="form-group">
                                             <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <div class="row">
                                                 <b:column col-sm="6" offset-sm="3">
@@ -64,7 +67,7 @@
                                             </div>
                                         </div>
                                     </h:form>
-                                    
+
                                 </b:column>
                             </div>
                         </div>
@@ -101,7 +104,7 @@
                 font-size:18px;
                 width:274px;
                 height:50px;
-                
+
             }
             .actives{
                 font-size:18px;
@@ -184,7 +187,7 @@
                 color:gray;
             }
         </style>
-        
+
     </ui:define>
 
 </ui:composition>
