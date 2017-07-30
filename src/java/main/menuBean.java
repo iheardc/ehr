@@ -46,6 +46,9 @@ public class menuBean implements Serializable {
     }
     
     // Nursing Station
+    public static String patientStatus(){
+        return "/nursing_station/patient_status.xhtml?faces-redirect=true";
+    }    
     public static String triage(){
         return "/nursing_station/triage?faces-redirect=true";
     }

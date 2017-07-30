@@ -99,12 +99,22 @@ public class DbDAO {
     private static final String ADD_VITAL_SIGN
             = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
             + "VALUES(?,?,?,?,?,?);";
+    private static final String FIND_ALL_STATUS//Michelle
+            = "SELECT * FROM outpatient_dynamic";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
         "WFN", // waiting for nurse
         "WFNI", // waiting for nurse(injection)
-        "WFD" // waiting for doctor
+        "WFD", // waiting for doctor
+        
+        // Michelle added below
+        "CKI", // Check-In
+        "WFR", // Waiting for Result  
+        "WFDR", // Waiting for Doctor with Result
+        "WFP", // Waiting for Prescription
+        "WFB", // Waiting for Bill
+        "CKO" // Check Out
     };
 
     public static double getTodayMillisecondsWithOutTime() {
@@ -495,8 +505,14 @@ public class DbDAO {
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
-            pstmt.setString(1, status);
+            
+            if(status.equals("ALL")){ //Michelle added this if-else
+                pstmt = connect.prepareStatement(FIND_ALL_STATUS);
+            }
+            else {
+                pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
+                pstmt.setString(1, status);
+            }
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -512,7 +528,7 @@ public class DbDAO {
         }
         return list;
     }
-
+    
     public List<Employee> findDoctor(String findDocName) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
@@ -730,6 +746,31 @@ public class DbDAO {
             d.errormsg += " Fail to add Vital Sign";
         }
         return result;
+    }
+    
+    // Michelle added. Find ALL patient status
+    public List<DynamicInfo> findPatientStatus() {
+        
+        List<DynamicInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_ALL_STATUS);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                DynamicInfo d = new DynamicInfo();
+                d.buildDynamicInfo(rs);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
     }
 
 }
