@@ -126,8 +126,8 @@
                             <div class="form-group">
                                 <p:outputLabel for="upload" value="Photo" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:fileUpload id="upload" auto="true" fileUploadListener="#{signupBean.uploadImg()}" 
-                                                  allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
+                                    <p:fileUpload id="upload" fileUploadListener="#{serviceBean.fileUpload}" auto="true" 
+                                      allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
                                 </b:column>
                             </div>
                         </b:column>

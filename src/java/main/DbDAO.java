@@ -28,9 +28,9 @@ public class DbDAO {
             = "INSERT INTO employee("
             + "email, password, first_name, last_name, gender, phone, "
             + "role, license, "
-            + "address, city, state, zip, country"
-            + ") "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "address, city, state, zip, country, "
+            + "pic) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_EMPLOYEE_EMAIL_DUPLICATE
             = "SELECT COUNT(*) as count FROM employee "
             + "WHERE email=?";
@@ -45,9 +45,9 @@ public class DbDAO {
             + "date_of_birth, occupation, religion, "
             + "address, city, state, zip, country, "
             + "emFN, emLN, emAddress, emCity, emState, emZip, emRelationship, emPhone, emEmail, "
-            + "postalAddress, postalCity, postalState, postalZip"
-            + ") "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "postalAddress, postalCity, postalState, postalZip, "
+            + "pic) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 //    private static final String FIND_EMPLOYEE
 //            = "SELECT * FROM employee WHERE id like ? and first_name like ? and last_name like ? and email like ? and role like ?";
     private static final String FIND_EMPLOYEE_OR
@@ -99,12 +99,15 @@ public class DbDAO {
     private static final String ADD_VITAL_SIGN
             = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
             + "VALUES(?,?,?,?,?,?);";
-
+    private static final String GET_CHEIF_COMPLAINT_FROM_DYNAMIC
+            = "SELECT * FROM chief_complaint WHERE id=?";
+    
     // Additional
     public static String[] DYNAMIN_DATA = {
         "WFN", // waiting for nurse
         "WFNI", // waiting for nurse(injection)
-        "WFD" // waiting for doctor
+        "WFD", // waiting for doctor
+        "WFDR" // waiting for doctor with result
     };
 
     public static double getTodayMillisecondsWithOutTime() {
@@ -211,6 +214,8 @@ public class DbDAO {
             pstmt.setString(11, em.state);
             pstmt.setString(12, em.zip);
             pstmt.setString(13, em.country);
+            
+            pstmt.setBytes(14, em.arr);
 
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -293,6 +298,8 @@ public class DbDAO {
             pstmt.setString(25, p.posCity);
             pstmt.setString(26, p.posState);
             pstmt.setString(27, p.posZip);
+            
+            pstmt.setBytes(28, p.arr);
 
             pstmt.executeUpdate();
 
@@ -730,6 +737,33 @@ public class DbDAO {
             d.errormsg += " Fail to add Vital Sign";
         }
         return result;
+    }
+    
+    public List<SynomedCT> getCheifComplaint(String dynamicId){
+        if (dynamicId == null) {
+            dynamicId = "";
+        }
+        List<SynomedCT> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_CHEIF_COMPLAINT_FROM_DYNAMIC);
+            pstmt.setString(1, dynamicId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                SynomedCT s = new SynomedCT();
+                s.buildSynomed(rs);
+                list.add(s);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! getCheifComplaint : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
     }
 
 }

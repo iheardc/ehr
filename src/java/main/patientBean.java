@@ -5,6 +5,8 @@
  */
 package main;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +14,11 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -32,12 +37,11 @@ public class patientBean implements Serializable {
     String findId, findName;
     // Auto complete
     private List<Patient> allPatientNames = new ArrayList<Patient>();
-    
+
     Date findDoB;
 
     // View more information when patient Check-In
     boolean isShowMoreInfo;
-    
 
     public void findPatient() {
         DbDAO dao = new DbDAO();
@@ -55,7 +59,6 @@ public class patientBean implements Serializable {
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
 
-    
     public void selectPatient() {
         isShowMoreInfo = true;
         RequestContext context = RequestContext.getCurrentInstance();
@@ -82,14 +85,13 @@ public class patientBean implements Serializable {
 
         return "/checkin/checkin_patient?faces-redirect=true";
     }
-    
-    public String assignDoctor(){
-        
-        
+
+    public String assignDoctor() {
+
         return menuBean.triage();
     }
-    
-    public void changeFindNameListener(String name){
+
+    public void changeFindNameListener(String name) {
         this.findName = name;
     }
 
@@ -106,7 +108,7 @@ public class patientBean implements Serializable {
         findName = null;
         findDoB = null;
     }
-    
+
     public List<Patient> patientCompleteItem(String query) {
         query = query.toLowerCase();
         findName = query;
@@ -144,7 +146,7 @@ public class patientBean implements Serializable {
     }
 
     public void setFindName(String findName) {
-        if(findName == null){
+        if (findName == null) {
             return;
         }
         this.findName = findName;
@@ -193,7 +195,20 @@ public class patientBean implements Serializable {
     public void setAllPatientNames(List<Patient> allPatientNames) {
         this.allPatientNames = allPatientNames;
     }
-    
-    
+
+    public StreamedContent getImage() throws IOException {
+//        FacesContext context = FacesContext.getCurrentInstance();
+//
+//        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+//            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+//            return new DefaultStreamedContent();
+//        } 
+//        return new DefaultStreamedContent(new ByteArrayInputStream(selectedP.arr));    
+        if (selectedP.arr == null || selectedP.arr.length <= 0) {
+            return new DefaultStreamedContent();
+        } else {
+            return new DefaultStreamedContent(new ByteArrayInputStream(selectedP.arr));
+        }
+    }
 
 }

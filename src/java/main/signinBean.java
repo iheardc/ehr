@@ -94,9 +94,6 @@ public class signinBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return "";
             } else {
-                System.out.println("CHECK@@@");
-                System.out.println("CHECK@@@ " + em.fn);
-                System.out.println("CHECK@@@ " + em.accessToken);
                 loggedIn = true;
 
                 context.addCallbackParam("loggedIn", loggedIn);

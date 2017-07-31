@@ -167,7 +167,7 @@
                             <p:panelGrid  columns="2" rendered="#{not empty patientBean.selectedP}" columnClasses="label,value">
 
                                 <h:outputText value=""/>
-                                <p:graphicImage value="/images/nopic.png"/> 
+                                <p:graphicImage value="#{patientBean.image}" width="100px"  cache="false"/>
 
                                 <h:outputText value="ID: " />
                                 <h:outputText value="#{patientBean.selectedP.id}" />

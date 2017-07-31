@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/employee-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile" 
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <ui:define name="title">Register page</ui:define>
+    <ui:define name="content"> 
+
+        <f:metadata>
+            <f:viewAction action="#{treatmentBean.reset()}"/>
+        </f:metadata>
+
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>Diagnosis Patient</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data" id="form">
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Select Patient(*)</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="status" value="Status" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:selectOneMenu id="status" value="#{treatmentBean.patientStatus}">
+                                        <f:selectItem itemValue="WFD%" itemLabel="All"/>
+                                        <f:selectItem itemValue="WFD" itemLabel="Waiting For Doctor"/>
+                                        <f:selectItem itemValue="WFDR" itemLabel="Waiting For Doctor With Result"/>
+                                    </p:selectOneMenu>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <b:column col-md="6" offset-md="2">
+                                    <p:commandButton class="btn btn-primary" value="Search" action="#{treatmentBean.findDynaPatient()}" update=":form:searchTables"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column id="searchTables">
+                            <b:column col-md="12" rendered="#{treatmentBean.isShowWFDTable}">
+                                <hr></hr>
+
+                                <p:dataTable var="d" value="#{treatmentBean.findWFDList}" id="searchTable1" paginator="true" rows="10"
+                                             resizableColumns="true"  tableStyleClass="table table-striped" selectionMode="single"
+                                             selection="#{treatmentBean.selectedD}" rowKey="#{d.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{treatmentBean.onWFDSelectRowSelect}" />
+
+                                    <f:facet name="header">
+                                        Waiting for Doctor
+                                    </f:facet>
+
+                                    <p:column headerText="Patient Name" style="width: 30%">
+                                        <h:outputText value="#{d.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Nurse Name" style="width: 30%">
+                                        <h:outputText value="#{d.n.name}" />
+                                    </p:column>
+                                    <p:column headerText="Date" style="width: 40%">
+                                        <h:outputText value="#{d.dateString}" />
+                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+
+                                </p:dataTable>
+
+                            </b:column>
+
+                            <b:column col-md="12" rendered="#{treatmentBean.isShowWFDRTable}">
+                                <hr></hr>
+
+                                <p:dataTable var="d" value="#{treatmentBean.findWFDRList}" id="searchTable2" paginator="true" rows="10"
+                                             resizableColumns="true" tableStyleClass="table table-striped" selectionMode="single"
+                                             selection="#{treatmentBean.selectedD}" rowKey="#{d.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{treatmentBean.onWFDRSelectRowSelect}" />
+
+                                    <f:facet name="header">
+                                        Waiting for Doctor with Result
+                                    </f:facet>
+
+                                    <p:column headerText="Patient Name" style="width: 30%">
+                                        <h:outputText value="#{d.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Nurse Name" style="width: 30%">
+                                        <h:outputText value="#{d.n.name}" />
+                                    </p:column>
+                                    <p:column headerText="Date" style="width: 40%">
+                                        <h:outputText value="#{d.dateString}" />
+                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+
+                                </p:dataTable>
+
+                            </b:column>
+                        </b:column>
+
+
+
+                        <b:column col-md="12">
+                            <hr></hr>
+                        </b:column>
+
+                        <br></br>
+
+                        <b:column rendered="#{treatmentBean.isShowMoreInfo}">
+
+                            <b:column col-md="11" offset-md="1">
+
+                                <h3>Selected Patient</h3>
+                                <hr></hr>
+                                <b:column col-md="12">
+                                    <b:column col-md="3">
+                                        <p:graphicImage value="/images/nopic.png" style="width:100%"/> 
+                                    </b:column>
+                                    <b:column col-md="9">
+                                        <p:outputLabel value="Name: #{treatmentBean.selectedD.p.name}"></p:outputLabel>
+                                        <br></br>
+                                        <p:outputLabel value="Date of Birth: #{treatmentBean.selectedD.p.dobString}"></p:outputLabel>
+                                    </b:column>
+                                </b:column>
+
+                            </b:column>
+
+                        </b:column>
+
+                        <div>
+                            <b:column id="wfdInfo" rendered="#{treatmentBean.isShowWFDInfo}">
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Current Chief Complaint</h3>
+                                    <hr></hr>
+                                    <p:dataTable var="s" value="#{treatmentBean.selectedD.cheifComplaintList}" id="cheifTable"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                        <p:column headerText="#" style="width: 5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="SYNOMED-CT" style="width: 25%">
+                                            <h:outputText value="#{s.code}" />
+                                        </p:column>
+                                        <p:column headerText="Description" style="width: 70%">
+                                            <h:outputText value="#{s.description}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Current Vital Sign</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>View Patient Visit History</h3>
+                                    <hr></hr>
+                                    <p:dataTable var="v" value="#{treatmentBean.visitHistory}" id="visitHistoryTable"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                        <p:column headerText="#" style="width: 5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="Name" style="width: 45%">
+                                            <h:outputText value="#{v.name}" />
+                                        </p:column>
+                                        <p:column headerText="Extension" style="width: 10%">
+                                            <h:outputText value="#{v.extension}" />
+                                        </p:column>
+                                        <p:column headerText="Size" style="width: 10%">
+                                            <h:outputText value="#{v.size}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width: 20%">
+                                            <h:outputText value="#{v.date}" />
+                                        </p:column>
+                                        <p:column style="width:10%; text-align: center" headerText="View">
+                                            <p:commandButton title="View" icon="ui-icon-search" value="" action="#{treatmentBean.viewFile(v.name)}">
+                                                <!--<f:setPropertyActionListener value="#{p}" target="#{treatmentBean.selectedP}" />-->
+                                            </p:commandButton>
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>View Patient Prescription History</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Write Prescription</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Write Visit Summary</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Give an Injection</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Place Order</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Refer Patient to Specialist</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Write Charge Code</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                            </b:column>
+
+                            <b:column id="wfiInfo" rendered="#{treatmentBean.isShowWFDRInfo}">
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Item1</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Item2</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                            </b:column>
+
+
+                        </div>
+
+                        <br></br>
+
+                        <b:column col-md="12" rendered="#{treatmentBean.isShowMoreInfo}">
+                            <hr></hr>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitDiagnosis()}" rendered="#{treatmentBean.isShowWFDInfo}"/>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitDiagnosisWithResult()}" rendered="#{treatmentBean.isShowWFDRInfo}"/>
+                            <p:commandButton class="btn btn-danger" value="Reset" action="#{treatmentBean.reset()}" update="form"/>
+                        </b:column>
+
+                    </b:column>
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:define>
+
+</ui:composition>

@@ -30,8 +30,8 @@ import org.primefaces.model.UploadedFile;
 @SessionScoped
 public class signupBean implements Serializable {
 
-//    @Inject
-//    ServiceBean service;
+    @Inject
+    ServiceBean service;
     String msg = "NOT registered yet";
 
     String id, email, password, rePassword, fn, ln, name, gender, phone, pic;
@@ -62,25 +62,25 @@ public class signupBean implements Serializable {
         setAllSpecialty();
     }
 
-    public void uploadImg() {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Notice", "It does not work yet.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-
     public String registrationEmployee() throws IOException {
 
         DbDAO dao = new DbDAO();
 
-        em = new Employee(id, email, password, fn, ln, name, gender, phone, pic,
+        byte[] arr = service.getData();
+//        em = new Employee(id, email, password, fn, ln, name, gender, phone,
+//                role, license, location,
+//                address, city, state, zip, country,
+//                accessToken, authority, specialty);
+        em = new Employee(id, email, password, fn, ln, name, gender, phone,
                 role, license, location,
                 address, city, state, zip, country,
-                accessToken, authority, specialty);
+                authority, arr, specialty);
 
         dao.insertNewEmployee(em);
 
         //failed
-        if (em.errormsg.length() > 0) {
+        if (em.errormsg.length()
+                > 0) {
             msg = em.errormsg;
             password = "";
             rePassword = "";
@@ -102,12 +102,8 @@ public class signupBean implements Serializable {
 
         DbDAO dao = new DbDAO();
 
-        p = new Patient(id, email, password, fn, ln, name, gender, phone, pic,
-                dateToDouble(dob2), occupation, religion,
-                address, city, state, zip, country,
-                emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip,
-                posAddress, posCity, posState, posZip,
-                accessToken);
+        byte[] arr = service.getData();
+        p = new Patient(id, email, password, fn, ln, name, gender, phone, address, city, state, zip, country, dateToDouble(dob2), occupation, religion, emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip, posAddress, posCity, posState, posZip, arr);
 
         dao.insertNewPatient(p);
 
@@ -117,7 +113,7 @@ public class signupBean implements Serializable {
             password = "";
             rePassword = "";
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", em.errormsg);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", p.errormsg);
             FacesContext.getCurrentInstance().addMessage(null, message);
             return "";
         } else { // success
@@ -141,13 +137,13 @@ public class signupBean implements Serializable {
 //        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 //        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
     }
-    
-    public String cancelPatient(){
+
+    public String cancelPatient() {
         reset();
         return menuBean.newPatient();
     }
-    
-    public String cancelEmployee(){
+
+    public String cancelEmployee() {
         reset();
         return menuBean.newEmployee();
     }

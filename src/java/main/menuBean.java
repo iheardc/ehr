@@ -39,19 +39,27 @@ public class menuBean implements Serializable {
     
     // Patient Check-In
     public static String newPatient(){
-        return "/checkin/create_patient?faces-redirect=true";
+        return "/checkin/create_patient.xhtml?faces-redirect=true";
     }
     public static String checkinPatient(){
-        return "/checkin/checkin_patient?faces-redirect=true";
+        return "/checkin/checkin_patient.xhtml?faces-redirect=true";
     }
     
     // Nursing Station
     public static String triage(){
-        return "/nursing_station/triage?faces-redirect=true";
+        return "/nursing_station/triage.xhtml?faces-redirect=true";
+    }
+    
+    // Treatment
+    public static String diagnosis(){
+        return "/treatment/diagnosis.xhtml?faces-redirect=true";
+    }
+    public static String writeVisitSummary(){
+        return "/treatment/write_visit_summary.xhtml?faces-redirect=true";
     }
     
     // Admin
     public static String newEmployee(){
-        return "/admin/create_employee?faces-redirect=true";
+        return "/admin/create_employee.xhtml?faces-redirect=true";
     }
 }

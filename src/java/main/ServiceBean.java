@@ -38,6 +38,7 @@ public class ServiceBean implements Serializable {
         this.fileUpload = null;
         ResourceHandler resourceHandler = FacesContext.getCurrentInstance().getApplication().getResourceHandler();
         InputStream is = resourceHandler.createResource("nopic.png", "images").getInputStream();
+//        InputStream is = resourceHandler.createResource("images/nopic.png").getInputStream();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         byte[] buffer = new byte[1];
         int length; 

@@ -51,10 +51,10 @@
                 </p:submenu>
                 <p:submenu label="Treatment"  expanded="false" >
                     <p:menuitem value="View Waiting Patients"  icon="fa fa-info"/>
-                    <p:menuitem value="Diagnosis Patient"  icon="fa fa-edit"/>
+                    <p:menuitem value="Diagnosis Patient"  icon="fa fa-edit" action="#{menuBean.diagnosis()}"/>
                     <p:menuitem value="Place Order"  icon="fa fa-edit"/>
                     <p:menuitem value="Write Prescription"  icon="fa fa-edit"/>
-                    <p:menuitem value="Write Visit Summary"  icon="fa fa-edit"/>
+                    <p:menuitem value="Write Visit Summary"  icon="fa fa-edit" action="#{menuBean.writeVisitSummary()}"/>
                     <p:menuitem value="View Referral"  icon="fa fa-edit"/>
                     <p:menuitem value="Refer to Specialist"  icon="fa fa-edit"/>
                 </p:submenu>
@@ -186,10 +186,10 @@
                     </p:submenu>
                     <p:submenu label="Treatment"  expanded="false" >
                         <p:menuitem value="View Waiting Patients"  icon="fa fa-info"/>
-                        <p:menuitem value="Diagnosis Patient"  icon="fa fa-edit"/>
+                        <p:menuitem value="Diagnosis Patient"  icon="fa fa-edit" action="#{menuBean.diagnosis()}"/>
                         <p:menuitem value="Place Order"  icon="fa fa-edit"/>
                         <p:menuitem value="Write Prescription"  icon="fa fa-edit"/>
-                        <p:menuitem value="Write Visit Summary"  icon="fa fa-edit"/>
+                        <p:menuitem value="Write Visit Summary"  icon="fa fa-edit" action="#{menuBean.writeVisitSummary()}"/>
                         <p:menuitem value="View Referral"  icon="fa fa-edit"/>
                         <p:menuitem value="Refer to Specialist"  icon="fa fa-edit"/>
                     </p:submenu>

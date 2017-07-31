@@ -9,18 +9,22 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  *
  * @author tw
  */
 public class Employee {
+    
+    @Inject
+    ServiceBean service; 
 
-    String id, email, password, fn, ln, name, gender, phone, pic;
+    String id, email, password, fn, ln, name, gender, phone;
     String role, license, location;
     String address, city, state, zip, country;
-    String accessToken;
     int authority;
+    byte[] arr;
     List<String> specialtyList;
     String specialty;
     String errormsg;
@@ -33,46 +37,16 @@ public class Employee {
         this.id = id;
         this.password = password;
     }
-//    public Employee(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String pic,
-//            String role, String license, String location,
-//            String address, String city, String state, String zip, String country,
-//            String accessToken, int authority, String specialty){
-//        
-//        this(email, password);
-//        this.id = id;
-//        this.fn = fn;
-//        this.ln = ln;
-//        this.name = name;
-//        this.gender = gender;
-//        this.phone = phone;
-//        this.pic = pic;
-//        this.role = role;
-//        this.license = license;
-//        this.location = location;
-//        this.address = address;
-//        this.city = city;
-//        this.state = state;
-//        this.zip = zip;
-//        this.country = country;
-//        this.accessToken = accessToken;
-//        this.authority = authority;
-//        this.setSpecialty(specialty);
-//    }
 
-    public Employee(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String pic,
-            String role, String license, String location,
-            String address, String city, String state, String zip, String country,
-            String accessToken, int authority, List<String> specialtyList) {
-
-        this(id, password);
+    public Employee(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String role, String license, String location, String address, String city, String state, String zip, String country, int authority, byte[] arr, List<String> specialtyList) {
+        this.id = id;
         this.email = email;
+        this.password = password;
         this.fn = fn;
         this.ln = ln;
-//        this.name = name;
-        this.name = fn + " " + ln;
+        this.name = name;
         this.gender = gender;
         this.phone = phone;
-        this.pic = pic;
         this.role = role;
         this.license = license;
         this.location = location;
@@ -81,10 +55,13 @@ public class Employee {
         this.state = state;
         this.zip = zip;
         this.country = country;
-        this.accessToken = accessToken;
         this.authority = authority;
+        this.arr = arr;
         this.specialtyList = specialtyList;
+        this.specialty = specialty;
     }
+    
+    
 
     public ArrayList<String> getKeySet(ResultSet rs) {
         try {
@@ -172,15 +149,11 @@ public class Employee {
                 }
                 column = "pic";
                 if (columnName.contains(column)) {
-                    this.pic = rs.getString(column);
+                    this.arr = rs.getBytes(column);
                 }
                 column = "authority";
                 if (columnName.contains(column)) {
                     this.authority = rs.getInt(column);
-                }
-                column = "access_token";
-                if (columnName.contains(column)) {
-                    this.accessToken = rs.getString(column);
                 }
                 column = "specialty";
                 if (columnName.contains(column)) {
@@ -212,6 +185,29 @@ public class Employee {
 
     public String getId() {
         return id;
+    }
+
+    public String getRealId() {
+        String realId = "";
+
+        String middle;
+        if (ln == null || "".equals(ln)) {
+            middle = fn.substring(0, Math.min(fn.length(), 3));
+            int len = middle.length();
+            for (int i = len; i < 3; i++) { // ab to abb / a to aaa
+                middle += middle.substring(len - 1, len);
+            }
+        }else{
+            middle = ln.substring(0, Math.min(ln.length(), 3));
+            int len = middle.length();
+            for (int i = len; i < 3; i++) { // ab to abb / a to aaa
+                middle += middle.substring(len - 1, len);
+            }
+        }
+        
+        realId = String.format("%011d", Integer.parseInt(id)) + middle + role;
+
+        return realId;
     }
 
     public void setEmail(String email) {
@@ -269,14 +265,6 @@ public class Employee {
 
     public String getPhone() {
         return phone;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    public String getPic() {
-        return pic;
     }
 
     public void setRole(String role) {
@@ -343,14 +331,6 @@ public class Employee {
         return country;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
     public void setAuthority(int authority) {
         this.authority = authority;
     }
@@ -388,5 +368,23 @@ public class Employee {
     public String getErrormsg() {
         return errormsg;
     }
+
+    public ServiceBean getService() {
+        return service;
+    }
+
+    public void setService(ServiceBean service) {
+        this.service = service;
+    }
+
+    public byte[] getArr() {
+        return arr;
+    }
+
+    public void setArr(byte[] arr) {
+        this.arr = arr;
+    }
+    
+    
 
 }

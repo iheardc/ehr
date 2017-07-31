@@ -159,6 +159,19 @@ public class DynamicInfo {
             }
         }
     }
+    
+    public void getCheifComplaints(FinishListener listener){
+        DbDAO dao = new DbDAO();
+        cheifComplaintList = dao.getCheifComplaint(id);
+        
+        if(listener != null){
+            listener.execute();
+        }
+    }
+    
+    public void getInjections(){
+        
+    }
 
     public String getId() {
         return id;

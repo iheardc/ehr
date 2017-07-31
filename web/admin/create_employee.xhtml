@@ -33,7 +33,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="firstname" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:inputText value="#{signupBean.fn}" id="firstname" autocomplete="off" class="form-control" placeholder="First Name"></p:inputText>
+                                    <p:inputText value="#{signupBean.fn}" id="firstname" autocomplete="off" class="form-control" placeholder="First Name" required="true"></p:inputText>
                                 </b:column>
                             </div>
                         </b:column>
@@ -52,7 +52,6 @@
                                 <p:outputLabel for="email" value="Email" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
                                     <p:inputText value="#{signupBean.email}" id="email" autocomplete="off" class="form-control" placeholder="Email">
-                                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                                     </p:inputText>
                                 </b:column>
                             </div>
@@ -62,7 +61,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="password" value="Password" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:password value="#{signupBean.password}" id="password" class="form-control" placeholder="Password" match="confirm" feedback="true" inline="true">
+                                    <p:password value="#{signupBean.password}" id="password" class="form-control" placeholder="Password" match="confirm" feedback="true" inline="true" required="true">
                                         <f:validateLength minimum="6"/>
                                     </p:password>
                                 </b:column>
@@ -82,7 +81,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="gender" value="Gender" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:selectOneRadio value="#{signupBean.gender}"  id="gender">
+                                    <p:selectOneRadio value="#{signupBean.gender}"  id="gender" required="true">
                                         <f:selectItem itemLabel="Male" itemValue="male"/>
                                         <f:selectItem itemLabel="Female" itemValue="female"/>
                                         <f:selectItem itemLabel="Unknown" itemValue="unknown"/>
@@ -104,8 +103,8 @@
                             <div class="form-group">
                                 <p:outputLabel for="upload" value="Photo" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:fileUpload id="upload" auto="true" fileUploadListener="#{signupBean.uploadImg()}" 
-                                                  allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
+                                    <p:fileUpload id="upload" fileUploadListener="#{serviceBean.fileUpload}" auto="true" 
+                                      allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
                                 </b:column>
                             </div>
                         </b:column>
@@ -120,7 +119,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="location" value="Location" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:inputText value="#{signupBean.location}" id="location" autocomplete="off" class="form-control" placeholder="Location"></p:inputText>
+                                    <p:inputText value="#{signupBean.location}" id="location" autocomplete="off" class="form-control" placeholder="Location" required="true"></p:inputText>
                                 </b:column>
                             </div>
                         </b:column>
@@ -129,7 +128,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="role" value="Role" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:selectOneMenu id="role" value="#{signupBean.role}" placeholder="Role">
+                                    <p:selectOneMenu id="role" value="#{signupBean.role}" placeholder="Role" required="true">
                                         <f:selectItem itemValue="doctor" itemLabel="Doctor"/>
                                         <f:selectItem itemValue="nurse" itemLabel="Nurse"/>
                                         <f:selectItem itemValue="pharmacist" itemLabel="Pharmacist"/>
@@ -146,7 +145,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="license" value="License" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:inputText id="license" value="#{signupBean.license}" class="form-control" placeholder="License" type="text" autocomplete="off"></p:inputText>
+                                    <p:inputText id="license" value="#{signupBean.license}" class="form-control" placeholder="License" type="text" autocomplete="off" required="true"></p:inputText>
                                 </b:column>
                             </div>
                         </b:column>

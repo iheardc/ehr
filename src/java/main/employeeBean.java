@@ -5,6 +5,8 @@
  */
 package main;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 //import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,12 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
 //import javax.faces.view.ViewScoped;
 //import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 //import org.primefaces.context.RequestContext;
 
 /**
@@ -141,88 +146,15 @@ public class employeeBean implements Serializable {
     public String getFindSpecialty() {
         return findSpecialty;
     }
-
-
-//    public boolean isInUserAccnt() {
-//        return inUserAccnt;
-//    }
-//
-//    public void setInUserAccnt(boolean inUserAccnt) {
-//        this.inUserAccnt = inUserAccnt;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-//
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-//
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setMsg(String msg) {
-//        this.msg = msg;
-//    }
-//
-//    public String getMsg() {
-//        return msg;
-//    }
-//
-//    public void setPage(String page) {
-//        this.page = page;
-//    }
-//
-//    public String getPage() {
-//        return page;
-//    }
-
     
-//    public boolean isInUserAccnt() {
-//        return inUserAccnt;
-//    }
-//
-//    public void setInUserAccnt(boolean inUserAccnt) {
-//        this.inUserAccnt = inUserAccnt;
-//    }
-    
-//    public void setEmail(String email){
-//        this.email=email;
-//    }
-//
-//    public String getEmail(){
-//        return email;
-//    }
-//    
-//    public void setPassword(String password){
-//        this.password=password;
-//    }
-//    
-//    public String getPassword(){
-//        return password;
-//    }
-//    
-//    public void setMsg(String msg){
-//        this.msg=msg;
-//    }
-//    
-//    public String getMsg(){
-//        return msg;
-//    }
-//    
-//    public void setPage(String page){
-//        this.page=page;
-//    }
-//    
-//    public String getPage(){
-//        return page;
-//    }
+    public StreamedContent getImage() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
 
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } 
+        return new DefaultStreamedContent(new ByteArrayInputStream(selectedEm.arr));    
+    }
 
 }

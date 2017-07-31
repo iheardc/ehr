@@ -19,14 +19,15 @@ import java.util.List;
  */
 public class Patient {
 
-    String id, email, password, fn, ln, name, gender, phone, pic;
+    String id, email, password, fn, ln, name, gender, phone;
     String address, city, state, zip, country;
-    String accessToken;
     Double dob;
     String occupation, religion;
     String emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip;
     String posAddress, posCity, posState, posZip;
     String errormsg;
+    String DBaccnt = "";
+    byte[] arr;
 
     public Patient() {
 
@@ -36,55 +37,24 @@ public class Patient {
         this.email = email;
         this.password = password;
     }
-//    public Employee(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String pic,
-//            String role, String license, String location,
-//            String address, String city, String state, String zip, String country,
-//            String accessToken, int authority, String specialty){
-//        
-//        this(email, password);
-//        this.id = id;
-//        this.fn = fn;
-//        this.ln = ln;
-//        this.name = name;
-//        this.gender = gender;
-//        this.phone = phone;
-//        this.pic = pic;
-//        this.role = role;
-//        this.license = license;
-//        this.location = location;
-//        this.address = address;
-//        this.city = city;
-//        this.state = state;
-//        this.zip = zip;
-//        this.country = country;
-//        this.accessToken = accessToken;
-//        this.authority = authority;
-//        this.setSpecialty(specialty);
-//    }
 
-    public Patient(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String pic,
-            Double dob, String occupation, String religion,
-            String address, String city, String state, String zip, String country,
-            String emFN, String emLN, String emEmail, String emPhone, String emRelationship, String emAddress, String emCity, String emState, String emZip,
-            String posAddress, String posCity, String posState, String posZip,
-            String accessToken) {
-
-        this(email, password);
+    public Patient(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String address, String city, String state, String zip, String country, Double dob, String occupation, String religion, String emFN, String emLN, String emEmail, String emPhone, String emRelationship, String emAddress, String emCity, String emState, String emZip, String posAddress, String posCity, String posState, String posZip, byte[] arr) {
         this.id = id;
+        this.email = email;
+        this.password = password;
         this.fn = fn;
         this.ln = ln;
         this.name = name;
         this.gender = gender;
         this.phone = phone;
-        this.pic = pic;
-        this.dob = dob;
-        this.occupation = occupation;
-        this.religion = religion;
         this.address = address;
         this.city = city;
         this.state = state;
         this.zip = zip;
         this.country = country;
+        this.dob = dob;
+        this.occupation = occupation;
+        this.religion = religion;
         this.emFN = emFN;
         this.emLN = emLN;
         this.emEmail = emEmail;
@@ -98,7 +68,7 @@ public class Patient {
         this.posCity = posCity;
         this.posState = posState;
         this.posZip = posZip;
-        this.accessToken = accessToken;
+        this.arr = arr;
     }
 
     public ArrayList<String> getKeySet(ResultSet rs) {
@@ -155,7 +125,7 @@ public class Patient {
                 }
                 column = "pic";
                 if (columnName.contains(column)) {
-                    this.pic = rs.getString(column);
+                    this.arr = rs.getBytes(column);
                 }
                 column = "date_of_birth";
                 if (columnName.contains(column)) {
@@ -169,7 +139,7 @@ public class Patient {
                 if (columnName.contains(column)) {
                     this.religion = rs.getString(column);
                 }
-                
+
                 column = "address";
                 if (columnName.contains(column)) {
                     this.address = rs.getString(column);
@@ -190,7 +160,7 @@ public class Patient {
                 if (columnName.contains(column)) {
                     this.country = rs.getString(column);
                 }
-                
+
                 column = "emFN";
                 if (columnName.contains(column)) {
                     this.emFN = rs.getString(column);
@@ -227,7 +197,7 @@ public class Patient {
                 if (columnName.contains(column)) {
                     this.emZip = rs.getString(column);
                 }
-                
+
                 column = "postalAddress";
                 if (columnName.contains(column)) {
                     this.posAddress = rs.getString(column);
@@ -244,22 +214,17 @@ public class Patient {
                 if (columnName.contains(column)) {
                     this.posZip = rs.getString(column);
                 }
-                
-                column = "access_token";
-                if (columnName.contains(column)) {
-                    this.accessToken = rs.getString(column);
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-    
-    public boolean isSameName(String query){
+
+    public boolean isSameName(String query) {
         query = query.toLowerCase();
-        try{
+        try {
             return (fn.toLowerCase().startsWith(query) || ln.toLowerCase().startsWith(query));
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -271,6 +236,29 @@ public class Patient {
 
     public String getId() {
         return id;
+    }
+
+    public String getRealId() {
+        String realId = "";
+
+        String middle;
+        if (ln == null || "".equals(ln)) {
+            middle = fn.substring(0, Math.min(fn.length(), 3));
+            int len = middle.length();
+            for (int i = len; i < 3; i++) { // ab to abb / a to aaa
+                middle += middle.substring(len - 1, len);
+            }
+        }else{
+            middle = ln.substring(0, Math.min(ln.length(), 3));
+            int len = middle.length();
+            for (int i = len; i < 3; i++) { // ab to abb / a to aaa
+                middle += middle.substring(len - 1, len);
+            }
+        }
+        
+        realId = String.format("%011d", Integer.parseInt(id)) + middle + getDateMonthString((long)((double)dob));
+
+        return realId;
     }
 
     public void setEmail(String email) {
@@ -329,14 +317,6 @@ public class Patient {
         return phone;
     }
 
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    public String getPic() {
-        return pic;
-    }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -377,14 +357,6 @@ public class Patient {
         return country;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
     public void setDob(Double dob) {
         this.dob = dob;
     }
@@ -392,16 +364,23 @@ public class Patient {
     public Double getDob() {
         return dob;
     }
-    
-    public String getDobString(){
-        return getDateString((long)((double)dob));
+
+    public String getDobString() {
+        return getDateString((long) ((double) dob));
     }
-    public static String getDateString(long time){
+
+    public static String getDateString(long time) {
 
         Date currentDate = new Date(time);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         return df.format(currentDate);
 
+    }
+    
+    public static String getDateMonthString(long time){
+        Date currentDate = new Date(time);
+        DateFormat df = new SimpleDateFormat("MM");
+        return df.format(currentDate);
     }
 
     public void setOccupation(String occupation) {
@@ -530,6 +509,14 @@ public class Patient {
 
     public String getErrormsg() {
         return errormsg;
+    }
+
+    public String getDBaccnt() {
+        return DBaccnt;
+    }
+
+    public void setDBaccnt(String DBaccnt) {
+        this.DBaccnt = DBaccnt;
     }
 
 }
