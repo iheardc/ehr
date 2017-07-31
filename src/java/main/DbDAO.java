@@ -101,13 +101,21 @@ public class DbDAO {
             + "VALUES(?,?,?,?,?,?);";
     private static final String GET_CHEIF_COMPLAINT_FROM_DYNAMIC
             = "SELECT * FROM chief_complaint WHERE id=?";
-    
+    private static final String FIND_ALL_STATUS//Michelle
+            = "SELECT * FROM outpatient_dynamic";
+
     // Additional
     public static String[] DYNAMIN_DATA = {
         "WFN", // waiting for nurse
         "WFNI", // waiting for nurse(injection)
         "WFD", // waiting for doctor
-        "WFDR" // waiting for doctor with result
+        
+        // Michelle added below
+        "WFR", // Waiting for Result  
+        "WFDR", // Waiting for Doctor with Result
+        "WFP", // Waiting for Prescription
+        "WFB", // Waiting for Bill
+        "CKO" // Check Out
     };
 
     public static double getTodayMillisecondsWithOutTime() {
@@ -502,8 +510,14 @@ public class DbDAO {
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
-            pstmt.setString(1, status);
+            
+            if(status.equals("ALL")){ //Michelle added this if-else
+                pstmt = connect.prepareStatement(FIND_ALL_STATUS);
+            }
+            else {
+                pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
+                pstmt.setString(1, status);
+            }
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -519,7 +533,7 @@ public class DbDAO {
         }
         return list;
     }
-
+    
     public List<Employee> findDoctor(String findDocName) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
@@ -765,5 +779,30 @@ public class DbDAO {
         }
         return list;
     }
+    
+    // Michelle added. Find ALL patient status
+    public List<DynamicInfo> findPatientStatus() {
+        
+        List<DynamicInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_ALL_STATUS);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                DynamicInfo d = new DynamicInfo();
+                d.buildDynamicInfo(rs);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
 
 }

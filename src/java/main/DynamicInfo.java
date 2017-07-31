@@ -191,11 +191,25 @@ public class DynamicInfo {
                 return "Waiting for Nurse";
             case "WFNI":
                 return "Waiting for Nurse(Injection)";
+            case "CKI": //Michelle Added More Status Here
+                return "Check-In";
+            case "WFD":
+                return "Waiting for Doctor without Result";
+            case "WFR":
+                return "Waiting for Result";    
+            case "WFDR":
+                return "Waiting for Doctor with Result";
+            case "WFP":
+                return "Waiting for Prescription";   
+            case "WFB":
+                return "Waiting for Bill";
+            case "CKO":
+                return "Check Out";    
             default:
                 return "N/A";
         }
     }
-
+    
     public void setStatus(String status) {
         this.status = status;
     }
