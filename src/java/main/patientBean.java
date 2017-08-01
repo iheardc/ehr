@@ -61,6 +61,7 @@ public class patientBean implements Serializable {
 
     public void selectPatient() {
         isShowMoreInfo = true;
+        resetFindItem();
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
 //        context.update(":form");
