@@ -21,7 +21,6 @@ import java.util.List;
  * @author tw
  */
 public class DbDAO {
-    
 
 //    private static final String LOGIN_PATIENT = "SELECT * FROM patient WHERE email=? AND password=?";
     private static final String LOGIN_EMPLOYEE = "SELECT * FROM employee WHERE id=? AND password=?";
@@ -75,7 +74,12 @@ public class DbDAO {
     private static final String MAKE_NEW_BILLING
             = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
-            = "SELECT * FROM outpatient_dynamic WHERE status like ?";
+            = "SELECT A.*, B.pic as patient_pic "
+            + "FROM outpatient_dynamic as A LEFT OUTER JOIN ( "
+            + "SELECT id,pic FROM patient "
+            + "GROUP BY id) as B on(B.id = A.patient_id) "
+            + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ?"
+            + "GROUP BY A.id;";
     private static final String FIND_DOCTOR
             = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
     private static final String FIND_DOCTOR_WITH_SPECIALTY
@@ -101,16 +105,34 @@ public class DbDAO {
             = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
             + "VALUES(?,?,?,?,?,?);";
     private static final String GET_CHEIF_COMPLAINT_FROM_DYNAMIC
-            = "SELECT * FROM chief_complaint WHERE id=?";
+            = "SELECT * FROM chief_complaint WHERE outpatient_dynamic_id=?";
+    private static final String GET_VITAL_SIGN_FROM_DYNAMIC
+            = "SELECT * FROM vital_sign WHERE outpatient_dynamic_id=?";
     private static final String FIND_ALL_STATUS//Michelle
             = "SELECT * FROM outpatient_dynamic";
+    private static final String GET_PATIENT_VISIT_HISTORY
+            = "SELECT  A.*, B.chief as chief , C.injection as injection, D.temperature, D.SPO2, D.weight, D.blood_pressure "
+            + "FROM outpatient_dynamic as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, GROUP_CONCAT(CONCAT(SNOMED_CT_Code, ':', description) SEPARATOR ', ') AS chief "
+            + "FROM chief_complaint "
+            + "GROUP BY outpatient_dynamic_id) as B on (B.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, GROUP_CONCAT(CONCAT(RxNORM_Code, ':', description) SEPARATOR ', ') AS injection "
+            + "FROM injection "
+            + "GROUP BY outpatient_dynamic_id) as C on (C.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM vital_sign "
+            + "GROUP BY id) as D on (D.outpatient_dynamic_id = A.id) "
+            + "WHERE A.patient_id like ? and A.id not like ? "
+            + "GROUP BY A.id;";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
         "WFN", // waiting for nurse
         "WFNI", // waiting for nurse(injection)
         "WFD", // waiting for doctor
-        
+
         // Michelle added below
         "WFR", // Waiting for Result  
         "WFDR", // Waiting for Doctor with Result
@@ -165,9 +187,25 @@ public class DbDAO {
 
     }
 
+    public static Date getTodayDateWithTime() {
+        Calendar now = Calendar.getInstance();
+        Date date = null;
+        try {
+            String cdate = String.format("%d%02d%02d%02d%02d%02d", now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            date = sdf.parse(cdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
     // Query Function
     private boolean checkEmployeeEmailDuplicate(Employee em) {
-
+        if (em.email != null || !"".equals(em.email)) {
+            return false;
+        }
         boolean isDuplicate = false;
 
         PreparedStatement pstmt = null;
@@ -223,7 +261,7 @@ public class DbDAO {
             pstmt.setString(11, em.state);
             pstmt.setString(12, em.zip);
             pstmt.setString(13, em.country);
-            
+
             pstmt.setBytes(14, em.arr);
 
             pstmt.executeUpdate();
@@ -307,7 +345,7 @@ public class DbDAO {
             pstmt.setString(25, p.posCity);
             pstmt.setString(26, p.posState);
             pstmt.setString(27, p.posZip);
-            
+
             pstmt.setBytes(28, p.arr);
 
             pstmt.executeUpdate();
@@ -433,7 +471,6 @@ public class DbDAO {
 //            DbConnectionPools.closeResources(connect, pstmt);
 //        }
 //    }
-
     public void loginEmployee(Employee em) {
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -502,22 +539,25 @@ public class DbDAO {
         }
     }
 
-    public List<DynamicInfo> searchPatientInDynamic(String status) {
+    public List<DynamicInfo> searchPatientInDynamic(String status, String doctor_id) {
         if (status == null || "".equals(status)) {
             status = "%";
+        }
+        if (doctor_id == null || "".equals(doctor_id)) {
+            doctor_id = "%";
         }
         List<DynamicInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            
-            if(status.equals("ALL")){ //Michelle added this if-else
+
+            if (status.equals("ALL")) { //Michelle added this if-else
                 pstmt = connect.prepareStatement(FIND_ALL_STATUS);
-            }
-            else {
+            } else {
                 pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
                 pstmt.setString(1, status);
+                pstmt.setString(2, doctor_id);
             }
 
             ResultSet rs = pstmt.executeQuery();
@@ -534,7 +574,7 @@ public class DbDAO {
         }
         return list;
     }
-    
+
     public List<Employee> findDoctor(String findDocName) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
@@ -653,7 +693,7 @@ public class DbDAO {
         return list;
     }
 
-    public void assignDoctor(DynamicInfo d, Employee doc, Employee nurse, List<SynomedCT> cheifList, String temperature, String spo2, String weight, String bloodPressure) {
+    public void assignDoctor(DynamicInfo d, Employee doc, Employee nurse, List<SnomedCT> cheifList, String temperature, String spo2, String weight, String bloodPressure) {
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
@@ -688,13 +728,13 @@ public class DbDAO {
         }
     }
 
-    public boolean addCheifComplaint(Connection connect, DynamicInfo d, List<SynomedCT> cheifList) {
+    public boolean addCheifComplaint(Connection connect, DynamicInfo d, List<SnomedCT> cheifList) {
         boolean result = false;
         PreparedStatement pstmt = null;
 //        Connection connect = null;
         try {
 //            connect = DbConnectionPools.getPoolConnection();
-            for (SynomedCT s : cheifList) {
+            for (SnomedCT s : cheifList) {
                 pstmt = connect.prepareStatement(ADD_CHEIF_COMPLAINT);
 
                 pstmt.setString(1, d.id);
@@ -717,17 +757,21 @@ public class DbDAO {
 //            = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
 //            + "VALUES(?,?,?,?,?,?);";
     public boolean addVitalSign(Connection connect, DynamicInfo d, String temperature, String spo2, String weight, String bloodPressure) {
-        if(temperature == null && spo2 == null && weight == null && bloodPressure == null){
+        if (temperature == null && spo2 == null && weight == null && bloodPressure == null) {
             return true;
-        }else{
-            if(temperature == null)
+        } else {
+            if (temperature == null) {
                 temperature = "";
-            if(spo2 == null)
+            }
+            if (spo2 == null) {
                 spo2 = "";
-            if(weight == null)
+            }
+            if (weight == null) {
                 weight = "";
-            if(bloodPressure == null)
+            }
+            if (bloodPressure == null) {
                 bloodPressure = "";
+            }
         }
         boolean result = false;
         PreparedStatement pstmt = null;
@@ -753,12 +797,12 @@ public class DbDAO {
         }
         return result;
     }
-    
-    public List<SynomedCT> getCheifComplaint(String dynamicId){
+
+    public List<SnomedCT> getCheifComplaint(String dynamicId) {
         if (dynamicId == null) {
             dynamicId = "";
         }
-        List<SynomedCT> list = new ArrayList<>();
+        List<SnomedCT> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
@@ -768,8 +812,8 @@ public class DbDAO {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                SynomedCT s = new SynomedCT();
-                s.buildSynomed(rs);
+                SnomedCT s = new SnomedCT();
+                s.buildSnomed(rs);
                 list.add(s);
             }
         } catch (Exception e) {
@@ -780,10 +824,33 @@ public class DbDAO {
         }
         return list;
     }
-    
+
+    public void getVitalSign(DynamicInfo d) {
+        if (d == null) {
+            return;
+        }
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_VITAL_SIGN_FROM_DYNAMIC);
+            pstmt.setString(1, d.id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                d.buildDynamicInfoVital(rs);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! getCheifComplaint : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
+
     // Michelle added. Find ALL patient status
     public List<DynamicInfo> findPatientStatus() {
-        
+
         List<DynamicInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -804,6 +871,29 @@ public class DbDAO {
         }
         return list;
     }
-    
+
+    public void patientVisitHistory(DynamicInfo d) {
+        List<DynamicInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_PATIENT_VISIT_HISTORY);
+            pstmt.setString(1, d.p.id);
+            pstmt.setString(2, d.id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                DynamicInfo dy = new DynamicInfo();
+                dy.buildDynamicInfo(rs);
+                list.add(dy);
+            }
+            d.setPreviousHistory(list);
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
 
 }

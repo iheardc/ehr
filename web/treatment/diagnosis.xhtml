@@ -23,7 +23,7 @@
 
             <b:column col-md="12">
 
-                <h1>Diagnosis Patient</h1>
+                <h1>Patient Consultation</h1>
                 <hr></hr>
 
 
@@ -91,8 +91,8 @@
                                 <hr></hr>
 
                                 <p:dataTable var="d" value="#{treatmentBean.findWFDRList}" id="searchTable2" paginator="true" rows="10"
-                                             resizableColumns="true" tableStyleClass="table table-striped" selectionMode="single"
-                                             selection="#{treatmentBean.selectedD}" rowKey="#{d.id}">
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{treatmentBean.selectedD}" rowKey="#{d.id}">
 
                                     <p:ajax event="rowSelect" listener="#{treatmentBean.onWFDRSelectRowSelect}" />
 
@@ -111,7 +111,7 @@
                                     </p:column>
                                     <p:columnGroup type="footer">
                                         <p:row>
-                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                            <p:column colspan="3" style="text-align:left" footerText="Please select the row." />
                                         </p:row>
                                     </p:columnGroup>
 
@@ -132,11 +132,11 @@
 
                             <b:column col-md="11" offset-md="1">
 
-                                <h3>Selected Patient</h3>
-                                <hr></hr>
+                                <!--                                <h3>Selected Patient</h3>
+                                                                <hr></hr>-->
                                 <b:column col-md="12">
                                     <b:column col-md="3">
-                                        <p:graphicImage value="/images/nopic.png" style="width:100%"/> 
+                                        <p:graphicImage value="#{treatmentBean.selectedD.p.image}" style="width:100%" cache="false"/> 
                                     </b:column>
                                     <b:column col-md="9">
                                         <p:outputLabel value="Name: #{treatmentBean.selectedD.p.name}"></p:outputLabel>
@@ -162,7 +162,7 @@
                                         <p:column headerText="#" style="width: 5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="SYNOMED-CT" style="width: 25%">
+                                        <p:column headerText="SNOMED-CT" style="width: 25%">
                                             <h:outputText value="#{s.code}" />
                                         </p:column>
                                         <p:column headerText="Description" style="width: 70%">
@@ -177,6 +177,19 @@
 
                                     <h3>Current Vital Sign</h3>
                                     <hr></hr>
+                                    <b:column col-md="12">
+                                        <b:column col-md="6">
+                                            <p:outputLabel value="Temperature: #{treatmentBean.selectedD.temperature}"></p:outputLabel>
+                                            <br></br>
+                                            <p:outputLabel value="Blood Pressure: #{treatmentBean.selectedD.bloodPressure}"></p:outputLabel>
+                                        </b:column>
+                                        <b:column col-md="6">
+                                            <p:outputLabel value="SPO2: #{treatmentBean.selectedD.spo2}"></p:outputLabel>
+                                            <br></br>
+                                            <p:outputLabel value="Weight: #{treatmentBean.selectedD.weight}"></p:outputLabel>
+                                        </b:column>
+                                        <p:commandButton class="btn btn-default" value="View History" update=":form:vitalDetail" oncomplete="PF('vitalDialog').show()" />
+                                    </b:column>
 
                                 </b:column>
 
@@ -184,7 +197,32 @@
 
                                     <h3>View Patient Visit History</h3>
                                     <hr></hr>
-                                    <p:dataTable var="v" value="#{treatmentBean.visitHistory}" id="visitHistoryTable"
+                                    <p:dataTable var="vh" value="#{treatmentBean.selectedD.previousHistory}" id="visitHistoryTable"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                        <p:column headerText="#" style="width: 5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="Doctor Name" style="width: 20%">
+                                            <h:outputText value="#{vh.doc.name}" />
+                                        </p:column>
+                                        <p:column headerText="Cheif Complaint" style="width: 35%">
+                                            <h:outputText value="#{vh.cheifComplaintStr}" />
+                                        </p:column>
+                                        <p:column headerText="Injection" style="width: 10%">
+                                            <h:outputText value="#{vh.injectionStr}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width: 20%">
+                                            <h:outputText value="#{vh.dateString}" />
+                                        </p:column>
+                                        <p:column style="width:10%; text-align: center" headerText="Detail">
+                                            <p:commandButton title="Detail" value="Detail" styleClass="btn btn-default">
+                                                <!--<f:setPropertyActionListener value="#{p}" target="#{treatmentBean.selectedP}" />-->
+                                            </p:commandButton>
+                                        </p:column>
+
+                                    </p:dataTable>
+<!--                                    <p:dataTable var="v" value="#{treatmentBean.visitHistory}" id="visitHistoryTable"
                                                  resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
 
                                         <p:column headerText="#" style="width: 5%">
@@ -204,11 +242,11 @@
                                         </p:column>
                                         <p:column style="width:10%; text-align: center" headerText="View">
                                             <p:commandButton title="View" icon="ui-icon-search" value="" action="#{treatmentBean.viewFile(v.name)}">
-                                                <!--<f:setPropertyActionListener value="#{p}" target="#{treatmentBean.selectedP}" />-->
+                                                <f:setPropertyActionListener value="#{p}" target="#{treatmentBean.selectedP}" />
                                             </p:commandButton>
                                         </p:column>
 
-                                    </p:dataTable>
+                                    </p:dataTable>-->
 
                                 </b:column>
 
@@ -224,6 +262,11 @@
                                     <h3>Write Prescription</h3>
                                     <hr></hr>
 
+<!--                                    <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.visitSummary}">
+                                        <strong>Success!</strong> Visit summary is successfully saved.
+                                    </b:alert>-->
+                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" ></p:commandButton>
+
                                 </b:column>
 
                                 <b:column col-md="11" offset-md="1">
@@ -231,12 +274,32 @@
                                     <h3>Write Visit Summary</h3>
                                     <hr></hr>
 
+                                    <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.visitSummary}">
+                                        <strong>Success!</strong> Visit summary is successfully saved.
+                                    </b:alert>
+                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" ></p:commandButton>
+
                                 </b:column>
 
                                 <b:column col-md="11" offset-md="1">
 
                                     <h3>Give an Injection</h3>
                                     <hr></hr>
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="injection" value="RxNORM" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:inputText value="" id="injection" autocomplete="off" class="form-control" placeholder="Enter RxNORM or description"></p:inputText>
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <b:column col-md="11" offset-md="1">
+                                            <h4>Injection</h4>
+                                            <hr></hr>
+                                            
+                                        </b:column>
+                                    </b:column>
 
                                 </b:column>
 
@@ -294,6 +357,124 @@
                         </b:column>
 
                     </b:column>
+
+
+
+                    <!--Dialog-->
+                    <p:dialog header="Vital Sign History" widgetVar="vitalDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                        <p:outputPanel id="vitalDetail">
+
+                            <p:panelGrid  columns="1" rendered="#{not empty treatmentBean.selectedD.previousHistory}">
+
+
+                                <p:dataTable var="vh" value="#{treatmentBean.selectedD.previousHistory}" id="vitalHistoryTable"  paginator="true" rows="10"
+                                             resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                    <p:column headerText="Date" style="width: 20%">
+                                        <h:outputText value="#{vh.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Nurse Name" style="width: 20%">
+                                        <h:outputText value="#{vh.n.name}" />
+                                    </p:column>
+                                    <p:column headerText="Temperature" style="width: 15%">
+                                        <h:outputText value="#{vh.temperature}" />
+                                    </p:column>
+                                    <p:column headerText="Blood Pressure" style="width: 25%">
+                                        <h:outputText value="#{vh.bloodPressure}" />
+                                    </p:column>
+                                    <p:column headerText="SPO2" style="width: 10%">
+                                        <h:outputText value="#{vh.spo2}" />
+                                    </p:column>
+                                    <p:column headerText="Weight" style="width: 10%">
+                                        <h:outputText value="#{vh.weight}" />
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+
+                    <p:dialog header="Write Visit Summary" widgetVar="vsDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                        <p:outputPanel id="vsDetail"  style="border:0px;">
+
+                            <!--<p:panelGrid  columns="1"  style="border:0px;">-->
+
+                            <b:column col-md="12">
+
+                                <b:column col-md="6">
+
+                                    <h3>Current Cheif Complaint</h3>
+                                    <hr></hr>
+                                    <p:dataTable var="s" value="#{treatmentBean.selectedD.cheifComplaintList}" id="vsCheifTable"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                        <p:column headerText="#" style="width: 5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="SNOMED-CT" style="width: 25%">
+                                            <h:outputText value="#{s.code}" />
+                                        </p:column>
+                                        <p:column headerText="Description" style="width: 70%">
+                                            <h:outputText value="#{s.description}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </b:column>
+                                <b:column col-md="6">
+                                    <h3>Current Vital Sign</h3>
+                                    <hr></hr>
+                                    <b:column col-md="12">
+                                        <b:column col-md="6">
+                                            <p:outputLabel value="Temperature: #{treatmentBean.selectedD.temperature}"></p:outputLabel>
+                                            <br></br>
+                                            <p:outputLabel value="Blood Pressure: #{treatmentBean.selectedD.bloodPressure}"></p:outputLabel>
+                                        </b:column>
+                                        <b:column col-md="6">
+                                            <p:outputLabel value="SPO2: #{treatmentBean.selectedD.spo2}"></p:outputLabel>
+                                            <br></br>
+                                            <p:outputLabel value="Weight: #{treatmentBean.selectedD.weight}"></p:outputLabel>
+                                        </b:column>
+                                        <p:commandButton styleClass="btn btn-default" value="View History" update=":form:vitalDetail" oncomplete="PF('vitalDialog').show()" />
+                                    </b:column>
+                                </b:column>
+
+                            </b:column>
+
+                            <b:column col-md="12">
+
+                                <h3>Write</h3>
+                                <hr></hr>
+
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="datetime" value="Date and Time" class="col-sm-2 control-label" ></p:outputLabel>
+                                        <b:column col-sm="6">
+                                            <p:calendar id="datetime" value="#{treatmentBean.datetime}" pattern="MM/dd/yyyy HH:mm:ss" />
+                                        </b:column>
+                                    </div>
+                                </b:column>
+
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <!--<p:outputLabel for="visitSummary" value="" class="col-sm-2 control-label"></p:outputLabel>-->
+                                        <!--<b:column col-sm="10">-->
+                                        <p:inputTextarea id="visitSummary" style="width:100%;" value="#{treatmentBean.visitSummary}" placeholder="Enter visit summary"/>
+                                        <!--</b:column>-->
+                                    </div>
+                                </b:column>
+
+                            </b:column>
+
+                            <b:column col-md="12">
+                                <p:commandButton title="Save" value="Save" styleClass="btn btn-primary" oncomplete="PF('vsDialog').hide()" update="form" ></p:commandButton>
+                            </b:column>
+
+
+                            <!--</p:panelGrid>-->
+                        </p:outputPanel>
+                    </p:dialog>
+
 
                 </h:form>
 

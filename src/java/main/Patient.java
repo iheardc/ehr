@@ -5,6 +5,8 @@
  */
 package main;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.DateFormat;
@@ -12,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -517,6 +521,21 @@ public class Patient {
 
     public void setDBaccnt(String DBaccnt) {
         this.DBaccnt = DBaccnt;
+    }
+    
+    public StreamedContent getImage() throws IOException {
+//        FacesContext context = FacesContext.getCurrentInstance();
+//
+//        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+//            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+//            return new DefaultStreamedContent();
+//        } 
+//        return new DefaultStreamedContent(new ByteArrayInputStream(selectedP.arr));    
+        if (arr == null || arr.length <= 0) {
+            return new DefaultStreamedContent();
+        } else {
+            return new DefaultStreamedContent(new ByteArrayInputStream(arr));
+        }
     }
 
 }

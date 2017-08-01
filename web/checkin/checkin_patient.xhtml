@@ -88,12 +88,15 @@
                             <div class="form-group">
 
                                 <p:dataTable var="p" value="#{patientBean.findList}" id="patientData" paginator="true" rows="10"
-                                             resizableColumns="true" tableStyleClass="table table-striped"  >
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{patientBean.selectedP}" rowKey="#{p.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{patientBean.onPatientSelectRowSelect}" />
 
                                     <p:column headerText="ID" style="width:10%">
                                         <h:outputText value="#{p.id}" />
                                     </p:column>
-                                    <p:column headerText="Name" style="width:30%">
+                                    <p:column headerText="Name" style="width:40%">
                                         <h:outputText value="#{p.name}" />
                                     </p:column>
                                     <p:column headerText="Gender" style="width:20%">
@@ -102,11 +105,16 @@
                                     <p:column headerText="Date of Birth" style="width:30%">
                                         <h:outputText value="#{p.dobString}" />
                                     </p:column>
-                                    <p:column style="width:10%; text-align: center" headerText="Select">
-                                        <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectPatient()}">
-                                            <f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />
-                                        </p:commandButton>
-                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <!--                                    <p:column style="width:10%; text-align: center" headerText="Select">
+                                                                            <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{patientBean.selectPatient()}">
+                                                                                <f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />
+                                                                            </p:commandButton>
+                                                                        </p:column>-->
                                 </p:dataTable>
 
                             </div>
@@ -120,9 +128,20 @@
 
                                 <h3>View Demographic</h3>
                                 <hr></hr>
-                                <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="View #{patientBean.selectedP.name}'s Detail" title="View" class="btn btn-primary">
-                                    <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->
-                                </p:commandButton>
+                                <b:column col-md="12" class="form-horizontal" id="patientInfo">
+                                    <b:column col-md="3">
+                                        <p:graphicImage value="#{patientBean.selectedP.image}" style="width:100%" cache="false"/> 
+                                    </b:column>
+                                    <b:column col-md="9">
+                                        <p:outputLabel value="Patient Id : #{patientBean.selectedP.id} " class="col-sm-6"/>
+                                        <p:outputLabel value="Patient Name : #{patientBean.selectedP.name} " class="col-sm-6"/>
+                                        <p:outputLabel value="Gender : #{patientBean.selectedP.gender} " class="col-sm-6"/>
+                                        <p:outputLabel value="Date of Birth : #{patientBean.selectedP.dobString} " class="col-sm-6"/>
+                                        <p:commandButton update=":form:pDetail" oncomplete="PF('pDialog').show()" value="More" title="More" class="btn btn-default">
+                                            <!--<f:setPropertyActionListener value="#{p}" target="#{patientBean.selectedP}" />-->
+                                        </p:commandButton>
+                                    </b:column>
+                                </b:column>
 
 
                             </b:column>

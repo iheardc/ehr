@@ -50,7 +50,7 @@ public class patientStatusBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus);
+        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus, null);
         
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

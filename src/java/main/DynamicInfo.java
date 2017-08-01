@@ -26,15 +26,19 @@ public class DynamicInfo {
     Double date;
     
     // Cheif Complaint
-    List<SynomedCT> cheifComplaintList;
+    List<SnomedCT> cheifComplaintList;
+    String cheifComplaintStr;
     
     // Vital Sign
     String temperature, spo2, weight, bloodPressure;
     
     // Injection
     ArrayList<String[]> injectionList;
+    String injectionStr;
     
     String errormsg;
+    
+    List<DynamicInfo> previousHistory;
 
     public DynamicInfo() {
         p = new Patient();
@@ -42,7 +46,7 @@ public class DynamicInfo {
         n = new Employee();
     }
 
-    public DynamicInfo(String id, String status, Patient p, Employee doc, Employee n, Double date, List<SynomedCT> cheifComplaintList, String temperature, String spo2, String weight, String bloodPressure, ArrayList<String[]> injectionList, String errormsg) {
+    public DynamicInfo(String id, String status, Patient p, Employee doc, Employee n, Double date, List<SnomedCT> cheifComplaintList, String temperature, String spo2, String weight, String bloodPressure, ArrayList<String[]> injectionList, String errormsg) {
         this.id = id;
         this.status = status;
         this.p = p;
@@ -114,6 +118,10 @@ public class DynamicInfo {
                 if (columnName.contains(column)) {
                     this.p.dob = rs.getDouble(column);
                 }
+                column = "patient_pic";
+                if (columnName.contains(column)) {
+                    this.p.arr = rs.getBytes(column);
+                }
                 column = "doctor_id";
                 if (columnName.contains(column)) {
                     this.doc.id = rs.getString(column);
@@ -154,6 +162,45 @@ public class DynamicInfo {
                 if (columnName.contains(column)) {
                     this.bloodPressure = rs.getString(column);
                 }
+                column = "chief";
+                if (columnName.contains(column)) {
+                    this.cheifComplaintStr = rs.getString(column);
+                }
+                column = "injection";
+                if (columnName.contains(column)) {
+                    this.injectionStr = rs.getString(column);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public void buildDynamicInfoVital(ResultSet rs){
+        ArrayList<String> columnName = getKeySet(rs);
+//        Employee em = new Employee();
+        if (columnName != null) {
+            try {
+                String column = "outpatient_dynamic_id";
+                if (columnName.contains(column)) {
+                    this.id = Integer.toString(rs.getInt(column));
+                }
+                column = "temperature";
+                if (columnName.contains(column)) {
+                    this.temperature = rs.getString(column);
+                }
+                column = "SPO2";
+                if (columnName.contains(column)) {
+                    this.spo2 = rs.getString(column);
+                }
+                column = "weight";
+                if (columnName.contains(column)) {
+                    this.weight = rs.getString(column);
+                }
+                column = "blood_pressure";
+                if (columnName.contains(column)) {
+                    this.bloodPressure = rs.getString(column);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -169,8 +216,18 @@ public class DynamicInfo {
         }
     }
     
+    public void getVitalSigns(){
+        DbDAO dao = new DbDAO();
+        dao.getVitalSign(this);
+    }
+    
     public void getInjections(){
         
+    }
+    
+    public void getPreviousVisitHistory(){
+        DbDAO dao = new DbDAO();
+        dao.patientVisitHistory(this);
     }
 
     public String getId() {
@@ -257,11 +314,11 @@ public class DynamicInfo {
         this.date = date;
     }
 
-    public List<SynomedCT> getCheifComplaintList() {
+    public List<SnomedCT> getCheifComplaintList() {
         return cheifComplaintList;
     }
 
-    public void setCheifComplaintList(List<SynomedCT> cheifComplaintList) {
+    public void setCheifComplaintList(List<SnomedCT> cheifComplaintList) {
         this.cheifComplaintList = cheifComplaintList;
     }
 
@@ -311,6 +368,30 @@ public class DynamicInfo {
 
     public void setErrormsg(String errormsg) {
         this.errormsg = errormsg;
+    }
+
+    public String getCheifComplaintStr() {
+        return cheifComplaintStr;
+    }
+
+    public void setCheifComplaintStr(String cheifComplaintStr) {
+        this.cheifComplaintStr = cheifComplaintStr;
+    }
+
+    public String getInjectionStr() {
+        return injectionStr;
+    }
+
+    public void setInjectionStr(String injectionStr) {
+        this.injectionStr = injectionStr;
+    }
+
+    public List<DynamicInfo> getPreviousHistory() {
+        return previousHistory;
+    }
+
+    public void setPreviousHistory(List<DynamicInfo> previousHistory) {
+        this.previousHistory = previousHistory;
     }
     
     

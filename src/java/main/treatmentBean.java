@@ -57,8 +57,12 @@ public class treatmentBean implements Serializable {
     hl7 hl7 = new hl7();
 
     public void findDynaPatient() {
+
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus);
+        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus, sBean.id);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -87,22 +91,24 @@ public class treatmentBean implements Serializable {
     }
 
     public void onWFDSelectRowSelect(SelectEvent event) {
+        resetMoreForm();
         selectedD.getCheifComplaints(null);
+        selectedD.getVitalSigns();
+        selectedD.getPreviousVisitHistory();
         FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
 
-        visitHistory = new ArrayList<>();
-        db = new DropBox();
-        db.connectDB(selectedD.p);
-        try {
-            db.viewAllDocuments(visitHistory);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        for (Forms f : visitHistory) {
-            System.out.println(f.date + ", " + f.name + ", " + f.size + ", " + f.type);
-        }
-
+//        visitHistory = new ArrayList<>();
+//        db = new DropBox();
+//        db.connectDB(selectedD.p);
+//        try {
+//            db.viewAllDocuments(visitHistory);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        for (Forms f : visitHistory) {
+//            System.out.println(f.date + ", " + f.name + ", " + f.size + ", " + f.type);
+//        }
         selectDynaWFDPatient();
 //        new Thread() {
 //            @Override
@@ -130,7 +136,7 @@ public class treatmentBean implements Serializable {
     public void selectDynaWFDPatient() {
         isShowWFDInfo = true;
         isShowWFDRInfo = false;
-        resetMoreForm();
+//        resetMoreForm();
 //        RequestContext context = RequestContext.getCurrentInstance();
 //        context.update("form");
         RequestContext.getCurrentInstance().update("form");
@@ -139,7 +145,7 @@ public class treatmentBean implements Serializable {
     public void selectDynaWFDRPatient() {
         isShowWFDInfo = false;
         isShowWFDRInfo = true;
-        resetMoreForm();
+//        resetMoreForm();
 //        RequestContext context = RequestContext.getCurrentInstance();
 //        context.update("form");
         RequestContext.getCurrentInstance().update("form");
@@ -270,9 +276,8 @@ public class treatmentBean implements Serializable {
         isShowWriteSummary = false;
         findPatientName = null;
         findPatientDoB = null;
-        datetime = null;
+        datetime = DbDAO.getTodayDateWithTime();
         visitSummary = null;
-
     }
 
     public void submitDiagnosis() {

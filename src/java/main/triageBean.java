@@ -39,11 +39,11 @@ public class triageBean implements Serializable {
 
     // Enter Chief Complaint
     // The items currently available for selection
-    private List<SynomedCT> scodeItems = new ArrayList<SynomedCT>();
+    private List<SnomedCT> scodeItems = new ArrayList<SnomedCT>();
     // Current selected specialty
-    private List<SynomedCT> findScodeList;
+    private List<SnomedCT> findScodeList;
     // All the items available in the application
-    private List<SynomedCT> scodeAllItems = new ArrayList<SynomedCT>();
+    private List<SnomedCT> scodeAllItems = new ArrayList<SnomedCT>();
 
     // Find Doctor
     String findDocName, findDocSpecialty;
@@ -57,7 +57,7 @@ public class triageBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus);
+        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus, null);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -79,24 +79,40 @@ public class triageBean implements Serializable {
         }
         isShowWFNTable = findWNFList.size() > 0;
         isShowWFNITable = findWNFIList.size() > 0;
+        selectedD = null;
+        resetMoreForm();
 
 //        resetFindItem();
         RequestContext.getCurrentInstance().update("form");
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
+    
+    public void onWFNSelectRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        selectDynaAssignPatient();
+    }
 
     public void selectDynaAssignPatient() {
+        resetMoreForm();
         isShowAssignInfo = true;
         isShowInjectionInfo = false;
-        resetMoreForm();
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
     }
+    
+    public void onWFNISelectRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        selectDynaInjectionPatient();
+    }
 
     public void selectDynaInjectionPatient() {
+        resetMoreForm();
         isShowAssignInfo = false;
         isShowInjectionInfo = true;
-        resetMoreForm();
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
     }
@@ -198,14 +214,14 @@ public class triageBean implements Serializable {
         patientStatus = null;
         findWNFList = null;
         findWNFIList = null;
-        isShowAssignInfo = false;
-        isShowInjectionInfo = false;
         isShowWFNTable = false;
         isShowWFNITable = false;
         selectedD = null;
     }
 
     public void resetMoreForm() {
+        isShowAssignInfo = false;
+        isShowInjectionInfo = false;
         findDocName = null;
         findDocSpecialty = null;
         findDocList = null;
@@ -221,21 +237,21 @@ public class triageBean implements Serializable {
 
     private void setAllScode() {
 
-        scodeItems = new ArrayList<SynomedCT>();
-        findScodeList = new ArrayList<SynomedCT>();
-        scodeAllItems = new ArrayList<SynomedCT>();
+        scodeItems = new ArrayList<SnomedCT>();
+        findScodeList = new ArrayList<SnomedCT>();
+        scodeAllItems = new ArrayList<SnomedCT>();
 
-        scodeAllItems = SynomedService.getAllList();
+        scodeAllItems = SnomedService.getAllList();
         scodeItems.addAll(scodeAllItems);
     }
 
-    public List<SynomedCT> scodeCompleteItem(String query) {
+    public List<SnomedCT> scodeCompleteItem(String query) {
         if (findScodeList == null) {
             findScodeList = new ArrayList<>();
         }
         query = query.toLowerCase();
-        List<SynomedCT> filteredList = new ArrayList<SynomedCT>();
-        for (SynomedCT item : scodeAllItems) {
+        List<SnomedCT> filteredList = new ArrayList<SnomedCT>();
+        for (SnomedCT item : scodeAllItems) {
             if (item.isContain(query) && !findScodeList.contains(item)) {
                 filteredList.add(item);
             }
@@ -414,27 +430,27 @@ public class triageBean implements Serializable {
         this.selectedDoc = selectedDoc;
     }
 
-    public List<SynomedCT> getScodeItems() {
+    public List<SnomedCT> getScodeItems() {
         return scodeItems;
     }
 
-    public void setScodeItems(List<SynomedCT> scodeItems) {
+    public void setScodeItems(List<SnomedCT> scodeItems) {
         this.scodeItems = scodeItems;
     }
 
-    public List<SynomedCT> getFindScodeList() {
+    public List<SnomedCT> getFindScodeList() {
         return findScodeList;
     }
 
-    public void setFindScodeList(List<SynomedCT> findScodeList) {
+    public void setFindScodeList(List<SnomedCT> findScodeList) {
         this.findScodeList = findScodeList;
     }
 
-    public List<SynomedCT> getScodeAllItems() {
+    public List<SnomedCT> getScodeAllItems() {
         return scodeAllItems;
     }
 
-    public void setScodeAllItems(List<SynomedCT> scodeAllItems) {
+    public void setScodeAllItems(List<SnomedCT> scodeAllItems) {
         this.scodeAllItems = scodeAllItems;
     }
 

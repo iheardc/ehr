@@ -17,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -55,8 +56,19 @@ public class patientBean implements Serializable {
             message = new FacesMessage("Search ", "There are no matching results.");
         }
         FacesContext.getCurrentInstance().addMessage(null, message);
+        selectedP = null;
+        isShowMoreInfo = false;
         resetFindItem();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form");
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
+    }
+
+    public void onPatientSelectRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        selectPatient();
     }
 
     public void selectPatient() {

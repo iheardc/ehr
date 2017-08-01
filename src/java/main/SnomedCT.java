@@ -13,15 +13,15 @@ import java.util.ArrayList;
  *
  * @author tw
  */
-public class SynomedCT {
+public class SnomedCT {
     
     String code, description;
     
-    public SynomedCT(){
+    public SnomedCT(){
         
     }
 
-    public SynomedCT(String code, String description) {
+    public SnomedCT(String code, String description) {
         this.code = code;
         this.description = description;
     }
@@ -47,7 +47,7 @@ public class SynomedCT {
         }
     }
     
-    public void buildSynomed(ResultSet rs) {
+    public void buildSnomed(ResultSet rs) {
         ArrayList<String> columnName = getKeySet(rs);
 //        Employee em = new Employee();
         if (columnName != null) {
@@ -88,7 +88,7 @@ public class SynomedCT {
     
     @Override
     public boolean equals(Object obj){
-        SynomedCT s = (SynomedCT)obj;
+        SnomedCT s = (SnomedCT)obj;
         return (code.equals(s.code) && description.equals(s.description));
     }
     

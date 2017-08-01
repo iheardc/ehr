@@ -17,17 +17,17 @@ import javax.faces.convert.FacesConverter;
  *
  * @author tw
  */
-@FacesConverter("synomedConverter")
-public class SynomedConverter implements Converter {
+@FacesConverter("snomedConverter")
+public class SnomedConverter implements Converter {
 
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
         if (value != null && value.trim().length() > 0) {
             try {
 //                ThemeService service = (ThemeService) fc.getExternalContext().getApplicationMap().get("themeService");
 //                return service.getThemes().get(Integer.parseInt(value));
-                SynomedService service = (SynomedService) fc.getExternalContext().getApplicationMap().get("synomedService");
-                List<SynomedCT> list = service.getList();
-                for(SynomedCT s : list){
+                SnomedService service = (SnomedService) fc.getExternalContext().getApplicationMap().get("snomedService");
+                List<SnomedCT> list = service.getList();
+                for(SnomedCT s : list){
                     if(s.getCode().equals(value)){
                         return s;
                     }
@@ -44,7 +44,7 @@ public class SynomedConverter implements Converter {
     public String getAsString(FacesContext fc, UIComponent uic, Object object) {
         if (object != null) {
 //            return String.valueOf(((Theme) object).getId());
-            return ((SynomedCT) object).getCode();
+            return ((SnomedCT) object).getCode();
         } else {
             return null;
         }
