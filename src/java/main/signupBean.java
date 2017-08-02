@@ -62,7 +62,7 @@ public class signupBean implements Serializable {
         setAllSpecialty();
     }
 
-    public String registrationEmployee() throws IOException {
+    public void registrationEmployee() throws IOException {
 
         DbDAO dao = new DbDAO();
 
@@ -87,18 +87,19 @@ public class signupBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", em.errormsg);
             FacesContext.getCurrentInstance().addMessage(null, message);
-            return "";
+//            return "";
         } else {
             reset();
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage("Successfylly registered ", "Your registration has been successfully completed!");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            return "/admin/create_employee.xhtml?faces-redirect=true";
+//            return "/admin/create_employee.xhtml?faces-redirect=true";
+            menuBean.newEmployee();
         }
 
     }
 
-    public String registrationPatient() throws IOException {
+    public void registrationPatient() throws IOException {
 
         DbDAO dao = new DbDAO();
 
@@ -115,13 +116,14 @@ public class signupBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", p.errormsg);
             FacesContext.getCurrentInstance().addMessage(null, message);
-            return "";
+//            return "";
         } else { // success
             reset();
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage("Successfylly registered ", "Your registration has been successfully completed!");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            return "/checkin/create_patient.xhtml?faces-redirect=true";
+//            return "/checkin/create_patient.xhtml?faces-redirect=true";
+            menuBean.newPatient();
         }
 
     }
@@ -138,14 +140,16 @@ public class signupBean implements Serializable {
 //        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
     }
 
-    public String cancelPatient() {
+    public void cancelPatient() {
         reset();
-        return menuBean.newPatient();
+//        return menuBean.newPatient();
+        menuBean.newPatient();
     }
 
-    public String cancelEmployee() {
+    public void cancelEmployee() {
         reset();
-        return menuBean.newEmployee();
+//        return menuBean.newEmployee();
+        menuBean.newEmployee();
     }
 
     public void reset() {

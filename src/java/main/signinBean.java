@@ -28,6 +28,7 @@ public class signinBean implements Serializable {
     String loginType = "patient";
     Patient p;
     Employee em;
+        boolean loggedIn = false;
     boolean isPatientLogin = false;
 //    boolean ispatientlogin=true;
 //    boolean isclinicianlogin=false;
@@ -47,11 +48,10 @@ public class signinBean implements Serializable {
 //        }
     }
     
-    public String login() {
+    public void login() {
         RequestContext context = RequestContext.getCurrentInstance();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().clear();
         FacesMessage message;
-        boolean loggedIn = false;
         msg = "";
         DbDAO dao = new DbDAO();
 //        if ("patient".equals(loginType)) {
@@ -92,7 +92,7 @@ public class signinBean implements Serializable {
                 loggedIn = false;
                 message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                return "";
+//                return "";
             } else {
                 loggedIn = true;
 
@@ -101,7 +101,8 @@ public class signinBean implements Serializable {
                 message = new FacesMessage("Welcome ", em.fn);
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 isPatientLogin = false;
-                return "/home.xhtml?faces-redirect=true";
+                menuBean.redirectHome();
+//                return "/home.xhtml?faces-redirect=true";
             }
             
 //        }
@@ -187,5 +188,23 @@ public class signinBean implements Serializable {
     public void setLoginType(String loginType) {
         this.loginType = loginType;
     }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public boolean isIsPatientLogin() {
+        return isPatientLogin;
+    }
+
+    public void setIsPatientLogin(boolean isPatientLogin) {
+        this.isPatientLogin = isPatientLogin;
+    }
+    
+    
     
 }

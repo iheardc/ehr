@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+    <ui:composition>
+
+
+        <!--    <ui:define name="title">Main</ui:define>-->
+        <!--    <ui:define name="header">
+                <ui:include src="templates/header.xhtml"/>
+            </ui:define>
+        -->
+        <!--    <ui:define name="title">Main</ui:define>
+            <ui:define name="leftMenu">
+            </ui:define>
+            <ui:define name="content"> -->
+        <div class="container">
+            <div class="row">
+                <b:column col-md="6" offset-md="3">
+                    <h:form>
+                        <p:commandButton class="btn btn-default" style="margin-bottom:10px;" value="Create Employee(temporary)" ajax="false" action="#{menuBean.newEmployee()}" immediate="true" update="content" />
+                    </h:form>
+                    <div class="panel panel-login" style="padding:2em;">
+                        <div class="panel-heading" style="margin-bottom: 1em;">
+                            <h:form class="row" id="loginmessage">
+                                <!--<b:column col-xs="6">class="active" id="login-form-link"-->
+                                    <!--<p:commandButton value="Patient" class="active" id="login-form-link" action="#{signinBean.selectlogin('patient')}" immediate="true" />-->
+                                <!--</b:column>-->
+                                <!--<b:column col-xs="6">id="register-form-link-->
+                                Please Login
+                                <!--</b:column>-->
+                            </h:form>
+                            <hr></hr>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <b:column col-lg="12"> 
+                                    <h:form id="login-form" role="form">
+                                        <div class="form-group">
+                                            <p:inputText id="id" class="form-control" placeholder="ID" autocomplete="off" value="#{signinBean.id}" required="true"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <b:column col-sm="6" offset-sm="3">
+                                                    <p:commandButton process="@this" value="Login" id="login-submit" action="#{signinBean.login()}" class="form-control btn btn-login" update="content" ajax="false"/>
+                                                </b:column>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <b:column col-lg="12">
+                                                    <div class="text-center">
+                                                        <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
+<!--                                                        <p:commandButton process="@this" value="temp login" action="#{menuBean.redirectHome()}" class="form-control btn btn-login" immediate="true" />-->
+                                                    </div>
+                                                </b:column>
+                                            </div>
+                                        </div>
+                                    </h:form>
+
+                                </b:column>
+                            </div>
+                        </div>
+                    </div>
+                </b:column>
+            </div>
+        </div>
+        <style type="text/css"> 
+            .container{
+                padding-top : 150px;
+            }
+            .panel-login {
+                border-color: #ccc;
+                -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+                -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+                box-shadow: 0px 2px 3px 4px rgba(0,0,0,0.2);
+            }
+            .panel-login>.panel-heading {
+                color: #00415d;
+                background-color: #fff;
+                border-color: #fff;
+                text-align:center;
+            }
+            .panel-login>.panel-heading a{
+                text-decoration: none;
+                color: #666;
+                font-weight: bold;
+                font-size: 15px;
+                -webkit-transition: all 0.1s linear;
+                -moz-transition: all 0.1s linear;
+                transition: all 0.1s linear;
+            }
+            .active{
+                font-size:18px;
+                width:274px;
+                height:50px;
+
+            }
+            .actives{
+                font-size:18px;
+                width:274px;
+                height:50px;
+            }
+            .panel-login>.panel-heading hr{
+                margin-top: 10px;
+                margin-bottom: 0px;
+                clear: both;
+                border: 0;
+                height: 1px;
+                background-image: -webkit-linear-gradient(left,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0));
+                background-image: -moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+                background-image: -ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+                background-image: -o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+            }
+            .panel-login input[type="text"],.panel-login input[type="email"],.panel-login input[type="password"] {
+                height: 45px;
+                border: 1px solid #ddd;
+                font-size: 16px;
+                -webkit-transition: all 0.1s linear;
+                -moz-transition: all 0.1s linear;
+                transition: all 0.1s linear;
+            }
+            .panel-login input:hover,
+            .panel-login input:focus {
+                outline:none;
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none;
+                border-color: #ccc;
+            }
+            .btn-login {
+                background-color: #59B2E0;
+                outline: none;
+                color: #fff;
+                font-size: 14px;
+                height: auto;
+                font-weight: normal;
+                padding: 14px 0;
+                text-transform: uppercase;
+                border-color: #59B2E6;
+            }
+            .btn-login:hover,
+            .btn-login:focus {
+                color: #fff;
+                background-color: #53A3CD;
+                border-color: #53A3CD;
+            }
+            .forgot-password {
+                text-decoration: underline;
+                color: #888;
+            }
+            .forgot-password:hover,
+            .forgot-password:focus {
+                text-decoration: underline;
+                color: #666;
+            }
+
+            .btn-register {
+                background-color: #1CB94E;
+                outline: none;
+                color: #fff;
+                font-size: 14px;
+                height: auto;
+                font-weight: normal;
+                padding: 14px 0;
+                text-transform: uppercase;
+                border-color: #1CB94A;
+            }
+            .btn-register:hover,
+            .btn-register:focus {
+                color: #fff;
+                background-color: #1CA347;
+                border-color: #1CA347;
+            }
+            #loginmessage{
+                font-size:25px;
+                color:gray;
+            }
+        </style>
+
+        <!--</ui:define>-->
+
+    </ui:composition>
+</html>

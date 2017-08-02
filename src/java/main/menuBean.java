@@ -17,52 +17,78 @@ import javax.inject.Named;
 @SessionScoped
 public class menuBean implements Serializable {
     
+    public static String pathCont = "login.xhtml";
+    public static String pathLeft = "/leftMenu/employee_leftMenu.xhtml";
+    
     public menuBean(){
         
     }
     
     // Header
-    public static String redirectHome(){
-        return "/home.xhtml?faces-redirect=true";
+//    public static String redirectHome(){
+//        return "/home.xhtml";
+//    }
+    public static void redirectHome(){
+        pathCont = "/home.xhtml";
     }
     
     // User Information
-    public static String viewPatientDemographics(){
-        return "/userInfo/view_patient.xhtml?faces-redirect=true";
+    public static void viewPatientDemographics(){
+        pathCont = "/userInfo/view_patient.xhtml";
     }
-    public static String viewEmployeeDemographics(){
-        return "/userInfo/view_employee.xhtml?faces-redirect=true";
+    public static void viewEmployeeDemographics(){
+        pathCont = "/userInfo/view_employee.xhtml";
     }
-    public static String findEmployee(){
-        return "/userInfo/find_employee.xhtml?faces-redirect=true";
+    public static void findEmployee(){
+        pathCont = "/userInfo/find_employee.xhtml";
     }
     
     // Patient Check-In
-    public static String newPatient(){
-        return "/checkin/create_patient.xhtml?faces-redirect=true";
+    public static void newPatient(){
+        pathCont = "/checkin/create_patient.xhtml";
     }
-    public static String checkinPatient(){
-        return "/checkin/checkin_patient.xhtml?faces-redirect=true";
+    public static void checkinPatient(){
+        pathCont = "/checkin/checkin_patient.xhtml";
     }
     
     // Nursing Station
-    public static String patientStatus(){
-        return "/nursing_station/patient_status.xhtml?faces-redirect=true";
+    public static void patientStatus(){
+        pathCont = "/nursing_station/patient_status.xhtml";
     }    
-    public static String triage(){
-        return "/nursing_station/triage.xhtml?faces-redirect=true";
+    public static void triage(){
+        pathCont = "/nursing_station/triage.xhtml";
     }
     
     // Treatment
-    public static String diagnosis(){
-        return "/treatment/diagnosis.xhtml?faces-redirect=true";
+    public static void diagnosis(){
+        pathCont = "/treatment/diagnosis.xhtml";
     }
-    public static String writeVisitSummary(){
-        return "/treatment/write_visit_summary.xhtml?faces-redirect=true";
+    public static void writeVisitSummary(){
+        pathCont = "/treatment/write_visit_summary.xhtml";
     }
     
     // Admin
-    public static String newEmployee(){
-        return "/admin/create_employee.xhtml?faces-redirect=true";
+    public static void newEmployee(){
+        pathCont = "/admin/create_employee.xhtml";
     }
+
+    public String getPathCont() {
+        return pathCont;
+    }
+
+    public void setPathCont(String pathCont) {
+        this.pathCont = pathCont;
+    }
+
+    public String getPathLeft() {
+        return pathLeft;
+    }
+
+    public void setPathLeft(String pathLeft) {
+        menuBean.pathLeft = pathLeft;
+    }
+    
+    
+    
+    
 }

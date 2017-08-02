@@ -86,7 +86,7 @@ public class triageBean implements Serializable {
         RequestContext.getCurrentInstance().update("form");
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
-    
+
     public void onWFNSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -101,7 +101,7 @@ public class triageBean implements Serializable {
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
     }
-    
+
     public void onWFNISelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -131,13 +131,13 @@ public class triageBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
 
     }
-    
+
     public void onDoctorSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Doctor Selected", ((Employee) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
-    public String assignDoctor() {
+    public void assignDoctor() {
         boolean isEnterChiefComplaint;
         if (findScodeList == null) {
             isEnterChiefComplaint = false;
@@ -156,13 +156,14 @@ public class triageBean implements Serializable {
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", selectedD.errormsg);
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                return "";
+//                return "";
             } else { // success
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
                 FacesMessage message = new FacesMessage("Successfylly assigned ", selectedD.p.getName() + " to " + selectedDoc.getName());
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 reset();
-                return menuBean.triage();
+//                return menuBean.triage();
+                menuBean.triage();
             }
 
         } else {
@@ -174,7 +175,7 @@ public class triageBean implements Serializable {
                 FacesMessage message = new FacesMessage("Error ", "Doctor");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
-            return "";
+//            return "";
         }
     }
 

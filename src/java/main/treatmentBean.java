@@ -177,7 +177,7 @@ public class treatmentBean implements Serializable {
         }
     }
 
-    public String submitNewRecord() {
+    public void submitNewRecord() {
 //        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssZ");
 //        Date dateobj = new Date();
 //        String date = df.format(dateobj);
@@ -204,7 +204,8 @@ public class treatmentBean implements Serializable {
 //        bp = "";
 //        glucose = "";
 //        temperature = "";
-        return menuBean.writeVisitSummary();
+//        return menuBean.writeVisitSummary();
+        menuBean.writeVisitSummary();
     }
 
     public String viewFile(String file) throws Exception {

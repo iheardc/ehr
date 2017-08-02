@@ -79,7 +79,7 @@ public class patientBean implements Serializable {
 //        context.update(":form");
     }
 
-    public String checkIn() {
+    public void checkIn() {
 
         DbDAO dao = new DbDAO();
         dao.checkInPatient(selectedP);
@@ -88,7 +88,7 @@ public class patientBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", p.errormsg);
             FacesContext.getCurrentInstance().addMessage(null, message);
-            return "";
+//            return "";
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage("Check-In", "Successfully Check-In " + selectedP.getName() + ".");
@@ -96,12 +96,14 @@ public class patientBean implements Serializable {
             reset();
         }
 
-        return "/checkin/checkin_patient?faces-redirect=true";
+//        return "/checkin/checkin_patient?faces-redirect=true";
+        menuBean.checkinPatient();
     }
 
-    public String assignDoctor() {
+    public void assignDoctor() {
 
-        return menuBean.triage();
+//        return menuBean.triage();
+        menuBean.triage();
     }
 
     public void changeFindNameListener(String name) {
