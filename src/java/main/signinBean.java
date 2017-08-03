@@ -48,7 +48,7 @@ public class signinBean implements Serializable {
 //        }
     }
     
-    public void login() {
+    public String login() {
         RequestContext context = RequestContext.getCurrentInstance();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().clear();
         FacesMessage message;
@@ -92,7 +92,7 @@ public class signinBean implements Serializable {
                 loggedIn = false;
                 message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", msg);
                 FacesContext.getCurrentInstance().addMessage(null, message);
-//                return "";
+                return "";
             } else {
                 loggedIn = true;
 
@@ -102,10 +102,25 @@ public class signinBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 isPatientLogin = false;
                 menuBean.redirectHome();
-//                return "/home.xhtml?faces-redirect=true";
+                return "/index.xhtml?faces-redirect=true";
             }
             
 //        }
+    }
+    
+    public String checkLogin(){
+        if(loggedIn){
+            return "";
+        }else{
+            return "/welcome.xhtml?faces-redirect=true";
+        }
+    }
+    
+    public String logout(){
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        em = null;
+        loggedIn = false;
+        return "/welcome.xhtml?faces-redirect=true";
     }
     
     public String getId() {

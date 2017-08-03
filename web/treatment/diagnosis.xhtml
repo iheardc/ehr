@@ -259,10 +259,10 @@
                                     <h3>Write Prescription</h3>
                                     <hr></hr>
 
-<!--                                    <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.visitSummary}">
-                                        <strong>Success!</strong> Visit summary is successfully saved.
-                                    </b:alert>-->
-                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" ></p:commandButton>
+                                    <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.prescription.detail}">
+                                        <strong>Success!</strong> Prescription was successfully saved.
+                                    </b:alert>
+                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:wpDetail" oncomplete="PF('wpDialog').show()" ></p:commandButton>
 
                                 </b:column>
 
@@ -272,7 +272,7 @@
                                     <hr></hr>
 
                                     <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.visitSummary}">
-                                        <strong>Success!</strong> Visit summary is successfully saved.
+                                        <strong>Success!</strong> Visit summary was successfully saved.
                                     </b:alert>
                                     <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" ></p:commandButton>
 
@@ -280,20 +280,51 @@
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3>Give an Injection</h3>
+                                    <h3>Injection Order</h3>
                                     <hr></hr>
                                     <b:column col-md="12" class="form-horizontal">
                                         <div class="form-group">
                                             <p:outputLabel for="injection" value="RxNORM" class="col-sm-2 control-label"></p:outputLabel>
                                             <b:column col-sm="10">
-                                                <p:inputText value="" id="injection" autocomplete="off" class="form-control" placeholder="Enter RxNORM or description"></p:inputText>
+                                                <p:autoComplete multiple="true" id="injection" placeholder="Enter RxNORM code or description"
+                                                                value="#{treatmentBean.injectionTempList}" converter="rxnormConverter"
+                                                                completeMethod="#{treatmentBean.rxnormCompleteItem}" var="it"
+                                                                itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                                style="width: 100%;">
+                                                    <p:ajax event="itemSelect" listener="#{treatmentBean.onInjectionItemSelect}"/>
+                                                    <p:ajax event="itemUnselect" />
+                                                    <p:column style="width: 20%;">
+                                                        <h:outputText value="#{it.code}" />
+                                                    </p:column>
+                                                    <p:column style="width: 80%;">
+                                                        <h:outputText value="#{it.description}" />
+                                                    </p:column>
+                                                </p:autoComplete>
                                             </b:column>
                                         </div>
                                     </b:column>
-                                    <b:column col-md="12">
+                                    <b:column col-md="12" rendered="#{treatmentBean.injectionList.size() > 0}">
                                         <b:column col-md="11" offset-md="1">
                                             <h4>Injection</h4>
                                             <hr></hr>
+                                            <p:dataTable var="in" value="#{treatmentBean.injectionList}" id="injectionTable" 
+                                                         resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                                <p:column headerText="#" style="width: 5%">
+                                                    <h:outputText value="#{index + 1}" />
+                                                </p:column>
+                                                <p:column headerText="RxNORM Code" style="width: 20%">
+                                                    <h:outputText value="#{in.code}" />
+                                                </p:column>
+                                                <p:column headerText="Description" style="width: 65%">
+                                                    <h:outputText value="#{in.description}" />
+                                                </p:column>
+                                                <p:column style="width:10%;text-align: center">
+                                                    <p:commandButton update="form" icon="fa fa-remove" title="Delete" action="#{treatmentBean.removeInjection(index)}">
+                                                    </p:commandButton>
+                                                </p:column>
+
+                                            </p:dataTable>
 
                                         </b:column>
                                     </b:column>
@@ -302,7 +333,14 @@
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3>Place Order</h3>
+                                    <h3>Lab Test Order</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Imaging Order</h3>
                                     <hr></hr>
 
                                 </b:column>
@@ -361,34 +399,34 @@
                     <p:dialog header="Vital Sign History" widgetVar="vitalDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
                         <p:outputPanel id="vitalDetail">
 
-                            <p:panelGrid  columns="1" rendered="#{not empty treatmentBean.selectedD.previousHistory}">
+                            <!--<p:panelGrid  columns="1" rendered="#{not empty treatmentBean.selectedD.previousHistory}">-->
 
 
-                                <p:dataTable var="vh" value="#{treatmentBean.selectedD.previousHistory}" id="vitalHistoryTable"  paginator="true" rows="10"
-                                             resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+                            <p:dataTable var="vh" value="#{treatmentBean.selectedD.previousHistory}" id="vitalHistoryTable"  paginator="true" rows="10"
+                                         resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
 
-                                    <p:column headerText="Date" style="width: 20%">
-                                        <h:outputText value="#{vh.dateString}" />
-                                    </p:column>
-                                    <p:column headerText="Nurse Name" style="width: 20%">
-                                        <h:outputText value="#{vh.n.name}" />
-                                    </p:column>
-                                    <p:column headerText="Temperature" style="width: 15%">
-                                        <h:outputText value="#{vh.temperature}" />
-                                    </p:column>
-                                    <p:column headerText="Blood Pressure" style="width: 25%">
-                                        <h:outputText value="#{vh.bloodPressure}" />
-                                    </p:column>
-                                    <p:column headerText="SPO2" style="width: 10%">
-                                        <h:outputText value="#{vh.spo2}" />
-                                    </p:column>
-                                    <p:column headerText="Weight" style="width: 10%">
-                                        <h:outputText value="#{vh.weight}" />
-                                    </p:column>
+                                <p:column headerText="Date" style="width: 20%">
+                                    <h:outputText value="#{vh.dateString}" />
+                                </p:column>
+                                <p:column headerText="Nurse Name" style="width: 20%">
+                                    <h:outputText value="#{vh.n.name}" />
+                                </p:column>
+                                <p:column headerText="Temperature" style="width: 15%">
+                                    <h:outputText value="#{vh.temperature}" />
+                                </p:column>
+                                <p:column headerText="Blood Pressure" style="width: 25%">
+                                    <h:outputText value="#{vh.bloodPressure}" />
+                                </p:column>
+                                <p:column headerText="SPO2" style="width: 10%">
+                                    <h:outputText value="#{vh.spo2}" />
+                                </p:column>
+                                <p:column headerText="Weight" style="width: 10%">
+                                    <h:outputText value="#{vh.weight}" />
+                                </p:column>
 
-                                </p:dataTable>
+                            </p:dataTable>
 
-                            </p:panelGrid>
+                            <!--</p:panelGrid>-->
                         </p:outputPanel>
                     </p:dialog>
 
@@ -469,6 +507,123 @@
 
 
                             <!--</p:panelGrid>-->
+                        </p:outputPanel>
+                    </p:dialog>
+
+                    <p:dialog header="Write Prescription" widgetVar="wpDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                        <p:outputPanel id="wpDetail">
+
+                            <b:column id="pres_popup">
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="preDetail" value="RxNORM" class="col-sm-2 control-label"></p:outputLabel>
+                                        <b:column col-sm="10">
+                                            <p:autoComplete multiple="false" id="preDetail" placeholder="Enter RxNORM code or description"
+                                                            value="#{treatmentBean.presTempRx}" converter="rxnormConverter"
+                                                            completeMethod="#{treatmentBean.rxnormCompleteItem}" var="it"
+                                                            itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                            style="width: 100%;">
+                                                <p:ajax event="itemSelect"/>
+                                                <p:ajax event="itemUnselect" />
+                                                <p:column style="width: 20%;">
+                                                    <h:outputText value="#{it.code}" />
+                                                </p:column>
+                                                <p:column style="width: 80%;">
+                                                    <h:outputText value="#{it.description}" />
+                                                </p:column>
+                                            </p:autoComplete>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="preSD" value="Single Dose" class="col-sm-2 control-label"></p:outputLabel>
+                                        <b:column col-sm="10">
+                                            <!--<p:spinner id="preSD" value="#{treatmentBean.presTempSD}" min="0"/>-->
+                                            <p:inputText value="#{treatmentBean.presTempSD}" id="preSD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="preNDD" value="Num of Daily Dose" class="col-sm-2 control-label"></p:outputLabel>
+                                        <b:column col-sm="10">
+                                            <!--<p:spinner id="preNDD" value="#{treatmentBean.presTempNDD}" min="0"/>-->
+                                            <p:inputText value="#{treatmentBean.presTempNDD}" id="preNDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="preTDD" value="Total Dosing Days" class="col-sm-2 control-label"></p:outputLabel>
+                                        <b:column col-sm="10">
+                                            <!--<p:spinner id="preTDD" value="#{treatmentBean.presTempTDD}" min="0"/>-->
+                                            <p:inputText value="#{treatmentBean.presTempTDD}" id="preTDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="preUsage" value="Usage" class="col-sm-2 control-label"></p:outputLabel>
+                                        <b:column col-sm="10">
+                                            <p:inputText value="#{treatmentBean.presTempUsage}" id="preUsage" class="form-control" placeholder="Enter Usage"></p:inputText>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+
+                                <b:column col-md="12" class="form-horizontal">
+                                    <div class="form-group">
+                                        <b:column col-md="6" offset-md="2">
+                                            <p:commandButton class="btn btn-primary" value="Add" action="#{treatmentBean.addPrescriptionDetail()}" update="pres_popup" />
+                                        </b:column>
+                                    </div>
+                                </b:column>
+
+                                <b:column col-md="12" style="margin-top: 2em;">
+                                    <b:column col-md="11" offset-md="1">
+
+                                        <h3>Prescription Detail</h3>
+                                        <hr></hr>
+                                        <p:dataTable var="de" value="#{treatmentBean.prescription.detail}" id="preDetailTable"
+                                                     resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                            <p:column headerText="#" style="width: 5%">
+                                                <h:outputText value="#{index+1}" />
+                                            </p:column>
+                                            <p:column headerText="RxNORM" style="width: 15%">
+                                                <h:outputText value="#{de.rx.code}" />
+                                            </p:column>
+                                            <p:column headerText="Description" style="width: 40%">
+                                                <h:outputText value="#{de.rx.description}" />
+                                            </p:column>
+                                            <p:column headerText="SD" style="width: 5%">
+                                                <h:outputText value="#{de.singleDose}" />
+                                            </p:column>
+                                            <p:column headerText="NDD" style="width: 5%">
+                                                <h:outputText value="#{de.numOfDailyDos}" />
+                                            </p:column>
+                                            <p:column headerText="TDD" style="width: 5%">
+                                                <h:outputText value="#{de.totalDosingDays}" />
+                                            </p:column>
+                                            <p:column headerText="Usage" style="width: 15%">
+                                                <h:outputText value="#{de.usage}" />
+                                            </p:column>
+                                            <p:column style="width:10%;text-align: center">
+                                                <p:commandButton icon="fa fa-remove" title="Delete" action="#{treatmentBean.removePrescriptionDetail(index)}">
+                                                </p:commandButton>
+                                            </p:column>
+
+                                        </p:dataTable>
+
+                                    </b:column>
+                                </b:column>
+                                
+                                <b:column col-md="12">
+                                    
+                                </b:column>
+
+                            </b:column>
+
                         </p:outputPanel>
                     </p:dialog>
 

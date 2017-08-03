@@ -27,22 +27,20 @@ public class EmployeeService {
     }
     
     public static List<Employee> getAllList(){
-        return new DbDAO().findAllEmployeeNames("");
+        return new DbDAO().getEmployeeNames(null, null);
+    }
+    
+    
+    public static List<Employee> getFilteredList(String role){
+        return new DbDAO().getEmployeeNames(role, null);
+    }
+    
+    public static List<Employee> getFilteredList(String role, String query){
+        return new DbDAO().getEmployeeNames(role, query);
     }
 
     public static List<Employee> getList() {
         return list;
-    }
-    
-    public static List<Employee> getRoleList(String role){
-        role = role.toLowerCase();
-        List<Employee> filteredList = new ArrayList<>();
-        for(Employee em : list){
-            if(em.getRole().toLowerCase().equals(role)){
-                filteredList.add(em);
-            }
-        }
-        return filteredList;
     }
     
 }

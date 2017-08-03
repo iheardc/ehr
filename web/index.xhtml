@@ -10,7 +10,9 @@
                 xmlns:pm="http://primefaces.org/mobile" 
                 xmlns:b="http://bootsfaces.net/ui">
 
-
+    <f:metadata>
+        <f:viewAction action="#{menuBean.reset()}"/>
+    </f:metadata>
     <!--    <ui:define name="title">Main</ui:define>-->
     <!--    <ui:define name="header">
             <ui:include src="templates/header.xhtml"/>
@@ -26,12 +28,9 @@
     </ui:define>
     <ui:define name="content"> 
         <p:fragment id="content">
-            <p:fragment>
+            <p:fragment rendered="#{signinBean.loggedIn}">
                 <ui:include src="#{menuBean.pathCont}" />  
             </p:fragment>
-<!--            <p:fragment rendered="#{docBean.loggedIn}">
-                <ui:include src="#{docBean.pathCont}" />  
-            </p:fragment>-->
         </p:fragment>
     </ui:define>
 

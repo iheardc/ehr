@@ -45,13 +45,12 @@ public class triageBean implements Serializable {
     // All the items available in the application
     private List<SnomedCT> scodeAllItems = new ArrayList<SnomedCT>();
 
+    private List<String> specAllItems = new ArrayList<String>();
+    
     // Find Doctor
     String findDocName, findDocSpecialty;
     List<Employee> findDocList;
     Employee selectedDoc;
-    // All the items available in the application
-    private List<String> specAllItems = new ArrayList<String>();
-    private List<Employee> allEmployeeNames = new ArrayList<Employee>();
 
     String temperature, weight, spo2, bloodPressure;
 
@@ -197,13 +196,14 @@ public class triageBean implements Serializable {
     public List<Employee> employeeCompleteItem(String query) {
         query = query.toLowerCase();
         findDocName = query;
-        List<Employee> filteredList = new ArrayList<>();
-        for (Employee item : allEmployeeNames) {
-            if (item.isSameName(query)) {
-                filteredList.add(item);
-            }
-        }
-        return filteredList;
+        return EmployeeService.getFilteredList("doctor", query);
+//        List<Employee> filteredList = new ArrayList<>();
+//        for (Employee item : allEmployeeNames) {
+//            if (item.isSameName(query)) {
+//                filteredList.add(item);
+//            }
+//        }
+//        return filteredList;
     }
 
     public void reset() {
@@ -231,7 +231,6 @@ public class triageBean implements Serializable {
         weight = null;
         spo2 = null;
         bloodPressure = null;
-        allEmployeeNames = EmployeeService.getRoleList("doctor");
         setAllScode();
         setAllSpecialty();
     }
@@ -413,14 +412,6 @@ public class triageBean implements Serializable {
 
     public void setFindDocList(List<Employee> findDocList) {
         this.findDocList = findDocList;
-    }
-
-    public List<Employee> getAllEmployeeNames() {
-        return allEmployeeNames;
-    }
-
-    public void setAllEmployeeNames(List<Employee> allEmployeeNames) {
-        this.allEmployeeNames = allEmployeeNames;
     }
 
     public Employee getSelectedDoc() {

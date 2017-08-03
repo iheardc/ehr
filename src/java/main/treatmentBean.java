@@ -50,11 +50,21 @@ public class treatmentBean implements Serializable {
     private String findPatientName;
     private Date findPatientDoB;
 
+    // Write Prescription
+    Prescription prescription;
+    RxNORM presTempRx;
+    int presTempSD, presTempNDD, presTempTDD;
+    String presTempUsage;
+
     // Write Visit Summary
     private Date datetime;
     private String visitSummary;
     DropBox db = new DropBox();
     hl7 hl7 = new hl7();
+
+    // Give an Injection
+//    private List<RxNORM> scodeItems = new ArrayList<RxNORM>();
+    private List<RxNORM> injectionList, injectionTempList;
 
     public void findDynaPatient() {
 
@@ -279,6 +289,18 @@ public class treatmentBean implements Serializable {
         findPatientDoB = null;
         datetime = DbDAO.getTodayDateWithTime();
         visitSummary = null;
+        injectionList = new ArrayList<>();
+        injectionTempList = new ArrayList<>();
+        prescription = new Prescription();
+        resetPrescriptionItem();
+    }
+    
+    public void resetPrescriptionItem(){
+        presTempRx = new RxNORM();
+        presTempSD = 0;
+        presTempNDD = 0;
+        presTempTDD = 0;
+        presTempUsage = null;
     }
 
     public void submitDiagnosis() {
@@ -287,6 +309,44 @@ public class treatmentBean implements Serializable {
 
     public void submitDiagnosisWithResult() {
 
+    }
+
+    public List<RxNORM> rxnormCompleteItem(String query) {
+        if (injectionList == null) {
+            injectionList = new ArrayList<>();
+        }
+        query = query.toLowerCase();
+        return RxNORMService.getFilteredList(query);
+    }
+
+    public void onInjectionItemSelect(SelectEvent event) {
+        injectionList.addAll(injectionTempList);
+        injectionTempList.clear();
+        RequestContext.getCurrentInstance().update("form");
+    }
+
+    public void removeInjection(int index) {
+        if (index < injectionList.size()) {
+            injectionList.remove(index);
+        }
+    }
+
+    public void addPrescriptionDetail() {
+        PrescriptionDetail temp = new PrescriptionDetail();
+        temp.rx = presTempRx;
+        temp.singleDose = presTempSD;
+        temp.numOfDailyDos = presTempNDD;
+        temp.totalDosingDays = presTempTDD;
+        temp.usage = presTempUsage;
+        prescription.getDetail().add(temp);
+        resetPrescriptionItem();
+    }
+
+    public void removePrescriptionDetail(int index) {
+        if (index < prescription.detail.size()) {
+            prescription.detail.remove(index);
+        }
+        RequestContext.getCurrentInstance().update("form:pres_popup");
     }
 
     public String getPatientStatus() {
@@ -444,5 +504,72 @@ public class treatmentBean implements Serializable {
     public void setHl7(hl7 hl7) {
         this.hl7 = hl7;
     }
+
+    public List<RxNORM> getInjectionList() {
+        return injectionList;
+    }
+
+    public void setInjectionList(List<RxNORM> injectionList) {
+        this.injectionList = injectionList;
+    }
+
+    public List<RxNORM> getInjectionTempList() {
+        return injectionTempList;
+    }
+
+    public void setInjectionTempList(List<RxNORM> injectionTempList) {
+        this.injectionTempList = injectionTempList;
+    }
+
+    public Prescription getPrescription() {
+        return prescription;
+    }
+
+    public void setPrescription(Prescription prescription) {
+        this.prescription = prescription;
+    }
+
+    public RxNORM getPresTempRx() {
+        return presTempRx;
+    }
+
+    public void setPresTempRx(RxNORM presTempRx) {
+        this.presTempRx = presTempRx;
+    }
+
+    public int getPresTempSD() {
+        return presTempSD;
+    }
+
+    public void setPresTempSD(int presTempSD) {
+        this.presTempSD = presTempSD;
+    }
+
+    public int getPresTempNDD() {
+        return presTempNDD;
+    }
+
+    public void setPresTempNDD(int presTempNDD) {
+        this.presTempNDD = presTempNDD;
+    }
+
+    public int getPresTempTDD() {
+        return presTempTDD;
+    }
+
+    public void setPresTempTDD(int presTempTDD) {
+        this.presTempTDD = presTempTDD;
+    }
+
+    public String getPresTempUsage() {
+        return presTempUsage;
+    }
+
+    public void setPresTempUsage(String presTempUsage) {
+        this.presTempUsage = presTempUsage;
+    }
+    
+    
+    
 
 }

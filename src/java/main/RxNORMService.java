@@ -15,26 +15,32 @@ import javax.faces.bean.ManagedBean;
  *
  * @author tw
  */
-@ManagedBean(name="patientService", eager = true)
+@ManagedBean(name="rxnormService", eager = true)
 @ApplicationScoped
-public class PatientService {
+public class RxNORMService {
     
-    public static List<Patient> list;
+    private List<RxNORM> list;
     
     @PostConstruct
     public void init() {
         list = getAllList();
     }
     
-    public static List<Patient> getAllList(){
-        return new DbDAO().getPatientNames(null);
+    public static List<RxNORM> getAllList(){
+        List<RxNORM> list = new ArrayList<>();
+        DbDAO dao = new DbDAO();
+        list = dao.getRxNORMCodes(null);
+        return list;
     }
     
-    public static List<Patient> getFilteredList(String query){
-        return new DbDAO().getPatientNames(query);
+    public static List<RxNORM> getFilteredList(String query){
+        List<RxNORM> list = new ArrayList<>();
+        DbDAO dao = new DbDAO();
+        list = dao.getRxNORMCodes(query);
+        return list;
     }
 
-    public static List<Patient> getList() {
+    public List<RxNORM> getList() {
         return list;
     }
     

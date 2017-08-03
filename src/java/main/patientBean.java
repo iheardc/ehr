@@ -36,8 +36,6 @@ public class patientBean implements Serializable {
     private Patient selectedP;
 
     String findId, findName;
-    // Auto complete
-    private List<Patient> allPatientNames = new ArrayList<Patient>();
 
     Date findDoB;
 
@@ -112,7 +110,6 @@ public class patientBean implements Serializable {
 
     public void reset() {
         resetFindItem();
-        this.allPatientNames = PatientService.getList();
         findList = null;
         selectedP = null;
         isShowMoreInfo = false;
@@ -127,13 +124,14 @@ public class patientBean implements Serializable {
     public List<Patient> patientCompleteItem(String query) {
         query = query.toLowerCase();
         findName = query;
-        List<Patient> filteredList = new ArrayList<>();
-        for (Patient item : allPatientNames) {
-            if (item.isSameName(query)) {
-                filteredList.add(item);
-            }
-        }
-        return filteredList;
+        return PatientService.getFilteredList(query);
+//        List<Patient> filteredList = new ArrayList<>();
+//        for (Patient item : allPatientNames) {
+//            if (item.isSameName(query)) {
+//                filteredList.add(item);
+//            }
+//        }
+//        return filteredList;
     }
 
     private String dateToDoubleString(Date date) {
@@ -201,14 +199,6 @@ public class patientBean implements Serializable {
 
     public boolean getIsShowMoreInfo() {
         return isShowMoreInfo;
-    }
-
-    public List<Patient> getAllPatientNames() {
-        return allPatientNames;
-    }
-
-    public void setAllPatientNames(List<Patient> allPatientNames) {
-        this.allPatientNames = allPatientNames;
     }
 
     public StreamedContent getImage() throws IOException {

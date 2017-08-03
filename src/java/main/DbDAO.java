@@ -90,10 +90,10 @@ public class DbDAO {
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
             + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and role='doctor' and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) "
             + "GROUP BY A.id;";
-    private static final String FIND_ALL_PATIENT_NAME
-            = "SELECT id, first_name, last_name FROM patient";
-    private static final String FIND_ALL_EMPLOYEE_NAME_WITH_ROLE
-            = "SELECT id, first_name, last_name, role FROM employee WHERE role like ?";
+    private static final String GET_PATIENT_NAMES
+            = "SELECT id, first_name, last_name FROM patient WHERE first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?";
+    private static final String GET_EMPLOYEE_NAMES_WITH_ROLE
+            = "SELECT id, first_name, last_name, role FROM employee WHERE role like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
     private static final String ASSIGN_DOCTOR
             = "UPDATE outpatient_dynamic SET "
             + "doctor_id=?,doctor_fn=?,doctor_ln=?,nurse_id=?,nurse_fn=?,nurse_ln=?,status=? "
@@ -126,6 +126,8 @@ public class DbDAO {
             + "GROUP BY id) as D on (D.outpatient_dynamic_id = A.id) "
             + "WHERE A.patient_id like ? and A.id not like ? "
             + "GROUP BY A.id;";
+    private static final String GET_RXNORM_CODES
+            = "select * from rxnorm_code WHERE code like ? or description like ?";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -643,13 +645,22 @@ public class DbDAO {
         return list;
     }
 
-    public List<Patient> findAllPatientNames() {
+    public List<Patient> getPatientNames(String query) {
+        if(query == null || "".equals(query)){
+            query = "%";
+        }else{
+            query = "%" + query + "%";
+        }
         List<Patient> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(FIND_ALL_PATIENT_NAME);
+            pstmt = connect.prepareStatement(GET_PATIENT_NAMES);
+            
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+            pstmt.setString(3, query);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -658,7 +669,7 @@ public class DbDAO {
                 list.add(p);
             }
         } catch (Exception e) {
-            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            System.out.println("ERROR!!!! getPatientNames : " + e.toString());
             e.printStackTrace();
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
@@ -666,17 +677,26 @@ public class DbDAO {
         return list;
     }
 
-    public List<Employee> findAllEmployeeNames(String role) {
+    public List<Employee> getEmployeeNames(String role, String query) {
         if (role == null || "".equals(role)) {
             role = "%";
+        }
+        if(query == null || "".equals(query)){
+            query = "%";
+        }else{
+            query = "%" + query + "%";
         }
         List<Employee> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(FIND_ALL_EMPLOYEE_NAME_WITH_ROLE);
+            pstmt = connect.prepareStatement(GET_EMPLOYEE_NAMES_WITH_ROLE);
+            
             pstmt.setString(1, role);
+            pstmt.setString(2, query);
+            pstmt.setString(3, query);
+            pstmt.setString(4, query);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -685,7 +705,7 @@ public class DbDAO {
                 list.add(em);
             }
         } catch (Exception e) {
-            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            System.out.println("ERROR!!!! getEmployeeNames : " + e.toString());
             e.printStackTrace();
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
@@ -894,6 +914,35 @@ public class DbDAO {
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
+    }
+    
+    public List<RxNORM> getRxNORMCodes(String query) {
+        if(query == null || "".equals(query)){
+            query = "%";
+        }else{
+            query = "%" + query + "%";
+        }
+        List<RxNORM> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_RXNORM_CODES);
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                RxNORM rx = new RxNORM();
+                rx.buildRxNORM(rs);
+                list.add(rx);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
     }
 
 }

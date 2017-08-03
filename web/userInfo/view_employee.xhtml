@@ -29,7 +29,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="firstname" value="First Name" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel value="#{employeeBean.em.fn}" id="firstname"   />
+                                        <p:outputLabel value="#{signinBean.em.fn}" id="firstname"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="lastname" value="Last Name" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel value="#{employeeBean.em.ln}" id="lastname"   />
+                                        <p:outputLabel value="#{signinBean.em.ln}" id="lastname"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -47,7 +47,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="email" value="Email" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel value="#{employeeBean.em.email}" id="email"   />
+                                        <p:outputLabel value="#{signinBean.em.email}" id="email"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -56,7 +56,7 @@
                                                         <div class="form-group">
                                                             <p:outputLabel for="password" value="Password" class="col-sm-2 control-label"></p:outputLabel>
                                                             <b:column col-sm="10">
-                                                                <p:password value="#{employeeBean.em.password}" id="password"   placeholder="Password" match="confirm" feedback="true" inline="true">
+                                                                <p:password value="#{signinBean.em.password}" id="password"   placeholder="Password" match="confirm" feedback="true" inline="true">
                                                                     <f:validateLength minimum="6"/>
                                                                 </p:password>
                                                             </b:column>
@@ -67,7 +67,7 @@
                                                         <div class="form-group">
                                                             <p:outputLabel for="confirm" value="Confirm Password" class="col-sm-2 control-label"></p:outputLabel>
                                                             <b:column col-sm="10">
-                                                                <p:password value="#{employeeBean.em.rePassword}" id="confirm"   placeholder="Confirm Password" feedback="false"></p:password>
+                                                                <p:password value="#{signinBean.em.rePassword}" id="confirm"   placeholder="Confirm Password" feedback="false"></p:password>
                                                             </b:column>
                                                         </div>
                                                     </b:column>-->
@@ -76,7 +76,7 @@
                                 <div class="form-group">
                                     <p:outputLabel value="Gender" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <outputLabel value="#{employeeBean.em.gender}"  />
+                                        <outputLabel value="#{signinBean.em.gender}"  />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -85,7 +85,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="phone" value="Phone" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="phone" value="#{employeeBean.em.phone}"   />
+                                        <p:outputLabel id="phone" value="#{signinBean.em.phone}"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -100,7 +100,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="location" value="Location" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel value="#{employeeBean.em.location}" id="location"   />
+                                        <p:outputLabel value="#{signinBean.em.location}" id="location"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -109,7 +109,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="role" value="Role" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="role" value="#{employeeBean.em.role}" />
+                                        <p:outputLabel id="role" value="#{signinBean.em.role}" />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -118,7 +118,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="license" value="License" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="license" value="#{employeeBean.em.license}"   />
+                                        <p:outputLabel id="license" value="#{signinBean.em.license}"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -128,8 +128,8 @@
                                                             <p:outputLabel value="Specialty" class="col-sm-2 control-label"></p:outputLabel>
                                                             <b:column col-sm="10">
                                                             <p:autoComplete multiple="true"
-                                                                            value="#{employeeBean.em.specialty}"
-                                                                            completeMethod="#{employeeBean.em.specCompleteItem}" var="it"
+                                                                            value="#{signinBean.em.specialty}"
+                                                                            completeMethod="#{signinBean.em.specCompleteItem}" var="it"
                                                                             itemLabel="#{it}" itemValue="#{it}" forceSelection="true"
                                                                             class="col-sm-10">
                                                                 <p:ajax event="itemSelect" />
@@ -153,7 +153,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="address" value="Address" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="address" value="#{employeeBean.em.address}"  />
+                                        <p:outputLabel id="address" value="#{signinBean.em.address}"  />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -162,7 +162,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="city" value="City" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="city" value="#{employeeBean.em.city}"   />
+                                        <p:outputLabel id="city" value="#{signinBean.em.city}"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -171,7 +171,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="state" value="State" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="state" value="#{employeeBean.em.state}"   />
+                                        <p:outputLabel id="state" value="#{signinBean.em.state}"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -180,7 +180,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="zip" value="Zip" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="zip" value="#{employeeBean.em.zip}"   />
+                                        <p:outputLabel id="zip" value="#{signinBean.em.zip}"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -189,7 +189,7 @@
                                 <div class="form-group">
                                     <p:outputLabel for="country" value="Country" class="col-sm-2 control-label"></p:outputLabel>
                                     <b:column col-sm="10">
-                                        <p:outputLabel id="country" value="#{employeeBean.em.country}"   />
+                                        <p:outputLabel id="country" value="#{signinBean.em.country}"   />
                                     </b:column>
                                 </div>
                             </b:column>
@@ -198,7 +198,7 @@
 
                         <!--                    <b:column col-md="12">
                                                 <hr></hr>
-                                                <p:commandButton class="btn btn-primary" action="#{employeeBean.em.registrationEmployee()}" value="Submit" ajax="false"/>
+                                                <p:commandButton class="btn btn-primary" action="#{signinBean.em.registrationEmployee()}" value="Submit" ajax="false"/>
                                             </b:column>-->
 
                     </h:form>

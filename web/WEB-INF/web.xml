@@ -26,7 +26,63 @@
             30
         </session-timeout>
     </session-config>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/welcome.xhtml</location>
+    </error-page>
     <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
+        <welcome-file>faces/welcome.xhtml</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>NotAllowed</web-resource-name>
+            <url-pattern>/faces/admin/*</url-pattern>
+            <url-pattern>/faces/checkin/*</url-pattern>
+            <url-pattern>/faces/emergency/*</url-pattern>
+            <url-pattern>/faces/inpatient/*</url-pattern>
+            <url-pattern>/faces/inventory/*</url-pattern>
+            <url-pattern>/faces/leftMenu/*</url-pattern>
+            <url-pattern>/faces/nursing_station/*</url-pattern>
+            <url-pattern>/faces/operation/*</url-pattern>
+            <url-pattern>/faces/order/*</url-pattern>
+            <url-pattern>/faces/payment/*</url-pattern>
+            <url-pattern>/faces/prescription/*</url-pattern>
+            <url-pattern>/faces/treatment/*</url-pattern>
+            <url-pattern>/faces/userInfo/*</url-pattern>
+            <!--<url-pattern>/faces/home.xhtml</url-pattern>-->
+            <!--<url-pattern>/faces/index.xhtml</url-pattern>-->
+        </web-resource-collection>
+        <auth-constraint />
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/faces/welcome.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/faces/welcome.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/faces/welcome.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/faces/welcome.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/faces/welcome.xhtml</location>
+    </error-page>
+<!--    <security-constraint>
+        <display-name>Restrict direct access to XHTML files</display-name>
+        <web-resource-collection>
+            <web-resource-name>XHTML files</web-resource-name>
+            <url-pattern>*.xhtml</url-pattern>
+        </web-resource-collection>
+        
+    </security-constraint>-->
 </web-app>
