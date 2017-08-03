@@ -1769,7 +1769,7 @@ System.out.println("@@@@@@@ !!!!!in DB content" + output.toString().length());
                         title3.appendChild(doc.createTextNode("Coded Vital Signs"));
                         section3.appendChild(title3);
                         Element text3 = doc.createElement("text");
-                        text3.appendChild(doc.createTextNode(visitSummary));
+                        text3.appendChild(doc.createTextNode(vitalStr));
                         section3.appendChild(text3);                         
 
                 Element component4 = doc.createElement("component");
@@ -1780,7 +1780,7 @@ System.out.println("@@@@@@@ !!!!!in DB content" + output.toString().length());
                         title4.appendChild(doc.createTextNode("Visit Summary"));
                         section4.appendChild(title4);
                         Element text4 = doc.createElement("text");
-                        text4.appendChild(doc.createTextNode(vitalStr));
+                        text4.appendChild(doc.createTextNode(visitSummary));
                         section4.appendChild(text4); 
                         
 

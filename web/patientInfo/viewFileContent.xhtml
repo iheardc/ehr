@@ -16,12 +16,12 @@
                 
                 <h:form>
                     <p:commandButton value="Back" actionListener="#{patientBean.back()}" update="content"/>
-                    <h:outputLink value="/viewFileContent" title="View Full Screen" target="_blank">
+                    <h:outputLink value="/ehr/viewFileContent" title="View Full Screen" target="_blank">
                         <h:outputText value="View Full Screen"/>
                     </h:outputLink>
                 </h:form>
                 
-                <iframe src="/viewFileContent" width="100%" height="1000"/>
+                <iframe src="/ehr/viewFileContent" width="100%" height="1000"/>
                 
             </p:panel>
         </div>

@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author degla
  */
-@WebServlet(description = "TestServlet Description", urlPatterns = { "/viewFileContent" })
+@WebServlet(description = "TestServlet Description", urlPatterns = { "/ehr/viewFileContent" })
 public class viewFileContent extends HttpServlet {
     
     @Inject
