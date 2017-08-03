@@ -69,6 +69,9 @@ public class DbDAO {
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
             + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
+    private static final String FIND_INSURANCE
+            = "SELECT * FROM insurance "
+            + "WHERE patient_id=?";
     private static final String CHECK_IN_PATIENT
             = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status) VALUES(?, ?, ?, ?, ?, ?, ?);";
     private static final String MAKE_NEW_BILLING
@@ -427,6 +430,30 @@ public class DbDAO {
         return list;
     }
 
+    public List<Insurance> findInsuracne(String findId, Double findDoB){
+        List<Insurance> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_INSURANCE);
+            pstmt.setString(1, findId);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Insurance ins = new Insurance();
+                ins.buildInsurance(rs);
+                list.add(ins);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findInsurance : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
 //    private static final String FIND_PATIENT
 //            = "SELECT * FROM patient "
 //            + "WHERE first_name like ? or last_name like ? and date_of_birth like ?";
@@ -507,7 +534,7 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
-
+   
     public void checkInPatient(Patient p) {
         PreparedStatement pstmt = null;
         Connection connect = null;

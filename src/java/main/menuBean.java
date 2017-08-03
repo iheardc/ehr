@@ -36,18 +36,14 @@ public class menuBean implements Serializable {
         pathCont = "/home.xhtml";
     }
     
-    public void redirectHomeAjax(){
-        pathCont = "/home.xhtml";
+    public static void detailInsurance(){
+        pathCont = "/insurance/insurance_detail.xhtml";
     }
     
-    public String getLoginPath(){
-        return "/welcome.xhtml";
+    public static void viewInsurance(){
+        pathCont = "/insurance/insurance_view.xhtml";
     }
     
-    public String redirectLoginPath(){
-        return "/welcome.xhtml?faces-redirect=true";
-    }
-
     // User Information
     public static void viewPatientDemographics() {
         pathCont = "/userInfo/view_patient.xhtml";

@@ -26,7 +26,7 @@ public class DbConnectionPools extends Object {
     public static Connection getPoolConnection(){
         try{
            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ehr", "ehr", "123456");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-13-124-79-185.ap-northeast-2.compute.amazonaws.com:3306/ehr", "ehr", "123456");
 //            Connection connection = DriverManager.getConnection("jdbc:mysql://74.208.128.169:3306/PHR", "root", "Rr7TNS7PrR");
 //            Connection connection = DriverManager.getConnection("jdbc:mysql://74.208.128.169:3306/ehr", "root", "Rr7TNS7PrR");
 

@@ -1,0 +1,370 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+    <ui:composition>
+
+        <!--    <ui:define name="content"> -->
+
+
+        <h:form style="padding-top:2em">
+            <b:container fluid="true">
+                <b:column col-md="12">
+                    <b:column col-md="1"><br></br><p:graphicImage value="/images/nhis-logo-new.jpg" style="width:80px"/>
+                    </b:column>
+                    <b:column col-md="2"><br></br><h6>&nbsp;&nbsp;&nbsp;<b><u>Claim Form</u></b><br></br>&nbsp;&nbsp;&nbsp;(Regulation 62)</h6>
+
+                    </b:column>
+                    <b:column col-md="7">
+                        <p:outputLabel value="NATIONAL HEALTH INSURANCE SCHEME VALLEY VIEW ADVENTIST HOSPITAL"  style="font-size:24px; text-align:center;"></p:outputLabel>
+                    </b:column>
+                    <b:column col-md="2"><p:graphicImage value="/images/images.jpg" style="width:80px"/>
+                    </b:column>
+                </b:column>
+            </b:container>
+
+            <div style="float:left; width:50%; padding:5px;">
+                <!--            <p:dataTable resizableColumns="true" tableStyle="width:50%;"  tableStyleClass="table table-striped" emptyMessage="">
+                                <p:columnGroup type="header">
+                                                <p:row>
+                                                    <p:column rowspan="1" headerText="SCHEME" />
+                                                    <p:column colspan="3" headerText="TECHIMAN DISTRICT INSURANCE SCHEME" />
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column colspan="1" headerText="From No." />
+                                                    <p:column colspan="1" headerText="a" />
+                                                    <p:column colspan="1" headerText="Date of Claim" />
+                                                    <p:column colspan="1" headerText="a" />
+                                                </p:row>
+                                            </p:columnGroup>
+                            </p:dataTable>-->
+                <table width="100%" border="1">
+                    <tr style="border:0;">
+                        <th style="padding:0 0 0 7px;" >SCHEME</th>
+                        <td colspan="3"><p:inputText value="TECHIMAN DISTRICT INSURANCE SCHEME" disabled="true" style="width:100%"></p:inputText></td>
+                    </tr>
+                    <tr style="border:0;">
+                        <th width="25%" style="padding:0 0 0 7px">Form No.</th>
+                        <td width="25%">
+                            <p:inputText value="#{insurance.id}" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                        <td width="25%" style="padding:0 0 0 10px">Date of Claim</td>
+                        <td width="25%">
+                            <p:inputText value="#{insurance.date_of_claim}" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div style="float:left; width:50%; padding:5px">
+                <table width="100%" border="1" height="55.5px">
+                    <tr>
+                        <th style="padding:0 0 0 7px; border-right:0;">Type of Service</th>
+                        <th colspan="2" style="border-left:0; border-right:0;" class="checkbox_size9">
+                            <p:selectManyCheckbox id="basic">
+                                <f:selectItem itemLabel="Out-Patient" itemValue="Out-Patient" />
+                                <f:selectItem itemLabel="In-Patient" itemValue="In-Patient" />
+                            </p:selectManyCheckbox>
+                        </th>
+                        <th rowspan="2"  class="checkbox_size9">
+                            <p:selectManyCheckbox id="basic3">
+                                <f:selectItem itemLabel="Pharmacy" itemValue="Pharmacy" />
+                            </p:selectManyCheckbox>
+                        </th>
+                    </tr>
+                    <tr style="border:0;">
+                        <th></th>
+                        <th  class="checkbox_size9">
+                            <p:selectManyCheckbox id="basic2">
+                                <f:selectItem itemLabel="Diagnosis" itemValue="Diagnosis" />
+                                <f:selectItem itemLabel="All-Inclusive" itemValue="All-Inclusive" />
+                                <f:selectItem itemLabel="Unbundled" itemValue="Unbundled" />
+                            </p:selectManyCheckbox>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="padding:5px 0 0 5px;">
+                <h6><i>Client Information</i></h6>
+            </div>
+
+            <div style="float:left; width:50%; padding:0 5px 5px 5px">
+                <table width="100%" border="1">
+                    <tr>
+                        <td style="padding:0 0 0 3px; width:130px; border-bottom:0;">Surname</td>
+                        <th colspan="4" style="border-bottom:0;">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 3px; width:130px; border-bottom:0; border-top:0;">Other Names</td>
+                        <td colspan="4" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>                     
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 3px; width:30%; border-bottom:0; border-top:0;">Date of Birth</td>
+                        <td style="width:25%; border-top:0; border-bottom:0; border-right:0">
+                            <p:inputText value="" disabled="true" style="width:100%; border-top:0; border-bottom:0"></p:inputText>
+                        </td>
+                        <td style="text-align:right; width:20%; border:0 ">Age</td>
+                        <td style="width:20%; border:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                        <td style="padding : 0 0 0 2px; width:5%; border-top:0; border-bottom:0; border-left:0">y</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 3px; width:130px; border-bottom:0; border-top:0;">Member No</td>
+                        <th colspan="4" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 3px; width:130px; border-bottom:0; border-top:0;">Serial No</td>
+                        <td colspan="4" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 3px; width:130px; border-top:0;">Hosp. Record No</td>
+                        <th colspan="2" style="border-top:0; border-right:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </th>
+                        <td style="text-align:right; width:80px; border-top:0; border-left:0; border-right:0">Sex</td>
+                        <td style="border-top:0; border-left:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:50%; padding:0 5px 5px 5px;">
+                <table width="100%" border="1">
+                    <tr>
+                        <td style="padding:0 0 0 7px;">Admission</td>
+                        <td width="340px" style="border-bottom:0;">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 7px;">Discharge</td>
+                        <td width="340px" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>                    
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 7px;">3rd visit</td>
+                        <td width="340px" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 7px;">Spell(days)</td>
+                        <td width="340px" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 7px;">CC code</td>
+                        <td width="340px" style="border-top:0; border-bottom:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 7px;">Physician</td>
+                        <td width="340px" style="border-top:0">
+                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:50%; padding:5px">
+                <table width="100%" border="1">
+                    <tr>
+                        <td style="padding:0 0 0 3px; border-bottom:0;" class="checkbox_size13" height="25px">
+                            <p:selectManyCheckbox id="basic4">
+                                <f:selectItem itemLabel="Discharge" itemValue="Discharge" />
+                                <f:selectItem itemLabel="Died" itemValue="Died" />
+                                <f:selectItem itemLabel="Transferred Out" itemValue="Trnasferred Out" />
+                            </p:selectManyCheckbox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 3px; border-top:0;" class="checkbox_size13" height="25px">
+                            <p:selectManyCheckbox id="basic5">
+                                <f:selectItem itemLabel="Absconded/Discharged against medical advise" itemValue="Absconded/Discharged against medical advise" />
+                            </p:selectManyCheckbox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding:0 0 0 3px;" class="checkbox_size13" height="25px">
+                            <p:selectManyCheckbox id="basic6">
+                                <f:selectItem itemLabel="Chronic Follow-up" itemValue="Chronic Follow-up" />
+                                <f:selectItem itemLabel="Emergency/Acute Episode" itemValue="Emergency/Acute Episode" />
+                            </p:selectManyCheckbox>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:50%; padding:5px">
+                <table width="100%" border="true">
+                    <tr>
+                        <td style="padding:0 0 0 7px; width:26%; border-bottom:0;">Specialty</td>
+                        <td width="70px">
+                            <p:inputText value="" disabled="true" style="width:100%" />
+                        </td>
+                    </tr>
+                    <tr style="height:20.5px;">
+                        <td colspan="2" style="border-top:0; border-bottom:0;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 7px; border-top:0;">Specialty Code</td>
+                        <td>
+                            <p:inputText value="" disabled="true" style="width:100%" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:100%; padding:5px">
+                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped" emptyMessage="">
+                    <p:column width="3%" style="text-align: center"></p:column>
+                    <p:column headerText="Procedure" width="70%" style="text-align: center"></p:column>
+                    <p:column headerText="Date" width="15%" style="text-align: center"></p:column>
+                    <p:column headerText="G-DRG" width="12%" style="text-align: center"></p:column>
+                </p:dataTable>
+            </div>
+
+
+            <div style="float:left; width:100%; padding:5px"> 
+                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
+                    <p:column width="3%" style="text-align: center"></p:column>
+                    <p:column headerText="Diagnosis" width="70%" style="text-align: center"></p:column>
+                    <p:column headerText="ICD-10" width="15%" style="text-align: center"></p:column>
+                    <p:column headerText="G-DRG" width="12%" style="text-align: center"></p:column>
+                </p:dataTable>
+            </div>
+
+            <div style="float:left; width:100%; padding:5px"> 
+                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
+                    <p:column style="text-align: center" width="3%"></p:column>
+                    <p:column headerText="Investigations" style="text-align: center" width="60%"></p:column>
+                    <p:column headerText="Date" style="text-align: center" width="15%"></p:column>
+                    <p:column headerText="G-DRG" style="text-align: center" width="12%"></p:column>
+                    <p:column headerText="COST" style="text-align: center" width="10%"></p:column>
+                </p:dataTable>
+            </div>
+
+            <div style="float:left; width:100%; padding:5px"> 
+                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
+                    <p:column width="2%" style="text-align: center"></p:column>
+                    <p:column headerText="Medicine" width="33%" style="text-align: center"></p:column>
+                    <p:column headerText="Unit Price" width="7%" style="text-align: center"></p:column>
+                    <p:column headerText="Qt." width="4%" style="text-align: center"></p:column>
+                    <p:column headerText="Total Amt" width="8%" style="text-align: center"></p:column>
+                    <p:column headerText="Date" width="13%" style="text-align: center"></p:column>
+                    <p:column headerText="Code" width="15%" style="text-align: center"></p:column>
+                    <p:column headerText="Dose" width="18%" style="text-align: center"></p:column>
+                </p:dataTable>
+            </div>
+
+            <div style="padding:5px 0 0 5px; width:100%;">
+                <table width="100%">
+                    <tr>
+                        <td>Client Claim Summary&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplememary sheet available: False</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:50%; padding:5px">
+                <table width="100%" border="true">
+                    <tr>
+                        <td colspan="3" style="padding:0 0 0 7px; border-bottom:0;">Type of Service</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 15px; border-top:0; border-bottom:0" width="120px">A. In-Patient</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 15px; border-top:0; border-bottom:0">B. Out-Patient</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 15px; border-top:0; border-bottom:0">C. Investigation</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 0 0 15px; border-top:0; border-bottom:0">D. Pharmacy</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="text-align: right; padding:0 20px 0 0; border-top:0;">TOTAL</th>
+                        <td width="70px"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:50%; padding:5px">
+                <table width="100%" height="72px" border="1">
+                    <tr>
+                        <td></td> 
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:50%; padding:5px">
+                <table width="100%" border="true">
+                    <tr style="height:20.5px;">
+                        <td></td> 
+                    </tr>
+                    <tr>
+                        <td  style="text-align: center">(Health Facility Insurance Officer)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="float:left; width:100%; padding:5px;">
+                <table width="100%" border="1">
+                    <tr>
+                        <td width="150px" style="text-align: right; padding:0 5px 0 0; border-bottom:0">Date Received</td>
+                        <td width="150px"></td>
+                        <td width="130px" style="text-align: right; padding:0 5px 0 0; border-bottom:0">Action 1</td>
+                        <td width="110px"></td>
+                        <td width="70px" style="text-align: right; padding:0 5px 0 0; border-bottom:0">Date</td>
+                        <td width="110px"></td>
+                        <td width="110px" style="text-align: right; padding:0 5px 0 0; border-bottom:0">Signed</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td width="150px" style="text-align: right; padding:0 5px 0 0; border-top:0">Signed</td>
+                        <td width="150px"></td>
+                        <td width="130px" style="text-align: right; padding:0 5px 0 0; border-top:0">Action 2</td>
+                        <td width="110px"></td>
+                        <td width="70px" style="text-align: right; padding:0 5px 0 0; border-top:0">Date</td>
+                        <td width="110px"></td>
+                        <td width="110px" style="text-align: right; padding:0 5px 0 0; border-top:0">Signed</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+
+
+
+        </h:form>
+
+    </ui:composition>
+</html>

@@ -224,6 +224,13 @@ tfoot .ui-state-default{
 .btn{
     padding: 6px 12px;
 }
+.checkbox_size9>table>tbody>tr>td>label{
+    font-size:9px;
+}
+
+.checkbox_size13>table>tbody>tr>td>label{
+    font-size:13px;
+}
 /*.btn-default{
     padding: 6px 12px;
 }
