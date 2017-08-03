@@ -5,7 +5,9 @@
  */
 package main;
 
+import com.dropbox.core.DbxException;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,6 +44,11 @@ public class patientBean implements Serializable {
     // View more information when patient Check-In
     boolean isShowMoreInfo;
 
+    // Medical History
+    ArrayList<Forms> visitHistory = new ArrayList<Forms>();
+    DropBox db = new DropBox();
+    String flName, view, mime;
+
     public void findPatient() {
         DbDAO dao = new DbDAO();
         findList = dao.findPatient(findId, findName, dateToDoubleString(findDoB));
@@ -65,6 +72,25 @@ public class patientBean implements Serializable {
     public void onPatientSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        selectPatient();
+    }
+
+    public void onHistoryPatientSelectRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        visitHistory = new ArrayList<>();
+        db = new DropBox();
+        db.connectDB(selectedP);
+        try {
+            db.viewAllDocuments(visitHistory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for (Forms f : visitHistory) {
+            System.out.println(f.date + ", " + f.name + ", " + f.size + ", " + f.type);
+        }
 
         selectPatient();
     }
@@ -113,6 +139,10 @@ public class patientBean implements Serializable {
         findList = null;
         selectedP = null;
         isShowMoreInfo = false;
+        this.db = null;
+        this.mime = null;
+        this.view = null;
+        this.flName = null;
     }
 
     public void resetFindItem() {
@@ -140,6 +170,68 @@ public class patientBean implements Serializable {
         } else {
             return date.getTime() + "";
         }
+    }
+
+    public void back(){
+        menuBean.patientMedicalHistory();
+    }
+    public void viewFile(String fileName) {
+        try {
+            flName = fileName;
+            view = "";
+            String ext = db.getExtens(fileName);
+            ext = ext.toLowerCase();
+            if (fileName.toLowerCase().equals("metadata.xml")) {
+                view = db.viewMetaFileContext();
+                mime = "text/html";
+            } else if (ext.equals(".xml") || ext.equals(".xsl")) {
+                String xslName = db.getXSL(fileName);
+                mime = "text/html";
+                if(xslName.length() > 1){
+                    view = db.transferXSLT(fileName, xslName);
+                    if(view.equals("error")){
+                        view = db.getFileDB(fileName).toString();
+                    }
+                }else{
+                    view = "";
+                }
+            }else if(ext.equals(".txt")){
+                mime = "text/plain";
+                view = "";
+            }else if(ext.equals(".doc") || ext.equals(".docx")){
+                mime = "application/msword";
+                view = "";
+            }else if(ext.equals(".ppt") || ext.equals(".pptx")){
+                mime = "application/vnd.ms-powerpoint";
+                view = "";
+            }else if(ext.equals(".pdf")){
+                mime = "application/pdf";
+                view = "";
+            }else{
+                view = "";
+                mime = "image/jpg";
+            }
+            
+            menuBean.viewMHDocument();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    public ByteArrayOutputStream showContent() throws DbxException, IOException{
+        System.out.println("!!!!!! Show content filename " + flName);
+        ByteArrayOutputStream outArr;
+        String ext = db.getExtens(flName);System.out.println("!!!!!! Show content ext " + ext);
+        if (!view.equals("")){
+            outArr = db.getByteArrayOutView(view);
+            System.out.println("!!!!!! view =  " + view);
+        }
+        else{
+            outArr = db.getByteArrayOutFile(flName);
+            System.out.println("!!!!!! view = 0 file " + flName);
+        }
+        return outArr;
     }
 
     public void setP(Patient p) {
@@ -214,6 +306,38 @@ public class patientBean implements Serializable {
         } else {
             return new DefaultStreamedContent(new ByteArrayInputStream(selectedP.arr));
         }
+    }
+
+    public ArrayList<Forms> getVisitHistory() {
+        return visitHistory;
+    }
+
+    public void setVisitHistory(ArrayList<Forms> visitHistory) {
+        this.visitHistory = visitHistory;
+    }
+
+    public String getFlName() {
+        return flName;
+    }
+
+    public void setFlName(String flName) {
+        this.flName = flName;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
+
+    public String getMime() {
+        return mime;
+    }
+
+    public void setMime(String mime) {
+        this.mime = mime;
     }
 
 }

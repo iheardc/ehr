@@ -56,7 +56,7 @@
                     </p:submenu>
                     <p:submenu label="Patient Information" expanded="false" class="sub-bottom-line">
                         <p:menuitem value="Search"  icon="fa fa-info"  update="content"/>
-                        <p:menuitem value="Medical History"  icon="fa fa-info"  update="content"/>
+                        <p:menuitem value="Medical History"  icon="fa fa-info" action="#{menuBean.patientMedicalHistoryWithReset()}"  update="content"/>
                     </p:submenu>
                     <p:submenu label="Patient Check-In"  expanded="false" rendered="#{menuBean.isRendered('receptionist/doctor/nurse')}" >
                         <p:menuitem value="Create Patient"  icon="fa fa-info" action="#{menuBean.newPatient()}" update="content" rendered="#{menuBean.isRendered('receptionist/doctor/nurse')}" />
@@ -185,7 +185,7 @@
                 </p:submenu>
                 <p:submenu label="Patient Information" expanded="false" class="sub-bottom-line">
                     <p:menuitem value="Search"  icon="fa fa-info"  update="content"/>
-                    <p:menuitem value="Medical History"  icon="fa fa-info"  update="content"/>
+                    <p:menuitem value="Medical History"  icon="fa fa-info" action="#{menuBean.patientMedicalHistoryWithReset()}"  update="content"/>
                 </p:submenu>
                 <p:submenu label="Patient Check-In"  expanded="false" rendered="#{menuBean.isRendered('receptionist/doctor/nurse')}" >
                     <p:menuitem value="Create Patient"  icon="fa fa-info" action="#{menuBean.newPatient()}" update="content" rendered="#{menuBean.isRendered('receptionist/doctor/nurse')}" />

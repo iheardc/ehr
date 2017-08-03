@@ -49,6 +49,7 @@
             <url-pattern>/faces/prescription/*</url-pattern>
             <url-pattern>/faces/treatment/*</url-pattern>
             <url-pattern>/faces/userInfo/*</url-pattern>
+            <url-pattern>/faces/patientInfo/medical_history_patient.xhtml</url-pattern>
             <!--<url-pattern>/faces/home.xhtml</url-pattern>-->
             <!--<url-pattern>/faces/index.xhtml</url-pattern>-->
         </web-resource-collection>

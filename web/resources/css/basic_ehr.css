@@ -230,3 +230,10 @@ tfoot .ui-state-default{
 .btn-primary{
     padding: 6px 12px;
 }*/
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left.myred{
+    background-color: red !important;
+}
+
+.p-autocomplete{
+    width: 100%;
+}

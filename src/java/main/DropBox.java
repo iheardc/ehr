@@ -1584,6 +1584,218 @@ System.out.println("@@@@@@@ !!!!!in DB content" + output.toString().length());
         saveNewHl7(res.getWriter().toString(), p, date);
         //return (res.getWriter().toString());//save to string XML
     }    
+    
+    public void newVisitSummary(Patient p, String cheifStr, String visitSummary, Employee em, String date, String vitalStr) throws Exception{
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        docFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+        Document doc = docBuilder.newDocument();
+        Element rootElement = doc.createElement("ClinicalDocument");
+        ProcessingInstruction pi = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"CDA.xsl\"");
+        doc.appendChild(rootElement);
+        doc.insertBefore(pi, rootElement);
+        rootElement.setAttribute("xmlns", "urn:hl7-org:v3");
+        rootElement.setAttribute("xmlns:n1", "urn:hl7-org:v3");
+        rootElement.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        rootElement.setAttribute("xmlns:voc", "urn:hl7-org:v3/voc");
+        rootElement.setAttribute("xsi:schemaLocation", "urn:hl7-org:v3 CDA.xsd");
+        
+        Element tempId1 = doc.createElement("templateId");
+        rootElement.appendChild(tempId1);
+        tempId1.setAttribute("extension", "HL7 General Header Constraints");
+        tempId1.setAttribute("root", "2.16.840.1.113883.10.20.3");
+        
+        Element id = doc.createElement("id");
+        rootElement.appendChild(id);
+        id.setAttribute("root", p.ln);
+        id.setAttribute("extension", date);
+        
+        Element code = doc.createElement("code");
+        rootElement.appendChild(code);
+        code.setAttribute("code", "34117-2");
+        code.setAttribute("codeSystem", "2.16.840.1.113883.6.1");
+        code.setAttribute("codeSystemName", "LOINC");
+        code.setAttribute("displayName", "History and Physical");
+        
+        Element title = doc.createElement("title");
+        title.appendChild(doc.createTextNode("Physical exam " + p.ln + " " + date));
+        rootElement.appendChild(title);
+        
+        Element time = doc.createElement("effectiveTime");
+        rootElement.appendChild(time);
+        time.setAttribute("value", date);
+        
+        Element conf = doc.createElement("confidentialityCode");
+        rootElement.appendChild(conf);
+        conf.setAttribute("code", "N");
+        conf.setAttribute("codeSystem", "2.16.840.1.113883.5.25");
+        
+        Element lang = doc.createElement("languageCode");
+        rootElement.appendChild(lang);
+        lang.setAttribute("code", "en-US");
+        
+        Element recordTarget = doc.createElement("recordTarget");
+        rootElement.appendChild(recordTarget);
+            
+            Element patientRole = doc.createElement("patientRole");
+            recordTarget.appendChild(patientRole);
+            
+                Element patId = doc.createElement("id");
+                patientRole.appendChild(patId);
+                patId.setAttribute("extension", p.getDobString());
+                patId.setAttribute("root", p.email);
+                
+//                Element addr = doc.createElement("addr");
+//                patientRole.appendChild(addr);               
+//                    Element street = doc.createElement("streetAddressLine");
+//                    street.appendChild(doc.createTextNode(p.address));
+//                    addr.appendChild(street);
+//                    Element city = doc.createElement("city");
+//                    city.appendChild(doc.createTextNode(p.city));
+//                    addr.appendChild(city);
+//                    Element state = doc.createElement("state");
+//                    state.appendChild(doc.createTextNode(p.state));
+//                    addr.appendChild(state);
+//                    Element zip = doc.createElement("postalCode");
+//                    zip.appendChild(doc.createTextNode(p.zip));
+//                    addr.appendChild(zip);
+//                Element telecom =doc.createElement("telecom");
+//                patientRole.appendChild(telecom);
+//                telecom.setAttribute("value", p.phone);
+//                telecom.setAttribute("use", "HP");
+                Element patient = doc.createElement("patient");
+                patientRole.appendChild(patient);
+                    Element name = doc.createElement("name");
+                    patient.appendChild(name);
+                        Element given = doc.createElement("given");
+                        given.appendChild(doc.createTextNode(p.fn));
+                        name.appendChild(given);
+                        Element family = doc.createElement("family");
+                        family.appendChild(doc.createTextNode(p.ln));
+                        name.appendChild(family);
+                        
+                    Element administrativeGenderCode = doc.createElement("administrativeGenderCode");
+                    patient.appendChild(administrativeGenderCode);
+                    String gender = (p.gender.equals("male")) ? "M":"F";
+                    administrativeGenderCode.setAttribute("code", gender);
+                    administrativeGenderCode.setAttribute("codeSystem", "2.16.840.1.113883.5.1");
+                    
+//                    if(p.DOB.length() == 10){
+//                        Element birhtTime = doc.createElement("birthTime");
+//                        patient.appendChild(birhtTime);
+//                        String bd = p.DOB.substring(6);
+//                        bd += p.DOB.substring(0, 2);
+//                        bd += p.DOB.substring(3, 5);
+//                        birhtTime.setAttribute("value", bd);       
+//                    }
+                        Element birhtTime = doc.createElement("birthTime");
+                        patient.appendChild(birhtTime);
+                        birhtTime.setAttribute("value", p.getDobString());
+
+        
+        Element author = doc.createElement("author");
+        rootElement.appendChild(author);
+            
+            Element assignedAuthor = doc.createElement("assignedAuthor");
+            author.appendChild(assignedAuthor);
+            
+//                Element addrAuth = doc.createElement("addr");
+//                assignedAuthor.appendChild(addrAuth);               
+//                    Element streetAuth = doc.createElement("streetAddressLine");
+//                    streetAuth.appendChild(doc.createTextNode(em.address));
+//                    addrAuth.appendChild(streetAuth);
+//                    Element cityAuth = doc.createElement("city");
+//                    cityAuth.appendChild(doc.createTextNode(em.city));
+//                    addrAuth.appendChild(cityAuth);
+//                    Element stateAuth = doc.createElement("state");
+//                    stateAuth.appendChild(doc.createTextNode(em.state));
+//                    addrAuth.appendChild(stateAuth);
+//                    Element zipAuth = doc.createElement("postalCode");
+//                    zipAuth.appendChild(doc.createTextNode(em.zip));
+//                    addrAuth.appendChild(zipAuth);
+//                Element telecomAuth =doc.createElement("telecom");
+//                assignedAuthor.appendChild(telecomAuth);
+//                telecomAuth.setAttribute("use", "WP");
+//                telecomAuth.setAttribute("value", em.phone);
+
+                Element assignedPerson = doc.createElement("assignedPerson");
+                assignedAuthor.appendChild(assignedPerson);
+                    Element nameAuth = doc.createElement("name");
+                    assignedPerson.appendChild(nameAuth);
+                        Element prefix = doc.createElement("prefix");
+                        prefix.appendChild(doc.createTextNode("Dr."));
+                        nameAuth.appendChild(prefix);
+                        Element givenAuth = doc.createElement("given");
+                        givenAuth.appendChild(doc.createTextNode(em.fn));
+                        nameAuth.appendChild(givenAuth);
+                        Element familyAuth = doc.createElement("family");
+                        familyAuth.appendChild(doc.createTextNode(em.ln));
+                        nameAuth.appendChild(familyAuth);
+                        
+                  
+                    
+        Element component1 = doc.createElement("component");
+        rootElement.appendChild(component1);
+            Element structuredbody = doc.createElement("structuredBody");
+            component1.appendChild(structuredbody);
+
+                Element component2 = doc.createElement("component");
+                structuredbody.appendChild(component2);
+                    Element section2 = doc.createElement("section");
+                    component2.appendChild(section2);
+//                        Element id2 = doc.createElement("id");
+//                        section2.appendChild(id2);
+//                        id2.setAttribute("root", "1.3.6.1.4.1.21367.2010.1.2.777");
+//                        id2.setAttribute("extension", "CodedVitalSigns_" + date);
+//                        Element code12 = doc.createElement("code");
+//                        section2.appendChild(code12);
+//                        code12.setAttribute("code", "8716-3");
+//                        code12.setAttribute("displayName", "VITAL SIGNS");
+//                        code12.setAttribute("codeSystem", "2.16.840.1.113883.6.1");
+//                        code12.setAttribute("codeSystemName", "LOINC");
+                        Element title2 = doc.createElement("title");
+                        title2.appendChild(doc.createTextNode("Chief Complaint"));
+                        section2.appendChild(title2);
+                        Element text2 = doc.createElement("text");
+                        text2.appendChild(doc.createTextNode(cheifStr));
+                        section2.appendChild(text2);   
+                        
+                Element component3 = doc.createElement("component");
+                structuredbody.appendChild(component3);
+                    Element section3 = doc.createElement("section");
+                    component3.appendChild(section3);
+                        Element title3 = doc.createElement("title");
+                        title3.appendChild(doc.createTextNode("Coded Vital Signs"));
+                        section3.appendChild(title3);
+                        Element text3 = doc.createElement("text");
+                        text3.appendChild(doc.createTextNode(visitSummary));
+                        section3.appendChild(text3);                         
+
+                Element component4 = doc.createElement("component");
+                structuredbody.appendChild(component4);
+                    Element section4 = doc.createElement("section");
+                    component4.appendChild(section4);
+                        Element title4 = doc.createElement("title");
+                        title4.appendChild(doc.createTextNode("Visit Summary"));
+                        section4.appendChild(title4);
+                        Element text4 = doc.createElement("text");
+                        text4.appendChild(doc.createTextNode(vitalStr));
+                        section4.appendChild(text4); 
+                        
+
+        // write the content into xml file
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource src = new DOMSource(doc);
+
+        StreamResult res = new StreamResult(new StringWriter());
+        transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+        transformer.transform(src, res);
+        System.out.println(res.getWriter());
+        saveNewHl7(res.getWriter().toString(), p, date);
+        //return (res.getWriter().toString());//save to string XML
+    }    
     //get file name and extension from a path
     public void setExtens (String st){
         int l = st.lastIndexOf(".");

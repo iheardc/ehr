@@ -13,20 +13,18 @@ import java.util.ArrayList;
  *
  * @author tw
  */
-public class SnomedCT {
+public class HCPCS {
     
-    String code, description;
+    String code, description ;
     
-    public SnomedCT(){
+    public HCPCS(){
         
     }
 
-    public SnomedCT(String code, String description) {
+    public HCPCS(String code, String description) {
         this.code = code;
         this.description = description;
     }
-    
-    
 
     public ArrayList<String> getKeySet(ResultSet rs) {
         try {
@@ -47,12 +45,12 @@ public class SnomedCT {
         }
     }
     
-    public void buildSnomed(ResultSet rs) {
+    public void buildHCPCS(ResultSet rs) {
         ArrayList<String> columnName = getKeySet(rs);
 //        Employee em = new Employee();
         if (columnName != null) {
             try {
-                String column = "SNOMED_CT_Code";
+                String column = "code";
                 if (columnName.contains(column)) {
                     this.code = rs.getString(column);
                 }
@@ -84,17 +82,6 @@ public class SnomedCT {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-    
-    @Override
-    public boolean equals(Object obj){
-        SnomedCT s = (SnomedCT)obj;
-        return (code.equals(s.code) && description.equals(s.description));
-    }
-    
-    @Override
-    public String toString(){
-        return code + " : " + description;
     }
     
 }

@@ -62,9 +62,8 @@ public class treatmentBean implements Serializable {
     DropBox db = new DropBox();
     hl7 hl7 = new hl7();
 
-    // Give an Injection
-//    private List<RxNORM> scodeItems = new ArrayList<RxNORM>();
-    private List<RxNORM> injectionList, injectionTempList;
+    // Injection Order
+    private List<HCPCS> injectionList, injectionTempList;
 
     public void findDynaPatient() {
 
@@ -188,12 +187,6 @@ public class treatmentBean implements Serializable {
     }
 
     public void submitNewRecord() {
-//        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssZ");
-//        Date dateobj = new Date();
-//        String date = df.format(dateobj);
-//        if(!tempDocEmail.equalsIgnoreCase("None")){
-//            submitRefer();
-//        }
 
         try {
             //viewAllDocuments();
@@ -203,18 +196,13 @@ public class treatmentBean implements Serializable {
             signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
             db.newRecord(selectedPatient, hl7, sBean.em, Double.toString(DbDAO.getTodayMillisecondsWithTime()));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-            FacesMessage message = new FacesMessage("Successfylly uploaded ", " successfully uploaded");
+            FacesMessage message = new FacesMessage("Successfylly uploaded ", "Visit summary was successfully uploaded");
             FacesContext.getCurrentInstance().addMessage(null, message);
             //dbTempPat.finishUploadNew();
         } catch (Exception ex) {
 //            Logger.getLogger(userBean.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
-        //updateAllDocuments();
-//        bp = "";
-//        glucose = "";
-//        temperature = "";
-//        return menuBean.writeVisitSummary();
         menuBean.writeVisitSummary();
     }
 
@@ -294,8 +282,8 @@ public class treatmentBean implements Serializable {
         prescription = new Prescription();
         resetPrescriptionItem();
     }
-    
-    public void resetPrescriptionItem(){
+
+    public void resetPrescriptionItem() {
         presTempRx = new RxNORM();
         presTempSD = 0;
         presTempNDD = 0;
@@ -304,6 +292,65 @@ public class treatmentBean implements Serializable {
     }
 
     public void submitDiagnosis() {
+
+        DbDAO dao = new DbDAO();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+        Employee doc = sBean.em;
+        if (prescription.detail.size() > 0) {
+            boolean result = dao.insertNewPrescription(selectedD.p, doc, prescription);
+            if (result) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Prescription was successfully registered."));
+            }else{
+                return;
+            }
+        }
+
+        if (visitSummary != null && !"".equals(visitSummary)) {
+            String vitalStr = "";
+            if (selectedD.temperature != null && !"".equals(selectedD.temperature)) {
+                vitalStr += "\nTemperature : " + selectedD.temperature + "°F";
+            }
+            if (selectedD.bloodPressure != null && !"".equals(selectedD.bloodPressure)) {
+                vitalStr += "\nBlood Pressure : " + selectedD.bloodPressure;
+            }
+            if (selectedD.spo2 != null && !"".equals(selectedD.spo2)) {
+                vitalStr += "\nSpO2 : " + selectedD.spo2 + "%";
+            }
+            if (selectedD.weight != null && !"".equals(selectedD.weight)) {
+                vitalStr += "\nWeight : " + selectedD.weight + "lb";
+            }
+            String cheifStr = "";
+            for(SnomedCT s : this.selectedD.cheifComplaintList){
+                cheifStr += s.toString() + "\n";
+            }
+            
+            try {
+                //viewAllDocuments();
+                db = new DropBox();
+                db.connectDB(selectedD.p);
+                db.newVisitSummary(selectedD.p, cheifStr, visitSummary, doc, DbDAO.getTodayDateString(), vitalStr);
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+                FacesMessage message = new FacesMessage("Successfylly uploaded ", "Visit summary was successfully uploaded");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                //dbTempPat.finishUploadNew();
+            } catch (Exception ex) {
+//            Logger.getLogger(userBean.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+                FacesMessage message = new FacesMessage("Upload Failed", "Failed to upload visit summary");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+        }
+        
+        if(dao.changePatientDynamicStatus(selectedD.id, DbDAO.DYNAMIN_DATA[5]).length() > 0){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "Please try again."));
+        }else{
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Successfully finished"));
+            menuBean.diagnosis();
+        }
+        
 
     }
 
@@ -317,6 +364,14 @@ public class treatmentBean implements Serializable {
         }
         query = query.toLowerCase();
         return RxNORMService.getFilteredList(query);
+    }
+
+    public List<HCPCS> hcpcsCompleteItem(String query) {
+        if (injectionList == null) {
+            injectionList = new ArrayList<>();
+        }
+        query = query.toLowerCase();
+        return HCPCSService.getFilteredList(query);
     }
 
     public void onInjectionItemSelect(SelectEvent event) {
@@ -505,19 +560,19 @@ public class treatmentBean implements Serializable {
         this.hl7 = hl7;
     }
 
-    public List<RxNORM> getInjectionList() {
+    public List<HCPCS> getInjectionList() {
         return injectionList;
     }
 
-    public void setInjectionList(List<RxNORM> injectionList) {
+    public void setInjectionList(List<HCPCS> injectionList) {
         this.injectionList = injectionList;
     }
 
-    public List<RxNORM> getInjectionTempList() {
+    public List<HCPCS> getInjectionTempList() {
         return injectionTempList;
     }
 
-    public void setInjectionTempList(List<RxNORM> injectionTempList) {
+    public void setInjectionTempList(List<HCPCS> injectionTempList) {
         this.injectionTempList = injectionTempList;
     }
 
@@ -568,8 +623,5 @@ public class treatmentBean implements Serializable {
     public void setPresTempUsage(String presTempUsage) {
         this.presTempUsage = presTempUsage;
     }
-    
-    
-    
 
 }

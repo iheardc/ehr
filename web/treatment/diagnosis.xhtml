@@ -27,7 +27,7 @@
                 <h:form enctype="multipart/form-data" id="form">
 
                     <b:column col-md="11" offset-md="1">
-                        <h2>Select Patient(*)</h2>
+                        <h2>Select a Patient(*)</h2>
                         <hr></hr>
 
                         <b:column col-md="12" class="form-horizontal">
@@ -262,7 +262,8 @@
                                     <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.prescription.detail}">
                                         <strong>Success!</strong> Prescription was successfully saved.
                                     </b:alert>
-                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:wpDetail" oncomplete="PF('wpDialog').show()" ></p:commandButton>
+                                    <p:commandButton title="Write prescription" value="Write" class="btn btn-primary" update=":form:wpDetail" oncomplete="PF('wpDialog').show()" rendered="#{empty treatmentBean.prescription.detail}"></p:commandButton>
+                                    <p:commandButton title="Write prescription" value="Edit" class="btn btn-success" update=":form:wpDetail" oncomplete="PF('wpDialog').show()" rendered="#{not empty treatmentBean.prescription.detail}"></p:commandButton>
 
                                 </b:column>
 
@@ -274,7 +275,8 @@
                                     <b:alert styleClass="alert alert-success" rendered="#{not empty treatmentBean.visitSummary}">
                                         <strong>Success!</strong> Visit summary was successfully saved.
                                     </b:alert>
-                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" ></p:commandButton>
+                                    <p:commandButton title="Write visit summary" value="Write" class="btn btn-primary" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" rendered="#{empty treatmentBean.visitSummary}" ></p:commandButton>
+                                    <p:commandButton title="Write visit summary" value="Edit" class="btn btn-success" update=":form:vsDetail" oncomplete="PF('vsDialog').show()" rendered="#{not empty treatmentBean.visitSummary}" ></p:commandButton>
 
                                 </b:column>
 
@@ -284,13 +286,13 @@
                                     <hr></hr>
                                     <b:column col-md="12" class="form-horizontal">
                                         <div class="form-group">
-                                            <p:outputLabel for="injection" value="RxNORM" class="col-sm-2 control-label"></p:outputLabel>
+                                            <p:outputLabel for="injection" value="HCPCS" class="col-sm-2 control-label"></p:outputLabel>
                                             <b:column col-sm="10">
-                                                <p:autoComplete multiple="true" id="injection" placeholder="Enter RxNORM code or description"
-                                                                value="#{treatmentBean.injectionTempList}" converter="rxnormConverter"
-                                                                completeMethod="#{treatmentBean.rxnormCompleteItem}" var="it"
+                                                <p:autoComplete multiple="true" id="injection" placeholder="Enter HCPCS code or description"
+                                                                value="#{treatmentBean.injectionTempList}" converter="hcpcsConverter"
+                                                                completeMethod="#{treatmentBean.hcpcsCompleteItem}" var="it"
                                                                 itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
-                                                                style="width: 100%;">
+                                                                style="display:block; width: 100%;" inputStyle="width:100%:" styleClass="p-autocomplete">
                                                     <p:ajax event="itemSelect" listener="#{treatmentBean.onInjectionItemSelect}"/>
                                                     <p:ajax event="itemUnselect" />
                                                     <p:column style="width: 20%;">
@@ -313,10 +315,10 @@
                                                 <p:column headerText="#" style="width: 5%">
                                                     <h:outputText value="#{index + 1}" />
                                                 </p:column>
-                                                <p:column headerText="RxNORM Code" style="width: 20%">
+                                                <p:column headerText="HCPCS" style="width: 10%">
                                                     <h:outputText value="#{in.code}" />
                                                 </p:column>
-                                                <p:column headerText="Description" style="width: 65%">
+                                                <p:column headerText="Description" style="width: 75%">
                                                     <h:outputText value="#{in.description}" />
                                                 </p:column>
                                                 <p:column style="width:10%;text-align: center">
@@ -386,8 +388,8 @@
 
                         <b:column col-md="12" rendered="#{treatmentBean.isShowMoreInfo}">
                             <hr></hr>
-                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitDiagnosis()}" rendered="#{treatmentBean.isShowWFDInfo}" update="form"/>
-                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitDiagnosisWithResult()}" rendered="#{treatmentBean.isShowWFDRInfo}" update="form"/>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitDiagnosis()}" rendered="#{treatmentBean.isShowWFDInfo}" update="content"/>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitDiagnosisWithResult()}" rendered="#{treatmentBean.isShowWFDRInfo}" update="content"/>
                             <p:commandButton class="btn btn-danger" value="Reset" action="#{treatmentBean.reset()}" update="form"/>
                         </b:column>
 
@@ -510,8 +512,9 @@
                         </p:outputPanel>
                     </p:dialog>
 
-                    <p:dialog header="Write Prescription" widgetVar="wpDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                    <p:dialog header="Write Prescription" widgetVar="wpDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" >
                         <p:outputPanel id="wpDetail">
+                        <!--<p:scrollPanel id="wpDetail">-->
 
                             <b:column id="pres_popup">
                                 <b:column col-md="12" class="form-horizontal">
@@ -539,8 +542,8 @@
                                     <div class="form-group">
                                         <p:outputLabel for="preSD" value="Single Dose" class="col-sm-2 control-label"></p:outputLabel>
                                         <b:column col-sm="10">
-                                            <!--<p:spinner id="preSD" value="#{treatmentBean.presTempSD}" min="0"/>-->
-                                            <p:inputText value="#{treatmentBean.presTempSD}" id="preSD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>
+                                            <p:spinner id="preSD" value="#{treatmentBean.presTempSD}" min="0"/>
+                                            <!--<p:inputText value="#{treatmentBean.presTempSD}" id="preSD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>-->
                                         </b:column>
                                     </div>
                                 </b:column>
@@ -548,8 +551,8 @@
                                     <div class="form-group">
                                         <p:outputLabel for="preNDD" value="Num of Daily Dose" class="col-sm-2 control-label"></p:outputLabel>
                                         <b:column col-sm="10">
-                                            <!--<p:spinner id="preNDD" value="#{treatmentBean.presTempNDD}" min="0"/>-->
-                                            <p:inputText value="#{treatmentBean.presTempNDD}" id="preNDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>
+                                            <p:spinner id="preNDD" value="#{treatmentBean.presTempNDD}" min="0"/>
+                                            <!--<p:inputText value="#{treatmentBean.presTempNDD}" id="preNDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>-->
                                         </b:column>
                                     </div>
                                 </b:column>
@@ -557,8 +560,8 @@
                                     <div class="form-group">
                                         <p:outputLabel for="preTDD" value="Total Dosing Days" class="col-sm-2 control-label"></p:outputLabel>
                                         <b:column col-sm="10">
-                                            <!--<p:spinner id="preTDD" value="#{treatmentBean.presTempTDD}" min="0"/>-->
-                                            <p:inputText value="#{treatmentBean.presTempTDD}" id="preTDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>
+                                            <p:spinner id="preTDD" value="#{treatmentBean.presTempTDD}" min="0"/>
+                                            <!--<p:inputText value="#{treatmentBean.presTempTDD}" id="preTDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>-->
                                         </b:column>
                                     </div>
                                 </b:column>
@@ -617,13 +620,13 @@
 
                                     </b:column>
                                 </b:column>
-                                
+
                                 <b:column col-md="12">
-                                    
+                                    <p:commandButton title="Save" value="Save" styleClass="btn btn-primary" oncomplete="PF('wpDialog').hide()" update="form" ></p:commandButton>
                                 </b:column>
 
                             </b:column>
-
+                        <!--</p:scrollPanel>-->
                         </p:outputPanel>
                     </p:dialog>
 

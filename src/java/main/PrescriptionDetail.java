@@ -69,7 +69,7 @@ public class PrescriptionDetail {
                 if (columnName.contains(column)) {
                     this.type = rs.getString(column);
                 }
-                column = "usage";
+                column = "description";
                 if (columnName.contains(column)) {
                     this.usage = rs.getString(column);
                 }

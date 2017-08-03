@@ -60,6 +60,21 @@ public class menuBean implements Serializable {
     public static void findEmployee() {
         pathCont = "/userInfo/find_employee.xhtml";
     }
+    
+    // Patient Information
+    
+    public static void patientMedicalHistoryWithReset() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
+        bean.reset();
+        pathCont = "/patientInfo/medical_history_patient.xhtml";
+    }
+    public static void patientMedicalHistory() {
+        pathCont = "/patientInfo/medical_history_patient.xhtml";
+    }
+    public static void viewMHDocument(){
+        pathCont = "/patientInfo/viewFileContent.xhtml";
+    }
 
     // Patient Check-In
     public static void newPatient() {

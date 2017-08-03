@@ -96,7 +96,7 @@ public class DbDAO {
             = "SELECT id, first_name, last_name, role FROM employee WHERE role like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
     private static final String ASSIGN_DOCTOR
             = "UPDATE outpatient_dynamic SET "
-            + "doctor_id=?,doctor_fn=?,doctor_ln=?,nurse_id=?,nurse_fn=?,nurse_ln=?,status=? "
+            + "doctor_id=?,doctor_fn=?,doctor_ln=?,nurse_id=?,nurse_fn=?,nurse_ln=?,status=?,date=? "
             + "WHERE id=?";
     private static final String ADD_CHEIF_COMPLAINT
             = "INSERT INTO chief_complaint(outpatient_dynamic_id, patient_id, SNOMED_CT_Code, description) "
@@ -128,6 +128,12 @@ public class DbDAO {
             + "GROUP BY A.id;";
     private static final String GET_RXNORM_CODES
             = "select * from rxnorm_code WHERE code like ? or description like ?";
+    private static final String GET_HCPCS_CODES
+            = "select * from hcpcs_code WHERE code like ? or description like ?";
+    private static final String UPDATE_PATIENT_DAYNAMIC_STATUS
+            = "UPDATE outpatient_dynamic SET "
+            + "date=?,status=? "
+            + "WHERE id=?";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -202,6 +208,18 @@ public class DbDAO {
 
         return date;
     }
+    
+    public static String getDateString(long time){
+
+        Date currentDate = new Date(time);
+        SimpleDateFormat df = new SimpleDateFormat("ddMMyyyyHHmmss");
+        return df.format(currentDate);
+
+    }
+    
+    public static String getTodayDateString(){
+        return getDateString((long)((double)getTodayMillisecondsWithTime()));
+    }
 
     // Query Function
     private boolean checkEmployeeEmailDuplicate(Employee em) {
@@ -272,7 +290,7 @@ public class DbDAO {
             rs.close();
 
             if (em.getSpecialtyList().size() > 0) {
-                insertNewEmployeeSpecialty(em, autoInsertedKey);
+                insertNewEmployeeSpecialty(connect, em, autoInsertedKey);
             }
 
             em.errormsg = "";//"Thank you for registering with us!";
@@ -284,12 +302,11 @@ public class DbDAO {
         }
     }
 
-    public void insertNewEmployeeSpecialty(Employee em, String id) {
+    public void insertNewEmployeeSpecialty(Connection connect, Employee em, String id) {
 
         PreparedStatement pstmt = null;
-        Connection connect = null;
         try {
-            connect = DbConnectionPools.getPoolConnection();
+//            connect = DbConnectionPools.getPoolConnection();
             for (String spec : em.getSpecialtyList()) {
                 pstmt = connect.prepareStatement(ADD_EMPLOYEE_SPECIALTY);
 
@@ -303,8 +320,6 @@ public class DbDAO {
         } catch (Exception e) {
             System.out.println("ERROR!!!!" + e.toString());
             em.errormsg = "Failed to add specialty.Failed to add specialty.";
-        } finally {
-            DbConnectionPools.closeResources(connect, pstmt);
         }
     }
 
@@ -712,6 +727,29 @@ public class DbDAO {
         }
         return list;
     }
+    
+    public String changePatientDynamicStatus(String id, String status){
+        String result = "";
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(UPDATE_PATIENT_DAYNAMIC_STATUS);
+
+            pstmt.setDouble(1, getTodayMillisecondsWithTime());
+            pstmt.setString(2, status);
+            pstmt.setString(3, id);
+
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            result = e.getMessage();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
 
     public void assignDoctor(DynamicInfo d, Employee doc, Employee nurse, List<SnomedCT> cheifList, String temperature, String spo2, String weight, String bloodPressure) {
         PreparedStatement pstmt = null;
@@ -727,7 +765,8 @@ public class DbDAO {
             pstmt.setString(5, nurse.fn);
             pstmt.setString(6, nurse.ln);
             pstmt.setString(7, DYNAMIN_DATA[2]);
-            pstmt.setString(8, d.id);
+            pstmt.setDouble(8, getTodayMillisecondsWithTime());
+            pstmt.setString(9, d.id);
 
             pstmt.executeUpdate();
 
@@ -943,6 +982,100 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
         return list;
+    }
+    
+    public List<HCPCS> getHCPCSCodes(String query) {
+        if(query == null || "".equals(query)){
+            query = "%";
+        }else{
+            query = "%" + query + "%";
+        }
+        List<HCPCS> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_HCPCS_CODES);
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                HCPCS rx = new HCPCS();
+                rx.buildHCPCS(rs);
+                list.add(rx);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
+    private static final String INSERT_PRESCRIPTION
+            = "INSERT INTO prescription("
+            + "doctor_id, patient_id, comment, status, date) "
+            + "VALUES(?,?,?,?,?)";
+    public boolean insertNewPrescription(Patient p, Employee doc, Prescription pres){
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(INSERT_PRESCRIPTION, Statement.RETURN_GENERATED_KEYS);
+
+            pstmt.setString(1, doc.id);
+            pstmt.setString(2, p.id);
+            pstmt.setString(3, pres.comment);
+            pstmt.setString(4, "WFP");
+            pstmt.setDouble(5, getTodayMillisecondsWithTime());
+
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            String autoInsertedKey = (rs.next()) ? rs.getString(1) : null;
+            rs.close();
+
+            if (pres.getDetail().size() > 0) {
+                insertPrescriptionDetail(connect, pres, autoInsertedKey);
+            }
+            result = true;
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    private static final String INSERT_PRESCRIPTION_DETAIL
+            = "INSERT INTO prescription_detail("
+            + "prescription_id, RxNORM_code, name, single_dose, num_of_daily_dose, total_dosing_days, description) "
+            + "VALUES(?,?,?,?,?,?,?)";
+    public void insertPrescriptionDetail(Connection connect, Prescription pres, String id) {
+
+        PreparedStatement pstmt = null;
+        try {
+//            connect = DbConnectionPools.getPoolConnection();
+            for (PrescriptionDetail de : pres.getDetail()) {
+                pstmt = connect.prepareStatement(INSERT_PRESCRIPTION_DETAIL);
+
+                pstmt.setString(1, id);
+                pstmt.setString(2, de.rx.code);
+                pstmt.setString(3, de.rx.description);
+                pstmt.setDouble(4, de.singleDose);
+                pstmt.setDouble(5, de.numOfDailyDos);
+                pstmt.setDouble(6, de.totalDosingDays);
+                pstmt.setString(7, de.usage);
+
+                pstmt.executeUpdate();
+            }
+
+//            em.errormsg = "";//"Thank you for registering with us!";
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+//            em.errormsg = "Failed to add specialty.Failed to add specialty.";
+        }
     }
 
 }
