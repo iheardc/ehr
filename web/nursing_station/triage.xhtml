@@ -15,6 +15,8 @@
             <f:viewAction action="#{triageBean.reset()}"/>
         </f:metadata>
 
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
+    
 
         <b:container fluid="true" class="customContainer">
 
@@ -29,6 +31,15 @@
                     <b:column col-md="11" offset-md="1">
                         <h2>Select a Patient(*)</h2>
                         <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="date" value="Date" class="col-sm-2 control-label" ></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:calendar id="date" value="#{triageBean.date}" pattern="MM/dd/yyyy" style="width: 100%;"/>
+                                </b:column>
+                            </div>
+                        </b:column>
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">

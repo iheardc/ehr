@@ -7,6 +7,7 @@ package main;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
@@ -24,6 +25,7 @@ import org.primefaces.event.SelectEvent;
 @SessionScoped
 public class patientStatusBean implements Serializable {
 
+    Date startDate, finishDate;
     String patientStatus;
     private DynamicInfo selectedD;
     
@@ -50,7 +52,7 @@ public class patientStatusBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus, null);
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(startDate), DbDAO.dateToDouble(finishDate)+86400000);
         
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -71,10 +73,10 @@ public class patientStatusBean implements Serializable {
         findCKOList = new ArrayList<DynamicInfo>();
         findALLList = new ArrayList<DynamicInfo>();
         
-        if (patientStatus.equals("ALL")){
-            findALLList = dao.findPatientStatus();
-        }
-        else {
+//        if (patientStatus.equals("ALL")){
+//            findALLList = dao.findPatientStatus();
+//        }
+//        else {
             for (DynamicInfo dy : dList) {
                 if (DbDAO.DYNAMIN_DATA[0].equals(dy.status)) {
                     findWNFList.add(dy);
@@ -101,7 +103,7 @@ public class patientStatusBean implements Serializable {
                 }
             }
             
-        }
+//        }
         
         isShowALLTable = findALLList.size() > 0;
         isShowWFNTable = findWNFList.size() > 0;
@@ -119,6 +121,8 @@ public class patientStatusBean implements Serializable {
     }
 
     public void reset() {
+        startDate = DbDAO.getTodayDate();
+        finishDate = DbDAO.getTodayDate();
         patientStatus = null;
         selectedD = null;
         
@@ -140,6 +144,54 @@ public class patientStatusBean implements Serializable {
         isShowWFPTable = false;
         isShowWFBTable = false;
         isShowCKOTable = false;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(Date finishDate) {
+        this.finishDate = finishDate;
+    }
+
+    public List<DynamicInfo> getFindWFPList() {
+        return findWFPList;
+    }
+
+    public void setFindWFPList(List<DynamicInfo> findWFPList) {
+        this.findWFPList = findWFPList;
+    }
+
+    public List<DynamicInfo> getFindWFBList() {
+        return findWFBList;
+    }
+
+    public void setFindWFBList(List<DynamicInfo> findWFBList) {
+        this.findWFBList = findWFBList;
+    }
+
+    public boolean isIsShowWFPTable() {
+        return isShowWFPTable;
+    }
+
+    public void setIsShowWFPTable(boolean isShowWFPTable) {
+        this.isShowWFPTable = isShowWFPTable;
+    }
+
+    public boolean isIsShowWFBTable() {
+        return isShowWFBTable;
+    }
+
+    public void setIsShowWFBTable(boolean isShowWFBTable) {
+        this.isShowWFBTable = isShowWFBTable;
     }
 
     public List<DynamicInfo> getFindWNFList() {

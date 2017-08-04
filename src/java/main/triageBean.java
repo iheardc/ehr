@@ -7,6 +7,7 @@ package main;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
@@ -25,6 +26,7 @@ import org.primefaces.event.SelectEvent;
 public class triageBean implements Serializable {
 
     String patientStatus;
+    Date date;
 
     private List<DynamicInfo> findWNFList;
     private List<DynamicInfo> findWNFIList;
@@ -51,8 +53,8 @@ public class triageBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus, null);
-
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date)+86400000);
+        
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
         if (dList.size() > 0) {
@@ -73,6 +75,12 @@ public class triageBean implements Serializable {
         }
         isShowWFNTable = findWNFList.size() > 0;
         isShowWFNITable = findWNFIList.size() > 0;
+        
+        if(isShowWFNTable == false && isShowWFNITable == false){
+            isShowWFNTable = true;
+            isShowWFNITable = true;
+        }
+        
         selectedD = null;
         resetMoreForm();
 
@@ -171,9 +179,12 @@ public class triageBean implements Serializable {
             }
 //            return "";
         }
+        
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public String finishInjection() {
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
         return "";
     }
 
@@ -207,6 +218,7 @@ public class triageBean implements Serializable {
     }
 
     public void resetPatientFindItem() {
+        date = DbDAO.getTodayDate();
         patientStatus = null;
         findWNFList = null;
         findWNFIList = null;
@@ -328,6 +340,14 @@ public class triageBean implements Serializable {
 
     public void setSelectedD(DynamicInfo selectedD) {
         this.selectedD = selectedD;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getPatientStatus() {

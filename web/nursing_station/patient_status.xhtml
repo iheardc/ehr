@@ -10,6 +10,8 @@
       xmlns:b="http://bootsfaces.net/ui">
 
     <ui:composition>
+        
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
 
         <f:metadata>
             <f:viewAction action="#{patientStatusBean.reset()}"/>
@@ -26,10 +28,25 @@
 
                 <h:form enctype="multipart/form-data" id="form">
 
+                    <b:column col-md="12" class="form-horizontal">
+                        <div class="form-group">
+                            <p:outputLabel for="sdate" value="Start Date" class="col-sm-2 control-label" ></p:outputLabel>
+                            <b:column col-sm="6">
+                                <p:calendar id="sdate" value="#{patientStatusBean.startDate}" pattern="MM/dd/yyyy" style="width: 100%;"/>
+                            </b:column>
+                        </div>
+                    </b:column>
 
                     <b:column col-md="12" class="form-horizontal">
-                        <br/>
+                        <div class="form-group">
+                            <p:outputLabel for="fdate" value="Finish Date" class="col-sm-2 control-label" ></p:outputLabel>
+                            <b:column col-sm="6">
+                                <p:calendar id="fdate" value="#{patientStatusBean.finishDate}" pattern="MM/dd/yyyy" style="width: 100%;"/>
+                            </b:column>
+                        </div>
+                    </b:column>
 
+                    <b:column col-md="12" class="form-horizontal">
                         <div class="form-group">
                             <p:outputLabel for="status" value="Select a Status" class="col-sm-2 control-label"></p:outputLabel>
                             <b:column col-sm="10">
@@ -37,7 +54,7 @@
                                     <f:selectItem itemValue="ALL" itemLabel="All"/>
                                     <f:selectItem itemValue="WFN" itemLabel="Waiting For Nurse"/>
                                     <f:selectItem itemValue="WFNI" itemLabel="Waiting For Nurse (Injection)"/>
-                                    <f:selectItem itemValue="WFD" itemLabel="Waiting for Doctor without Result"/>
+                                    <f:selectItem itemValue="WFD" itemLabel="Waiting for Doctor"/>
                                     <f:selectItem itemValue="WFR" itemLabel="Waiting for Result"/>
                                     <f:selectItem itemValue="WFDR" itemLabel="Waiting for Doctor with Result"/>
                                     <f:selectItem itemValue="WFP" itemLabel="Waiting for Prescription"/>
@@ -69,16 +86,23 @@
                                 <f:facet name="header">
                                     All Patients
                                 </f:facet>
-
+                                
                                 <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Name" style="width: 20%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width: 15%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -91,16 +115,23 @@
                                 <f:facet name="header">
                                     Waiting for Nurse
                                 </f:facet>
-
+                                
                                 <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Name" style="width: 20%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width: 15%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -113,16 +144,23 @@
                                 <f:facet name="header">
                                     Waiting for Nurse(Injection)
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -133,18 +171,25 @@
                             <p:dataTable var="d" value="#{patientStatusBean.findWFDList}" id="searchTable5" paginator="true" rows="10"
                                          resizableColumns="true" tableStyleClass="table table-striped" >
                                 <f:facet name="header">
-                                    Waiting for Doctor (Without Result)
+                                    Waiting for Doctor
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -157,16 +202,23 @@
                                 <f:facet name="header">
                                     Waiting for Result
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -179,16 +231,23 @@
                                 <f:facet name="header">
                                     Waiting for Doctor With Result
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -201,16 +260,23 @@
                                 <f:facet name="header">
                                     Waiting for Prescription
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -223,16 +289,23 @@
                                 <f:facet name="header">
                                     Waiting for Bill
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>
@@ -245,16 +318,23 @@
                                 <f:facet name="header">
                                     Check Out
                                 </f:facet>
-
-                                <p:column headerText="Patient ID" style="width:10%">
+                                
+                                <p:column headerText="Patient ID" style="width: 10%">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
-                                <p:column headerText="Patient Name" style="width:15%">
+                                <p:column headerText="Name" style="width: 30%">
                                     <h:outputText value="#{d.p.name}" />
                                 </p:column>
-                                <p:column headerText="Status" style="width:20%">
-                                    <h:outputText value="#{d.statusFull}" />
+                                <p:column headerText="Date of Birth" style="width: 25%">
+                                    <h:outputText value="#{d.p.dobString}" />
                                 </p:column>
+                                <p:column headerText="Gender" style="width: 10%">
+                                    <h:outputText value="#{d.p.gender}" />
+                                </p:column>
+                                <p:column headerText="Date" style="width: 25%">
+                                    <h:outputText value="#{d.dateString}" />
+                                </p:column>
+                                
                             </p:dataTable>
                             <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
                         </b:column>

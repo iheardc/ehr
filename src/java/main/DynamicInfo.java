@@ -251,7 +251,7 @@ public class DynamicInfo {
             case "CKI": //Michelle Added More Status Here
                 return "Check-In";
             case "WFD":
-                return "Waiting for Doctor without Result";
+                return "Waiting for Doctor";
             case "WFR":
                 return "Waiting for Result";    
             case "WFDR":

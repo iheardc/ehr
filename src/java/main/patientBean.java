@@ -121,12 +121,14 @@ public class patientBean implements Serializable {
         }
 
 //        return "/checkin/checkin_patient?faces-redirect=true";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
         menuBean.checkinPatient();
     }
 
     public void assignDoctor() {
 
 //        return menuBean.triage();
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
         menuBean.triage();
     }
 
@@ -172,9 +174,10 @@ public class patientBean implements Serializable {
         }
     }
 
-    public void back(){
+    public void back() {
         menuBean.patientMedicalHistory();
     }
+
     public void viewFile(String fileName) {
         try {
             flName = fileName;
@@ -187,47 +190,48 @@ public class patientBean implements Serializable {
             } else if (ext.equals(".xml") || ext.equals(".xsl")) {
                 String xslName = db.getXSL(fileName);
                 mime = "text/html";
-                if(xslName.length() > 1){
+                if (xslName.length() > 1) {
                     view = db.transferXSLT(fileName, xslName);
-                    if(view.equals("error")){
+                    if (view.equals("error")) {
                         view = db.getFileDB(fileName).toString();
                     }
-                }else{
+                } else {
                     view = "";
                 }
-            }else if(ext.equals(".txt")){
+            } else if (ext.equals(".txt")) {
                 mime = "text/plain";
                 view = "";
-            }else if(ext.equals(".doc") || ext.equals(".docx")){
+            } else if (ext.equals(".doc") || ext.equals(".docx")) {
                 mime = "application/msword";
                 view = "";
-            }else if(ext.equals(".ppt") || ext.equals(".pptx")){
+            } else if (ext.equals(".ppt") || ext.equals(".pptx")) {
                 mime = "application/vnd.ms-powerpoint";
                 view = "";
-            }else if(ext.equals(".pdf")){
+            } else if (ext.equals(".pdf")) {
                 mime = "application/pdf";
                 view = "";
-            }else{
+            } else {
                 view = "";
                 mime = "image/jpg";
             }
-            
+
             menuBean.viewMHDocument();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    public ByteArrayOutputStream showContent() throws DbxException, IOException{
+
+    public ByteArrayOutputStream showContent() throws DbxException, IOException {
         System.out.println("!!!!!! Show content filename " + flName);
         ByteArrayOutputStream outArr;
-        String ext = db.getExtens(flName);System.out.println("!!!!!! Show content ext " + ext);
-        if (!view.equals("")){
+        String ext = db.getExtens(flName);
+        System.out.println("!!!!!! Show content ext " + ext);
+        if (!view.equals("")) {
             outArr = db.getByteArrayOutView(view);
             System.out.println("!!!!!! view =  " + view);
-        }
-        else{
+        } else {
             outArr = db.getByteArrayOutFile(flName);
             System.out.println("!!!!!! view = 0 file " + flName);
         }

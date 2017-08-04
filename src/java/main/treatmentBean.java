@@ -27,7 +27,9 @@ import org.primefaces.event.SelectEvent;
 @SessionScoped
 public class treatmentBean implements Serializable {
 
+    String findDocId;
     String patientStatus;
+    Date date;
 
     private List<DynamicInfo> findWFDList;
     private List<DynamicInfo> findWFDRList;
@@ -67,11 +69,8 @@ public class treatmentBean implements Serializable {
 
     public void findDynaPatient() {
 
-        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
-        signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
-
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamic(patientStatus, sBean.id);
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, findDocId, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -259,6 +258,10 @@ public class treatmentBean implements Serializable {
     }
 
     public void resetPatientFindItem() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+        findDocId = sBean.em.id;
+        date = DbDAO.getTodayDate();
         patientStatus = null;
         findWFDList = null;
         findWFDRList = null;
@@ -302,7 +305,7 @@ public class treatmentBean implements Serializable {
             boolean result = dao.insertNewPrescription(selectedD.p, doc, prescription);
             if (result) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Prescription was successfully registered."));
-            }else{
+            } else {
                 return;
             }
         }
@@ -322,10 +325,10 @@ public class treatmentBean implements Serializable {
                 vitalStr += "\nWeight : " + selectedD.weight + "lb";
             }
             String cheifStr = "";
-            for(SnomedCT s : this.selectedD.cheifComplaintList){
+            for (SnomedCT s : this.selectedD.cheifComplaintList) {
                 cheifStr += s.toString() + "\n";
             }
-            
+
             try {
                 //viewAllDocuments();
                 db = new DropBox();
@@ -343,19 +346,19 @@ public class treatmentBean implements Serializable {
                 return;
             }
         }
-        
-        if(dao.changePatientDynamicStatus(selectedD.id, DbDAO.DYNAMIN_DATA[5]).length() > 0){
+
+        if (dao.changePatientDynamicStatus(selectedD.id, DbDAO.DYNAMIN_DATA[5]).length() > 0) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "Please try again."));
-        }else{
+        } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Successfully finished"));
             menuBean.diagnosis();
         }
-        
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 
     }
 
     public void submitDiagnosisWithResult() {
-
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public List<RxNORM> rxnormCompleteItem(String query) {
@@ -402,6 +405,22 @@ public class treatmentBean implements Serializable {
             prescription.detail.remove(index);
         }
         RequestContext.getCurrentInstance().update("form:pres_popup");
+    }
+
+    public String getFindDocId() {
+        return findDocId;
+    }
+
+    public void setFindDocId(String findDocId) {
+        this.findDocId = findDocId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getPatientStatus() {

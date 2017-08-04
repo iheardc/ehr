@@ -66,6 +66,8 @@ public class DbDAO {
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
             + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) and (concat_ws(' ',first_name,last_name) like ?) and A.email like ? and A.role like ? "
             + "GROUP BY A.id;";
+    private static final String FIND_PATIENT_WITH_DATE
+            = "";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
             + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
@@ -82,6 +84,13 @@ public class DbDAO {
             + "SELECT id,pic FROM patient "
             + "GROUP BY id) as B on(B.id = A.patient_id) "
             + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ?"
+            + "GROUP BY A.id;";
+    private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS_AND_DATE
+            = "SELECT A.*, B.pic as patient_pic "
+            + "FROM outpatient_dynamic as A LEFT OUTER JOIN ( "
+            + "SELECT id,pic FROM patient "
+            + "GROUP BY id) as B on(B.id = A.patient_id) "
+            + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ? and ? <= date and date <= ? "
             + "GROUP BY A.id;";
     private static final String FIND_DOCTOR
             = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
@@ -213,17 +222,35 @@ public class DbDAO {
 
         return date;
     }
-    
-    public static String getDateString(long time){
+
+    public static Date getTodayDate() {
+        Calendar now = Calendar.getInstance();
+        Date date = null;
+        try {
+            String cdate = String.format("%d%02d%02d", now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            date = sdf.parse(cdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+    public static String getDateString(long time) {
 
         Date currentDate = new Date(time);
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyyHHmmss");
         return df.format(currentDate);
 
     }
-    
-    public static String getTodayDateString(){
-        return getDateString((long)((double)getTodayMillisecondsWithTime()));
+
+    public static String getTodayDateString() {
+        return getDateString((long) ((double) getTodayMillisecondsWithTime()));
+    }
+
+    public static Double dateToDouble(Date date) {
+        return Double.parseDouble(date.getTime() + "");
     }
 
     // Query Function
@@ -432,7 +459,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Insurance> findInsuracne(String findId, Double findDoB){
+    public List<Insurance> findInsuracne(String findId, Double findDoB) {
         List<Insurance> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -459,6 +486,7 @@ public class DbDAO {
 //    private static final String FIND_PATIENT
 //            = "SELECT * FROM patient "
 //            + "WHERE first_name like ? or last_name like ? and date_of_birth like ?";
+
     public List<Patient> findPatient(String findId, String findName, String findDoB) {
         if (findId == null || "".equals(findId)) {
             findId = "%";
@@ -536,7 +564,7 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
-   
+
     public void checkInPatient(Patient p) {
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -586,7 +614,7 @@ public class DbDAO {
     }
 
     public List<DynamicInfo> searchPatientInDynamic(String status, String doctor_id) {
-        if (status == null || "".equals(status)) {
+        if (status == null || "".equals(status) || "All".equals(status)) {
             status = "%";
         }
         if (doctor_id == null || "".equals(doctor_id)) {
@@ -598,13 +626,9 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
 
-            if (status.equals("ALL")) { //Michelle added this if-else
-                pstmt = connect.prepareStatement(FIND_ALL_STATUS);
-            } else {
-                pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
-                pstmt.setString(1, status);
-                pstmt.setString(2, doctor_id);
-            }
+            pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
+            pstmt.setString(1, status);
+            pstmt.setString(2, doctor_id);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -613,7 +637,41 @@ public class DbDAO {
                 list.add(d);
             }
         } catch (Exception e) {
-            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            System.out.println("ERROR!!!! searchPatientInDynamic : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<DynamicInfo> searchPatientInDynamicWithDate(String status, String doctor_id, Double start, Double finish) {
+        if (status == null || "".equals(status) || "ALL".equals(status)) {
+            status = "%";
+        }
+        if (doctor_id == null || "".equals(doctor_id)) {
+            doctor_id = "%";
+        }
+        List<DynamicInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+
+            pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS_AND_DATE);
+            pstmt.setString(1, status);
+            pstmt.setString(2, doctor_id);
+            pstmt.setDouble(3, start);
+            pstmt.setDouble(4, finish);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                DynamicInfo d = new DynamicInfo();
+                d.buildDynamicInfo(rs);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! searchPatientInDynamicWithDate : " + e.toString());
             e.printStackTrace();
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
@@ -690,9 +748,9 @@ public class DbDAO {
     }
 
     public List<Patient> getPatientNames(String query) {
-        if(query == null || "".equals(query)){
+        if (query == null || "".equals(query)) {
             query = "%";
-        }else{
+        } else {
             query = "%" + query + "%";
         }
         List<Patient> list = new ArrayList<>();
@@ -701,7 +759,7 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_PATIENT_NAMES);
-            
+
             pstmt.setString(1, query);
             pstmt.setString(2, query);
             pstmt.setString(3, query);
@@ -725,9 +783,9 @@ public class DbDAO {
         if (role == null || "".equals(role)) {
             role = "%";
         }
-        if(query == null || "".equals(query)){
+        if (query == null || "".equals(query)) {
             query = "%";
-        }else{
+        } else {
             query = "%" + query + "%";
         }
         List<Employee> list = new ArrayList<>();
@@ -736,7 +794,7 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_EMPLOYEE_NAMES_WITH_ROLE);
-            
+
             pstmt.setString(1, role);
             pstmt.setString(2, query);
             pstmt.setString(3, query);
@@ -756,8 +814,8 @@ public class DbDAO {
         }
         return list;
     }
-    
-    public String changePatientDynamicStatus(String id, String status){
+
+    public String changePatientDynamicStatus(String id, String status) {
         String result = "";
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -983,11 +1041,11 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
-    
+
     public List<RxNORM> getRxNORMCodes(String query) {
-        if(query == null || "".equals(query)){
+        if (query == null || "".equals(query)) {
             query = "%";
-        }else{
+        } else {
             query = "%" + query + "%";
         }
         List<RxNORM> list = new ArrayList<>();
@@ -1012,11 +1070,11 @@ public class DbDAO {
         }
         return list;
     }
-    
+
     public List<HCPCS> getHCPCSCodes(String query) {
-        if(query == null || "".equals(query)){
+        if (query == null || "".equals(query)) {
             query = "%";
-        }else{
+        } else {
             query = "%" + query + "%";
         }
         List<HCPCS> list = new ArrayList<>();
@@ -1041,11 +1099,11 @@ public class DbDAO {
         }
         return list;
     }
-    
+
     public List<SnomedCT> getSNOMEDCTCodes(String query) {
-        if(query == null || "".equals(query)){
+        if (query == null || "".equals(query)) {
             query = "%";
-        }else{
+        } else {
             query = "%" + query + "%";
         }
         List<SnomedCT> list = new ArrayList<>();
@@ -1070,12 +1128,13 @@ public class DbDAO {
         }
         return list;
     }
-    
+
     private static final String INSERT_PRESCRIPTION
             = "INSERT INTO prescription("
             + "doctor_id, patient_id, comment, status, date) "
             + "VALUES(?,?,?,?,?)";
-    public boolean insertNewPrescription(Patient p, Employee doc, Prescription pres){
+
+    public boolean insertNewPrescription(Patient p, Employee doc, Prescription pres) {
         boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1110,6 +1169,7 @@ public class DbDAO {
             = "INSERT INTO prescription_detail("
             + "prescription_id, RxNORM_code, name, single_dose, num_of_daily_dose, total_dosing_days, description) "
             + "VALUES(?,?,?,?,?,?,?)";
+
     public void insertPrescriptionDetail(Connection connect, Prescription pres, String id) {
 
         PreparedStatement pstmt = null;

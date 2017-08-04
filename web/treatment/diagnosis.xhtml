@@ -15,6 +15,7 @@
             <f:viewAction action="#{treatmentBean.reset()}"/>
         </f:metadata>
 
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
 
         <b:container fluid="true" class="customContainer">
 
@@ -29,6 +30,23 @@
                     <b:column col-md="11" offset-md="1">
                         <h2>Select a Patient(*)</h2>
                         <hr></hr>
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="findDocId" value="Doctor ID" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="4">
+                                    <p:inputText value="#{treatmentBean.findDocId}" id="findDocId" autocomplete="off" class="form-control" placeholder="Doctor ID"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="date" value="Date" class="col-sm-2 control-label" ></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:calendar id="date" value="#{treatmentBean.date}" pattern="MM/dd/yyyy" style="width: 100%;"/>
+                                </b:column>
+                            </div>
+                        </b:column>
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
@@ -306,6 +324,7 @@
                                         </div>
                                     </b:column>
                                     <b:column col-md="12" rendered="#{treatmentBean.injectionList.size() > 0}">
+                                        <br/>
                                         <b:column col-md="11" offset-md="1">
                                             <h4>Injection</h4>
                                             <hr></hr>
@@ -349,7 +368,7 @@
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3>Refer Patient to Specialist</h3>
+                                    <h3>Refer to a Specialist</h3>
                                     <hr></hr>
 
                                 </b:column>
@@ -514,7 +533,7 @@
 
                     <p:dialog header="Write Prescription" widgetVar="wpDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" >
                         <p:outputPanel id="wpDetail">
-                        <!--<p:scrollPanel id="wpDetail">-->
+                            <!--<p:scrollPanel id="wpDetail">-->
 
                             <b:column id="pres_popup">
                                 <b:column col-md="12" class="form-horizontal">
@@ -626,7 +645,7 @@
                                 </b:column>
 
                             </b:column>
-                        <!--</p:scrollPanel>-->
+                            <!--</p:scrollPanel>-->
                         </p:outputPanel>
                     </p:dialog>
 

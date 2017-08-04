@@ -96,6 +96,7 @@ public class signupBean implements Serializable {
 //            return "/admin/create_employee.xhtml?faces-redirect=true";
             menuBean.newEmployee();
         }
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 
     }
 
@@ -125,6 +126,8 @@ public class signupBean implements Serializable {
 //            return "/checkin/create_patient.xhtml?faces-redirect=true";
             menuBean.newPatient();
         }
+        
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 
     }
 
