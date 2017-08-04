@@ -215,6 +215,7 @@ public class patientBean implements Serializable {
                 mime = "image/jpg";
             }
 
+            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
             menuBean.viewMHDocument();
 
         } catch (Exception e) {
