@@ -13,16 +13,13 @@
         <h:form id="header-form">
             <b:navBar brand="Electronic Health Record" brandHref="#"  sticky="true" fluid="true"  style="margin: 0px;">
                 <b:navbarLinks pull="left">                    
-                    <b:navLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHomeAjax()}" rendered="#{signinBean.loggedIn}" update="content"/>
-                    <b:navLink href="#" value="About" iconAwesome="fa-comment" />
-                    <b:navLink href="#" value="Help" iconAwesome="fa-question" />
+                    <b:navCommandLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHomeAjax()}" rendered="#{signinBean.loggedIn}" update="content"/>
+                    <b:navCommandLink href="#" value="About" iconAwesome="fa-comment" />
+                    <b:navCommandLink href="#" value="Help" iconAwesome="fa-question" />
                 </b:navbarLinks>
                 <b:navbarLinks pull="right">
-                    <b:navLink value="Logout" iconAwesome="fa-home"  rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true">
-                        
-                    </b:navLink>
-                    <p:commandLink  value="Logout" rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true" styleClass="my-btn"/>
-                    <!--<p:commandButton value="Logout" rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true" styleClass="my-btn"/>-->
+                    <b:navCommandLink value="Hi, #{signinBean.em.fn} (#{signinBean.em.role})" rendered="#{signinBean.loggedIn}"/>
+                    <b:navCommandLink value="Logout" iconAwesome="fa-sign-out"  rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true"/>
                 </b:navbarLinks>
             </b:navBar>
         </h:form>
