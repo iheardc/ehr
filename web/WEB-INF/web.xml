@@ -35,7 +35,7 @@
         <servlet-name>viewFileContent</servlet-name>
         <servlet-class>main.viewFileContent</servlet-class>
     </servlet>
-    <servlet>
+<!--    <servlet>
         <servlet-name>Jersey REST Service</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
@@ -47,7 +47,7 @@
     <servlet-mapping>
         <servlet-name>Jersey REST Service</servlet-name>
         <url-pattern>/main/*</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
     <servlet-mapping>
         <servlet-name>viewFileContent</servlet-name>
         <url-pattern>/viewFileContent</url-pattern>

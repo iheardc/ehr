@@ -10,7 +10,7 @@
       xmlns:b="http://bootsfaces.net/ui">
     
     <ui:composition>
-        <!--<h:form>-->
+        <h:form id="header-form">
             <b:navBar brand="Electronic Health Record" brandHref="#"  sticky="true" fluid="true"  style="margin: 0px;">
                 <b:navbarLinks pull="left">                    
                     <b:navLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHomeAjax()}" rendered="#{signinBean.loggedIn}" update="content"/>
@@ -18,11 +18,14 @@
                     <b:navLink href="#" value="Help" iconAwesome="fa-question" />
                 </b:navbarLinks>
                 <b:navbarLinks pull="right">
-                    <b:navLink value="Logout" iconAwesome="fa-home" rendered="#{signinBean.loggedIn}"/>
-                    
+                    <b:navLink value="Logout" iconAwesome="fa-home"  rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true">
+                        
+                    </b:navLink>
+                    <p:commandLink  value="Logout" rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true" styleClass="my-btn"/>
+                    <!--<p:commandButton value="Logout" rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true" styleClass="my-btn"/>-->
                 </b:navbarLinks>
             </b:navBar>
-        <!--</h:form>-->
+        </h:form>
 
 <!--        <p:dialog header="Get an access token to the Dropbox"  responsive="true" widgetVar="dlg1"  >
             <p:panelGrid columns="1" style="margin: 0 auto">
