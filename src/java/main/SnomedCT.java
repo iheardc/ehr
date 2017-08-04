@@ -15,17 +15,17 @@ import java.util.ArrayList;
  */
 public class SnomedCT {
     
-    String code, description;
+    String code, codeSystemOID, description ;
     
     public SnomedCT(){
         
     }
 
-    public SnomedCT(String code, String description) {
+    public SnomedCT(String code, String codeSystemOID, String description) {
         this.code = code;
+        this.codeSystemOID = codeSystemOID;
         this.description = description;
     }
-    
     
 
     public ArrayList<String> getKeySet(ResultSet rs) {
@@ -52,9 +52,13 @@ public class SnomedCT {
 //        Employee em = new Employee();
         if (columnName != null) {
             try {
-                String column = "SNOMED_CT_Code";
+                String column = "code";
                 if (columnName.contains(column)) {
                     this.code = rs.getString(column);
+                }
+                column = "code_system_OID";
+                if (columnName.contains(column)) {
+                    this.description = rs.getString(column);
                 }
                 column = "description";
                 if (columnName.contains(column)) {
@@ -85,16 +89,13 @@ public class SnomedCT {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    @Override
-    public boolean equals(Object obj){
-        SnomedCT s = (SnomedCT)obj;
-        return (code.equals(s.code) && description.equals(s.description));
+
+    public String getCodeSystemOID() {
+        return codeSystemOID;
     }
-    
-    @Override
-    public String toString(){
-        return code + " : " + description;
+
+    public void setCodeSystemOID(String codeSystemOID) {
+        this.codeSystemOID = codeSystemOID;
     }
     
 }

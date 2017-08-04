@@ -133,6 +133,8 @@ public class DbDAO {
             = "select * from rxnorm_code WHERE code like ? or description like ?";
     private static final String GET_HCPCS_CODES
             = "select * from hcpcs_code WHERE code like ? or description like ?";
+    private static final String GET_SNOMEDCT_CODES
+            = "select * from snomed_ct_code WHERE code like ? or description like ?";
     private static final String UPDATE_PATIENT_DAYNAMIC_STATUS
             = "UPDATE outpatient_dynamic SET "
             + "date=?,status=? "
@@ -1031,6 +1033,35 @@ public class DbDAO {
                 HCPCS rx = new HCPCS();
                 rx.buildHCPCS(rs);
                 list.add(rx);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
+    public List<SnomedCT> getSNOMEDCTCodes(String query) {
+        if(query == null || "".equals(query)){
+            query = "%";
+        }else{
+            query = "%" + query + "%";
+        }
+        List<SnomedCT> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_SNOMEDCT_CODES);
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                SnomedCT sn = new SnomedCT();
+                sn.buildSnomed(rs);
+                list.add(sn);
             }
         } catch (Exception e) {
             System.out.println("ERROR! " + e.toString());

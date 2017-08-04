@@ -38,12 +38,7 @@ public class triageBean implements Serializable {
     boolean isShowInjectionInfo;
 
     // Enter Chief Complaint
-    // The items currently available for selection
-    private List<SnomedCT> scodeItems = new ArrayList<SnomedCT>();
-    // Current selected specialty
     private List<SnomedCT> findScodeList;
-    // All the items available in the application
-    private List<SnomedCT> scodeAllItems = new ArrayList<SnomedCT>();
 
     private List<String> specAllItems = new ArrayList<String>();
     
@@ -236,13 +231,7 @@ public class triageBean implements Serializable {
     }
 
     private void setAllScode() {
-
-        scodeItems = new ArrayList<SnomedCT>();
         findScodeList = new ArrayList<SnomedCT>();
-        scodeAllItems = new ArrayList<SnomedCT>();
-
-        scodeAllItems = SnomedService.getAllList();
-        scodeItems.addAll(scodeAllItems);
     }
 
     public List<SnomedCT> scodeCompleteItem(String query) {
@@ -250,13 +239,7 @@ public class triageBean implements Serializable {
             findScodeList = new ArrayList<>();
         }
         query = query.toLowerCase();
-        List<SnomedCT> filteredList = new ArrayList<SnomedCT>();
-        for (SnomedCT item : scodeAllItems) {
-            if (item.isContain(query) && !findScodeList.contains(item)) {
-                filteredList.add(item);
-            }
-        }
-        return filteredList;
+        return SnomedService.getFilteredList(query);
     }
 
     private void setAllSpecialty() {
@@ -422,28 +405,12 @@ public class triageBean implements Serializable {
         this.selectedDoc = selectedDoc;
     }
 
-    public List<SnomedCT> getScodeItems() {
-        return scodeItems;
-    }
-
-    public void setScodeItems(List<SnomedCT> scodeItems) {
-        this.scodeItems = scodeItems;
-    }
-
     public List<SnomedCT> getFindScodeList() {
         return findScodeList;
     }
 
     public void setFindScodeList(List<SnomedCT> findScodeList) {
         this.findScodeList = findScodeList;
-    }
-
-    public List<SnomedCT> getScodeAllItems() {
-        return scodeAllItems;
-    }
-
-    public void setScodeAllItems(List<SnomedCT> scodeAllItems) {
-        this.scodeAllItems = scodeAllItems;
     }
 
     public String getTemperature() {
