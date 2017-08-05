@@ -11,6 +11,7 @@ import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -27,53 +28,75 @@ public class menuBean implements Serializable {
 
     }
 
-    public void reset(){
+    public void reset() {
         pathCont = "/home.xhtml";
         pathLeft = "/leftMenu/employee_leftMenu.xhtml";
     }
-    
+
     public static void redirectHome() {
-//        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
-//        treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
-//        bean.reset();
-//        bean.findDynaPatient();
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signinBean sbean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+        switch (sbean.em.role) {
+            case "doctor": {
+                treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
+                bean.reset();
+                bean.findDynaPatient();
+                break;
+            }
+            case "nurse": {
+                triageBean bean = (triageBean) elContext.getELResolver().getValue(elContext, null, "triageBean");
+                bean.reset();
+                bean.findDynaPatient();
+                break;
+            }
+        }
         pathCont = "/home.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
-    public static void detailInsurance(){
+
+    public static void detailInsurance() {
         pathCont = "/insurance/insurance_detail.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
-    public static void viewInsurance(){
+
+    public static void viewInsurance() {
         pathCont = "/insurance/insurance_view.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     // User Information
     public static void viewPatientDemographics() {
         pathCont = "/userInfo/view_patient.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public static void viewEmployeeDemographics() {
         pathCont = "/userInfo/view_employee.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public static void findEmployee() {
         pathCont = "/userInfo/find_employee.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     // Patient Information
-    
     public static void patientMedicalHistoryWithReset() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
         bean.reset();
         pathCont = "/patientInfo/medical_history_patient.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+
     public static void patientMedicalHistory() {
         pathCont = "/patientInfo/medical_history_patient.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    public static void viewMHDocument(){
+
+    public static void viewMHDocument() {
         pathCont = "/patientInfo/viewFileContent.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     // Patient Check-In
@@ -82,6 +105,7 @@ public class menuBean implements Serializable {
         signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
         bean.reset();
         pathCont = "/checkin/create_patient.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public static void checkinPatient() {
@@ -89,6 +113,7 @@ public class menuBean implements Serializable {
         patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
         bean.reset();
         pathCont = "/checkin/checkin_patient.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     // Nursing Station
@@ -97,6 +122,7 @@ public class menuBean implements Serializable {
         patientStatusBean bean = (patientStatusBean) elContext.getELResolver().getValue(elContext, null, "patientStatusBean");
         bean.reset();
         pathCont = "/nursing_station/patient_status.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public static void triage() {
@@ -104,6 +130,7 @@ public class menuBean implements Serializable {
         triageBean bean = (triageBean) elContext.getELResolver().getValue(elContext, null, "triageBean");
         bean.reset();
         pathCont = "/nursing_station/triage.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     // Treatment
@@ -112,6 +139,7 @@ public class menuBean implements Serializable {
         treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
         bean.reset();
         pathCont = "/treatment/diagnosis.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public static void writeVisitSummary() {
@@ -119,14 +147,16 @@ public class menuBean implements Serializable {
         treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
         bean.reset();
         pathCont = "/treatment/write_visit_summary.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     // Payment
     public static void viewPatientBill() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         paymentBean bean = (paymentBean) elContext.getELResolver().getValue(elContext, null, "paymentBean");
         bean.reset();
         pathCont = "/payment/view_patient_bill.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     // Admin
@@ -135,6 +165,7 @@ public class menuBean implements Serializable {
         signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
         bean.reset();
         pathCont = "/admin/create_employee.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
     public String getPathCont() {
@@ -152,23 +183,23 @@ public class menuBean implements Serializable {
     public void setPathLeft(String pathLeft) {
         menuBean.pathLeft = pathLeft;
     }
-    
-    public boolean isRendered(String strs){
-        
+
+    public boolean isRendered(String strs) {
+
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean bean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
-        
-        if(bean.em.role == null || "".equals(bean.em.role)){
+
+        if (bean.em.role == null || "".equals(bean.em.role)) {
             return false;
         }
-        
+
         String role = bean.em.role.toLowerCase();
-        for(String s : strs.split("/")){
-            if(s.toLowerCase().equals(role)){
+        for (String s : strs.split("/")) {
+            if (s.toLowerCase().equals(role)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

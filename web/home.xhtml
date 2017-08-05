@@ -25,8 +25,8 @@
                     <b:row>
 
                         <b:column col-md="3">
-                            <div class="shadow-div" style="height: 200px;">
-
+                            <div class="shadow-div" style=" height: 200px;">
+                                
                             </div>
                         </b:column>
                         <b:column col-md="3">
@@ -50,73 +50,138 @@
 
                     <b:row>
                         <b:column col-md="12">
-                            <div class="shadow-div">
-                                <p:column rendered="#{signinBean.em.role eq 'doctor'}">
-                                    <b:column col-md="12" rendered="#{treatmentBean.isShowWFDTable}">
-                                        <hr></hr>
+                            <p:column rendered="#{signinBean.em.role eq 'doctor'}">
+                                <b:column col-md="12" rendered="#{treatmentBean.isShowWFDTable}" class="shadow-div">
+                                    <!--<hr></hr>-->
 
-                                        <p:dataTable var="d" value="#{treatmentBean.findWFDList}" id="searchTable1" paginator="true" rows="10"
-                                                     resizableColumns="true"  tableStyleClass="table table-striped"
-                                                     >
+                                    <p:dataTable var="d" value="#{treatmentBean.findWFDList}" id="searchTableD1" paginator="true" rows="10"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped"
+                                                 >
 
                                             <!--<p:ajax event="rowSelect" listener="#{treatmentBean.onWFDSelectRowSelect}" />-->
 
-                                            <f:facet name="header">
-                                                Waiting for Doctor
-                                            </f:facet>
+                                        <f:facet name="header">
+                                            Waiting for Doctor
+                                        </f:facet>
 
-                                            <p:column headerText="Patient Name" style="width: 30%">
-                                                <h:outputText value="#{d.p.name}" />
-                                            </p:column>
-                                            <p:column headerText="Nurse Name" style="width: 30%">
-                                                <h:outputText value="#{d.n.name}" />
-                                            </p:column>
-                                            <p:column headerText="Date" style="width: 40%">
-                                                <h:outputText value="#{d.dateString}" />
-                                            </p:column>
-<!--                                            <p:columnGroup type="footer">
-                                                <p:row>
-                                                    <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
-                                                </p:row>
-                                            </p:columnGroup>-->
+                                        <p:column headerText="Patient Name" style="width: 30%">
+                                            <h:outputText value="#{d.p.name}" />
+                                        </p:column>
+                                        <p:column headerText="Nurse Name" style="width: 30%">
+                                            <h:outputText value="#{d.n.name}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width: 40%">
+                                            <h:outputText value="#{d.dateString}" />
+                                        </p:column>
+                                        <!--                                            <p:columnGroup type="footer">
+                                                                                        <p:row>
+                                                                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                                                                        </p:row>
+                                                                                    </p:columnGroup>-->
 
-                                        </p:dataTable>
+                                    </p:dataTable>
 
-                                    </b:column>
+                                </b:column>
 
-                                    <b:column col-md="12" rendered="#{treatmentBean.isShowWFDRTable}">
-                                        <hr></hr>
+                                <b:column col-md="12" rendered="#{treatmentBean.isShowWFDRTable}">
+                                    <hr></hr>
 
-                                        <p:dataTable var="d" value="#{treatmentBean.findWFDRList}" id="searchTable2" paginator="true" rows="10"
-                                                     resizableColumns="true" tableStyleClass="table table-striped"
-                                                     >
+                                    <p:dataTable var="d" value="#{treatmentBean.findWFDRList}" id="searchTableD2" paginator="true" rows="10"
+                                                 resizableColumns="true" tableStyleClass="table table-striped"
+                                                 >
 
                                             <!--<p:ajax event="rowSelect" listener="#{treatmentBean.onWFDRSelectRowSelect}" />-->
 
-                                            <f:facet name="header">
-                                                Waiting for Doctor with Result
-                                            </f:facet>
+                                        <f:facet name="header">
+                                            Waiting for Doctor with Result
+                                        </f:facet>
 
-                                            <p:column headerText="Patient Name" style="width: 30%">
-                                                <h:outputText value="#{d.p.name}" />
-                                            </p:column>
-                                            <p:column headerText="Nurse Name" style="width: 30%">
-                                                <h:outputText value="#{d.n.name}" />
-                                            </p:column>
-                                            <p:column headerText="Date" style="width: 40%">
-                                                <h:outputText value="#{d.dateString}" />
-                                            </p:column>
-<!--                                            <p:columnGroup type="footer">
-                                                <p:row>
-                                                    <p:column colspan="3" style="text-align:left" footerText="Please select the row." />
-                                                </p:row>
-                                            </p:columnGroup>-->
+                                        <p:column headerText="Patient Name" style="width: 30%">
+                                            <h:outputText value="#{d.p.name}" />
+                                        </p:column>
+                                        <p:column headerText="Nurse Name" style="width: 30%">
+                                            <h:outputText value="#{d.n.name}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width: 40%">
+                                            <h:outputText value="#{d.dateString}" />
+                                        </p:column>
+                                        <!--                                            <p:columnGroup type="footer">
+                                                                                        <p:row>
+                                                                                            <p:column colspan="3" style="text-align:left" footerText="Please select the row." />
+                                                                                        </p:row>
+                                                                                    </p:columnGroup>-->
 
-                                        </p:dataTable>
+                                    </p:dataTable>
 
-                                    </b:column>
-                                </p:column>
-                            </div>
+                                </b:column>
+                            </p:column>
+
+                            <p:column rendered="#{signinBean.em.role eq 'nurse'}">
+                                <b:column col-md="12" rendered="#{triageBean.isShowWFNTable}" class="shadow-div">
+                                    <!--<hr></hr>-->
+
+                                    <!--                                <b:column col-md="12" class="form-horizontal">
+                                                                        <div class="form-group">-->
+
+                                    <p:dataTable var="d" value="#{triageBean.findWNFList}" id="searchTableN1" paginator="true" rows="10"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" 
+                                                 >
+
+                                        <f:facet name="header">
+                                            Waiting for Nurse
+                                        </f:facet>
+
+                                        <p:column headerText="Patient ID" style="width: 10%">
+                                            <h:outputText value="#{d.p.id}" />
+                                        </p:column>
+                                        <p:column headerText="Name" style="width: 30%">
+                                            <h:outputText value="#{d.p.name}" />
+                                        </p:column>
+                                        <p:column headerText="Date of Birth" style="width: 25%">
+                                            <h:outputText value="#{d.p.dobString}" />
+                                        </p:column>
+                                        <p:column headerText="Gender" style="width: 10%">
+                                            <h:outputText value="#{d.p.gender}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width: 25%">
+                                            <h:outputText value="#{d.dateString}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                </b:column>
+
+                                <b:column col-md="12" rendered="#{triageBean.isShowWFNITable}">
+                                    <hr></hr>
+
+                                    <p:dataTable var="d" value="#{triageBean.findWNFIList}" id="searchTableN2" paginator="true" rows="10"
+                                                 resizableColumns="true" tableStyleClass="table table-striped"
+                                                 >
+
+                                        <f:facet name="header">
+                                            Waiting for Nurse(Injection)
+                                        </f:facet>
+
+                                        <p:column headerText="Patient ID" style="width:10%">
+                                            <h:outputText value="#{d.p.id}" />
+                                        </p:column>
+                                        <p:column headerText="Patient Name" style="width:30%">
+                                            <h:outputText value="#{d.p.name}" />
+                                        </p:column>
+                                        <p:column headerText="Doctor Name" style="width:20%">
+                                            <h:outputText value="#{d.doc.name}" />
+                                        </p:column>
+                                        <p:column headerText="Nurse Name" style="width:20%">
+                                            <h:outputText value="#{d.n.name}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width:20%">
+                                            <h:outputText value="#{d.dateString}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                </b:column>
+                            </p:column>
                         </b:column>
                     </b:row>
 
@@ -142,9 +207,21 @@
         <style type="text/css">
             .shadow-div{
                 margin: auto;
-                margin-top: 20px;
-                margin-bottom: 20px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                padding: 10px;
                 box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 4px 0 rgba(0, 0, 0, 0.19);
+            }
+            .shadow-div-header{
+                /*height: 70%;*/
+                color: white;
+                padding: 10px;
+            }
+            .shadow-div-content{
+                /*height: 30%;*/
+                color: black;
+                background-color: #f6f6f6;
+                padding: 10px;
             }
         </style>
 

@@ -121,7 +121,7 @@ public class DbDAO {
             + "doctor_id=?,doctor_fn=?,doctor_ln=?,nurse_id=?,nurse_fn=?,nurse_ln=?,status=?,date=? "
             + "WHERE id=?";
     private static final String ADD_CHEIF_COMPLAINT
-            = "INSERT INTO chief_complaint(outpatient_dynamic_id, patient_id, SNOMED_CT_Code, description) "
+            = "INSERT INTO chief_complaint(outpatient_dynamic_id, patient_id, code, description) "
             + "VALUES(?,?,?,?);";
     private static final String ADD_VITAL_SIGN
             = "INSERT INTO vital_sign(outpatient_dynamic_id, patient_id, temperature, SPO2, weight, blood_pressure) "
