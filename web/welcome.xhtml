@@ -22,45 +22,47 @@
     <ui:define name="leftMenu">
     </ui:define>
     <ui:define name="content"> 
-        <b:container>
-            <b:column col-md="6" offset-md="3">
-                <div class="panel panel-login" style="padding:2em; background-color: white;">
-                    <div class="panel-heading" style="margin-bottom: 1em;">
-                        <b:row id="loginmessage" style="font-size:20px">
-                            Please Login
-                        </b:row>
-                        <hr></hr>
-                    </div>
-                    <div class="panel-body">
-                        <h:form id="login-form" role="form">
-                            <div class="form-group">
-                                <p:inputText id="id" class="form-control" placeholder="ID" autocomplete="off" value="#{signinBean.id}" required="true"/>
-                            </div>
-                            <div class="form-group">
-                                <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
-                            </div>
+        <h:form id="form">
+            <b:container>
+                <b:column col-md="6" offset-md="3">
+                    <div class="panel panel-login" style="padding:2em; background-color: white;">
+                        <div class="panel-heading" style="margin-bottom: 1em;">
+                            <b:row id="loginmessage" style="font-size:20px">
+                                Please Login
+                            </b:row>
+                            <hr></hr>
+                        </div>
+                        <div class="panel-body">
+                            <h:form id="login-form" role="form">
+                                <div class="form-group">
+                                    <p:inputText id="id" class="form-control" placeholder="ID" autocomplete="off" value="#{signinBean.id}" required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
+                                </div>
 
-                            <div class="form-group">
-                                <div class="row">
-                                    <b:column col-sm="6" offset-sm="3">
-                                        <p:commandButton value="Login" id="login-submit" action="#{signinBean.login()}" class="form-control btn btn-login" ajax="false"/>
-                                    </b:column>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <b:column col-sm="6" offset-sm="3">
+                                            <p:commandButton value="Login" id="login-submit" action="#{signinBean.login()}" class="form-control btn btn-login" ajax="false"/>
+                                        </b:column>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <b:column col-lg="12">
-                                        <div class="text-center">
-                                            <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
-                                        </div>
-                                    </b:column>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <b:column col-lg="12">
+                                            <div class="text-center">
+                                                <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
+                                            </div>
+                                        </b:column>
+                                    </div>
                                 </div>
-                            </div>
-                        </h:form>
+                            </h:form>
+                        </div>
                     </div>
-                </div>
-            </b:column>
-        </b:container>
+                </b:column>
+            </b:container>
+        </h:form>
 
         <style type="text/css"> 
             body{

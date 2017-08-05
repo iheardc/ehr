@@ -68,6 +68,25 @@ public class patientBean implements Serializable {
         context.update("form");
 //        return "/userInfo/find_employee.xhtml?faces-redirect=true";
     }
+    
+    public void findPatientWithDate(){ // for check-in
+        DbDAO dao = new DbDAO();
+        findList = dao.findPatientWithDate(DbDAO.getTodayMillisecondsWithOutTime()+86400000, findId, findName, dateToDoubleString(findDoB));
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message;
+        if (findList.size() > 0) {
+            message = new FacesMessage("Search ", "There are " + findList.size() + " results.");
+        } else {
+            message = new FacesMessage("Search ", "There are no matching results.");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        selectedP = null;
+        isShowMoreInfo = false;
+        resetFindItem();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form");
+    }
 
     public void onPatientSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());

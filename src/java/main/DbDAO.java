@@ -67,7 +67,13 @@ public class DbDAO {
             + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) and (concat_ws(' ',first_name,last_name) like ?) and A.email like ? and A.role like ? "
             + "GROUP BY A.id;";
     private static final String FIND_PATIENT_WITH_DATE
-            = "";
+            = "select * from patient as P "
+            + "LEFT OUTER JOIN( "
+            + "SELECT patient_id, count(id) as cot "
+            + "FROM outpatient_dynamic "
+            + "WHERE date <= ? "
+            + "GROUP BY patient_id) as B on (B.patient_id = P.id) "
+            + "where id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ? and IFNULL(B.cot,0) <= 0";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
             + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
@@ -76,6 +82,10 @@ public class DbDAO {
             + "WHERE patient_id=?";
     private static final String CHECK_IN_PATIENT
             = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status) VALUES(?, ?, ?, ?, ?, ?, ?);";
+    private static final String CHECK_OUT_PATIENT
+            = "UPDATE outpatient_dynamic SET "
+            + "status=?,date=? "
+            + "WHERE id=?";
     private static final String MAKE_NEW_BILLING
             = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
@@ -148,6 +158,8 @@ public class DbDAO {
             = "UPDATE outpatient_dynamic SET "
             + "date=?,status=? "
             + "WHERE id=?";
+    private static final String FIND_PATIENT_BILLING
+            = "SELECT * FROM billing WHERE billed_to like ? and ? <= date and date <= ?";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -160,7 +172,9 @@ public class DbDAO {
         "WFDR", // Waiting for Doctor with Result
         "WFP", // Waiting for Prescription
         "WFB", // Waiting for Bill
-        "CKO" // Check Out
+        "CKO", // Check Out
+        "ADM", // Admission
+        "TRF" // Transfer
     };
 
     public static double getTodayMillisecondsWithOutTime() {
@@ -519,7 +533,47 @@ public class DbDAO {
                 list.add(p);
             }
         } catch (Exception e) {
-            System.out.println("ERROR!!!! findEmployee : " + e.toString());
+            System.out.println("ERROR!!!! findPatient : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    public List<Patient> findPatientWithDate(Double date, String findId, String findName, String findDoB) {
+        if (findId == null || "".equals(findId)) {
+            findId = "%";
+        }
+        if (findName == null || "".equals(findName)) {
+            findName = "%";
+        } else {
+            findName = "%" + findName + "%";
+        }
+        if (findDoB == null || "".equals(findDoB) || "0".equals(findDoB)) {
+            findDoB = "%";
+        }
+        List<Patient> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_PATIENT_WITH_DATE);
+            pstmt.setDouble(1, date);
+            pstmt.setString(2, findId);
+            pstmt.setString(3, findName);
+            pstmt.setString(4, findName);
+            pstmt.setString(5, findName);
+            pstmt.setString(6, findDoB);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Patient p = new Patient();
+                p.buildPatient(rs);
+                list.add(p);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findPatientWithDate : " + e.toString());
             e.printStackTrace();
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
@@ -527,24 +581,6 @@ public class DbDAO {
         return list;
     }
 
-//    public void loginPatient(Patient p) {
-//        PreparedStatement pstmt = null;
-//        Connection connect = null;
-//        try {
-//            connect = DbConnectionPools.getPoolConnection();
-//            pstmt = connect.prepareStatement(LOGIN_PATIENT);
-//            pstmt.setString(1, p.email);
-//            pstmt.setString(2, p.password);
-//            ResultSet rs = pstmt.executeQuery();
-//            while (rs.next()) {
-//                p.buildPatient(rs);
-//                p.errormsg = "Success";
-//            }
-//        } catch (Exception e) {
-//        } finally {
-//            DbConnectionPools.closeResources(connect, pstmt);
-//        }
-//    }
     public void loginEmployee(Employee em) {
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1193,6 +1229,54 @@ public class DbDAO {
         } catch (Exception e) {
             System.out.println("ERROR!!!!" + e.toString());
 //            em.errormsg = "Failed to add specialty.Failed to add specialty.";
+        }
+    }
+    
+    public List<PayInfo> getPayList(Patient p, Double startDate, Double finishDate) {
+        List<PayInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_PATIENT_BILLING);
+            pstmt.setString(1, p.id);
+            pstmt.setDouble(2, startDate);
+            pstmt.setDouble(3, finishDate);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                PayInfo pa = new PayInfo();
+                pa.buildInfo(rs);
+                list.add(pa);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
+    public void checkOutPatient(DynamicInfo d){
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(CHECK_OUT_PATIENT);
+
+            pstmt.setString(1, DYNAMIN_DATA[7]);
+            pstmt.setDouble(2, getTodayMillisecondsWithTime());
+            pstmt.setString(3, d.id);
+
+            pstmt.executeUpdate();
+
+            d.errormsg = "";//"Thank you for registering with us!";
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            d.errormsg += e.getMessage();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
         }
     }
 

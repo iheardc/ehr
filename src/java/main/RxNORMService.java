@@ -23,7 +23,7 @@ public class RxNORMService {
     
     @PostConstruct
     public void init() {
-        list = getAllList();
+//        list = getAllList();
     }
     
     public static List<RxNORM> getAllList(){
@@ -41,6 +41,9 @@ public class RxNORMService {
     }
 
     public List<RxNORM> getList() {
+        if(list == null || list.size() <= 0){
+            list = getAllList();
+        }
         return list;
     }
     

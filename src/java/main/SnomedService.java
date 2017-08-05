@@ -23,7 +23,7 @@ public class SnomedService {
     
    @PostConstruct
     public void init() {
-        list = getAllList();
+//        list = getAllList();
     }
     
     public static List<SnomedCT> getAllList(){
@@ -41,6 +41,9 @@ public class SnomedService {
     }
 
     public List<SnomedCT> getList() {
+        if(list == null || list.size() <= 0){
+            list = getAllList();
+        }
         return list;
     }
     

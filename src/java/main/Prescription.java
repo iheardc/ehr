@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -222,7 +223,5 @@ public class Prescription {
     public void setDetail(List<PrescriptionDetail> detail) {
         this.detail = detail;
     }
-    
-    
 
 }

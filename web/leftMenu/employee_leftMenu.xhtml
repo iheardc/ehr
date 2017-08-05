@@ -115,7 +115,7 @@
                         <p:menuitem value="Write Charge Code"  icon="fa fa-edit" update="content"/>
                     </p:submenu>
                     <p:submenu label="Payment"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/administrator/accountant')}" >
-                        <p:menuitem value="View Patient Bill"  icon="fa fa-info" update="content"/>
+                        <p:menuitem value="View Patient Bill"  icon="fa fa-info" action="#{menuBean.viewPatientBill()}" update="content"/>
                         <p:menuitem value="Payment History"  icon="fa fa-edit" update="content"/>
                     </p:submenu>
                     <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
@@ -244,7 +244,7 @@
                     <p:menuitem value="Write Charge Code"  icon="fa fa-edit" update="content"/>
                 </p:submenu>
                 <p:submenu label="Payment"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/administrator/accountant')}" >
-                    <p:menuitem value="View Patient Bill"  icon="fa fa-info" update="content"/>
+                    <p:menuitem value="View Patient Bill"  icon="fa fa-info" action="#{menuBean.viewPatientBill()}" update="content"/>
                     <p:menuitem value="Payment History"  icon="fa fa-edit" update="content"/>
                 </p:submenu>
                 <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">

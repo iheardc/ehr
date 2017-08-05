@@ -13,7 +13,7 @@
         <h:form id="header-form">
             <b:navBar brand="Electronic Health Record" brandHref="#"  sticky="true" fluid="true"  style="margin: 0px;">
                 <b:navbarLinks pull="left">                    
-                    <b:navCommandLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHomeAjax()}" rendered="#{signinBean.loggedIn}" update="content"/>
+                    <b:navCommandLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHome()}" rendered="#{signinBean.loggedIn}" update="content"/>
                     <b:navCommandLink href="#" value="About" iconAwesome="fa-comment" />
                     <b:navCommandLink href="#" value="Help" iconAwesome="fa-question" />
                 </b:navbarLinks>

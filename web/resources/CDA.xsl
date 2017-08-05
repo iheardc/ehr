@@ -78,27 +78,28 @@
  
 body {
  
-        color: #003366;
+        color: #3f3f3f;
  
         background-color: #FFFFFF;
  
         font-family: Verdana, Tahoma, sans-serif;
  
         font-size: 11px;
+                                            
+        padding-top: 20px;
+
+        padding-bottom: 20px;
  
 }
  
 
  
-a {
- 
-        color: #003366;
- 
-        background-color: #FFFFFF;
- 
+hr {
+    color: #bed5bb;
+                 
+    margin-left : 10px;   
+                                                                            
 }
- 
-
  
 h1 {
  
@@ -115,6 +116,8 @@ h2 {
         font-size: 11pt;
  
         font-weight: bold;
+                                 
+        margin: 0px;
  
 }
  
@@ -126,6 +129,8 @@ h3 {
  
         font-weight: bold;
  
+        margin: 0px;
+                                            
 }
  
 
@@ -135,14 +140,8 @@ h4 {
         font-size: 8pt;
  
         font-weight: bold;
- 
-}
- 
-
- 
-div {
- 
-        width: 80%;
+                                            
+        margin: 0px;
  
 }
  
@@ -152,7 +151,15 @@ table {
  
         line-height: 10pt;
  
-        width: 80%;
+        width: 90%;
+                                            
+        margin: auto;
+                                         
+        border: 1px solid #e1e1e1;
+                                            
+        margin-top: 10px;
+
+        margin-bottom: 10px;
  
 }
  
@@ -160,7 +167,7 @@ table {
  
 tr {
  
-        background-color: #ccccff;
+        background-color: #d7ebd6;
  
 }
  
@@ -168,23 +175,62 @@ tr {
  
 td {
  
-        padding: 0.1cm 0.2cm;
+        padding: 10px;
  
         vertical-align: top;
+                                            
+        font-size:12px;
  
 }
  
-
+.shadow-div{
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 4px 0 rgba(0, 0, 0, 0.19);
+}
+                                            
+.shadow-div a{
+    color: white;
+    font-size: 16px;
+}
+                                            
+.shadow-div li a{
+    color: white;
+}
+ 
+.shadow-header {
+    background-color: #5d845b;
+    color: white;
+    padding: 15px;
+}
+                                            
+.shadow-header2 {
+    background-color: #76a274;
+    color: white;
+    padding: 15px;
+}
+                                            
+.shadow-container {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 16px;
+}
  
 .h1center {
  
-        font-size: 12pt;
+        font-size: 16pt;
  
         font-weight: bold;
  
         text-align: center;
- 
-        width: 80%;
+                                            
+        margin-top: 10px;
+
+        margin-bottom: 20px;
  
 }
  
@@ -192,7 +238,7 @@ td {
  
 .header_table{
  
-        border: 1pt inset #00008b;
+        box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 4px 0 rgba(0, 0, 0, 0.19);
  
 }
  
@@ -260,7 +306,7 @@ td {
  
                                 <xsl:call-template name="make-tableofcontents"/>
  
-                                <hr align="left" color="teal" size="2" width="80%"/>
+                                <!--<hr align="left" size="2"/>-->
  
                                 <!-- produce human readable document content -->
  
@@ -268,7 +314,7 @@ td {
  
                                 <br/>
  
-                                <hr align="left" color="teal" size="2" width="80%"/>
+                                <!--<hr align="left" size="2"/>-->
  
                                 <br/>
  
@@ -301,30 +347,42 @@ td {
         <!-- generate table of contents -->
  
         <xsl:template name="make-tableofcontents">
+            
+            <div class="shadow-div">
+                
+                <div class="shadow-header">
  
-                <h2>
+                    <h2>
+
+                            <a name="toc">Table of Contents</a>
+
+                    </h2>
+                
+                </div>
+                
+                <div class="shadow-container">
  
-                        <a name="toc">Table of Contents</a>
- 
-                </h2>
- 
-                <ul>
- 
-                        <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
- 
-                                <li>
- 
-                                        <a href="#{generate-id(.)}">
- 
-                                                <xsl:value-of select="."/>
- 
-                                        </a>
- 
-                                </li>
- 
-                        </xsl:for-each>
- 
-                </ul>
+                    <ul>
+
+                            <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
+
+                                    <li>
+
+                                            <a href="#{generate-id(.)}" style="color:black;">
+
+                                                    <xsl:value-of select="."/>
+
+                                            </a>
+
+                                    </li>
+
+                            </xsl:for-each>
+
+                    </ul>
+                
+                </div>
+                
+            </div>
  
         </xsl:template>
  
@@ -338,7 +396,7 @@ td {
  
                                 <tr>
  
-                                        <td width="20%" bgcolor="#3399ff">
+                                        <td width="20%" bgcolor="#5d845b">
  
                                                 <span class="td_label">
  
@@ -362,7 +420,7 @@ td {
  
                                 <tr>
  
-                                        <td width="20%" bgcolor="#3399ff">
+                                        <td width="20%" bgcolor="#5d845b">
  
                                                 <span class="td_label">
  
@@ -398,7 +456,7 @@ td {
  
                         <tbody>
  
-                                <td width="20%" bgcolor="#3399ff">
+                                <td width="20%" bgcolor="#5d845b">
  
                                         <xsl:text>Confidentiality</xsl:text>
  
@@ -456,7 +514,7 @@ td {
  
                                         <tr>
  
-                                                <td width="20%" bgcolor="#3399ff">
+                                                <td width="20%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -530,7 +588,7 @@ td {
  
                                                 <tr>
  
-                                                        <td bgcolor="#3399ff">
+                                                        <td bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -578,7 +636,7 @@ td {
  
                                                         <tr>
  
-                                                                <td width="20%" bgcolor="#3399ff">
+                                                                <td width="20%" bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -612,7 +670,7 @@ td {
  
                                                                 <tr>
  
-                                                                        <td bgcolor="#3399ff">
+                                                                        <td bgcolor="#5d845b">
  
                                                                                 <span class="td_label">
  
@@ -660,7 +718,7 @@ td {
  
                                         <tr>
  
-                                                <td width="20%" bgcolor="#3399ff">
+                                                <td width="20%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -706,7 +764,7 @@ td {
  
                                                 <tr>
  
-                                                        <td bgcolor="#3399ff">
+                                                        <td bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -750,7 +808,7 @@ td {
  
                                         <tr>
  
-                                                <td width="20%" bgcolor="#3399ff">
+                                                <td width="20%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -776,7 +834,7 @@ td {
  
                                                 <tr>
  
-                                                        <td bgcolor="#3399ff">
+                                                        <td bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -824,7 +882,7 @@ td {
  
                                                         <tr>
  
-                                                                <td width="20%" bgcolor="#3399ff">
+                                                                <td width="20%" bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -902,7 +960,7 @@ td {
  
                                                         <tr>
  
-                                                                <td bgcolor="#3399ff">
+                                                                <td bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -930,7 +988,7 @@ td {
  
                                                         <tr>
  
-                                                                <td bgcolor="#3399ff">
+                                                                <td bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -974,7 +1032,7 @@ td {
  
                                 <tr>
  
-                                        <td width="20%" bgcolor="#3399ff">
+                                        <td width="20%" bgcolor="#5d845b">
  
                                                 <span class="td_label">
  
@@ -1024,7 +1082,7 @@ td {
  
                                         <tr>
  
-                                                <td bgcolor="#3399ff">
+                                                <td bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -1082,7 +1140,7 @@ td {
  
                                                                 <tr>
  
-                                                                        <td width="20%" bgcolor="#3399ff">
+                                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                                 <span class="td_label">
  
@@ -1186,7 +1244,7 @@ td {
  
                                                         <tr>
  
-                                                                <td width="20%" bgcolor="#3399ff">
+                                                                <td width="20%" bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -1238,7 +1296,7 @@ td {
  
                                                 <tr>
  
-                                                        <td width="20%" bgcolor="#3399ff">
+                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -1312,7 +1370,7 @@ td {
  
                                                 <tr>
  
-                                                        <td width="20%" bgcolor="#3399ff">
+                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -1354,7 +1412,7 @@ td {
  
                                                         <tr>
  
-                                                                <td bgcolor="#3399ff">
+                                                                <td bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -1386,7 +1444,7 @@ td {
  
                                                         <tr>
  
-                                                                <td bgcolor="#3399ff">
+                                                                <td bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -1440,7 +1498,7 @@ td {
  
                                                 <tr>
  
-                                                        <td width="20%" bgcolor="#3399ff">
+                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -1506,7 +1564,7 @@ td {
  
                                                         <tr>
  
-                                                                <td bgcolor="#3399ff">
+                                                                <td bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -1554,7 +1612,7 @@ td {
  
                                                 <tr>
  
-                                                        <td width="20%" bgcolor="#3399ff">
+                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                 <xsl:variable name="participtRole">
  
@@ -1656,7 +1714,7 @@ td {
  
                                                         <tr>
  
-                                                                <td bgcolor="#3399ff">
+                                                                <td bgcolor="#5d845b">
  
                                                                         <span class="td_label">
  
@@ -1704,7 +1762,7 @@ td {
  
                                         <tr>
  
-                                                <td width="20%" bgcolor="#3399ff">
+                                                <td width="20%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -1728,7 +1786,7 @@ td {
  
                                         <tr>
  
-                                                <td width="20%" bgcolor="#3399ff">
+                                                <td width="20%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -1748,7 +1806,7 @@ td {
  
                                                 </td>
  
-                                                <td width="10%" bgcolor="#3399ff">
+                                                <td width="10%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -1772,7 +1830,7 @@ td {
  
                                         <tr>
  
-                                                <td width="10%" bgcolor="#3399ff">
+                                                <td width="10%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -1792,7 +1850,7 @@ td {
  
                                                 </td>
  
-                                                <td width="10%" bgcolor="#3399ff">
+                                                <td width="10%" bgcolor="#5d845b">
  
                                                         <span class="td_label">
  
@@ -1840,7 +1898,7 @@ td {
  
                                                 <tr>
  
-                                                        <td width="20%" bgcolor="#3399ff">
+                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -1892,7 +1950,7 @@ td {
  
                                                 <tr>
  
-                                                        <td width="20%" bgcolor="#3399ff">
+                                                        <td width="20%" bgcolor="#5d845b">
  
                                                                 <span class="td_label">
  
@@ -2042,25 +2100,32 @@ td {
  
         <xsl:template name="section">
  
-                <xsl:call-template name="section-title">
- 
-                        <xsl:with-param name="title" select="n1:title"/>
- 
-                </xsl:call-template>
- 
-                <xsl:call-template name="section-author"/>
- 
-                <xsl:call-template name="section-text"/>
- 
-                <xsl:for-each select="n1:component/n1:section">
- 
-                        <xsl:call-template name="nestedSection">
- 
-                                <xsl:with-param name="margin" select="2"/>
- 
+                <div class="shadow-div">
+                    
+                    <div class="shadow-header2">
+                        <xsl:call-template name="section-title">
+
+                                <xsl:with-param name="title" select="n1:title"/>
+
                         </xsl:call-template>
- 
-                </xsl:for-each>
+                    </div>
+
+                    <xsl:call-template name="section-author"/>
+
+                    <div class="shadow-container">
+                        <xsl:call-template name="section-text"/>
+                    </div>
+                    
+                    <xsl:for-each select="n1:component/n1:section">
+
+                            <xsl:call-template name="nestedSection">
+
+                                    <xsl:with-param name="margin" select="2"/>
+
+                            </xsl:call-template>
+
+                    </xsl:for-each>
+                </div>
  
         </xsl:template>
  
@@ -2069,6 +2134,7 @@ td {
         <xsl:template name="section-title">
  
                 <xsl:param name="title"/>
+                
  
                 <h3>
  
@@ -2079,6 +2145,7 @@ td {
                         </a>
  
                 </h3>
+                
  
         </xsl:template>
  
@@ -2156,11 +2223,7 @@ td {
  
         <xsl:template name="section-text">
  
-                <div>
- 
                         <xsl:apply-templates select="n1:text" />
- 
-                </div>
  
         </xsl:template>
  
@@ -3426,597 +3489,597 @@ td {
  
                         </xsl:when>
  
-                        -->
+            -->
  
-                        <xsl:otherwise>
+            <xsl:otherwise>
  
-                                <xsl:value-of select="$this-code"/>
+                <xsl:value-of select="$this-code"/>
  
-                        </xsl:otherwise>
+            </xsl:otherwise>
  
-                </xsl:choose>
+        </xsl:choose>
  
-        </xsl:template>         <!-- show classCode -->
+    </xsl:template>         <!-- show classCode -->
  
-        <xsl:template name="show-actClassCode">
+    <xsl:template name="show-actClassCode">
  
-                <xsl:param name="clsCode"/>
+        <xsl:param name="clsCode"/>
  
-                <xsl:choose>
+        <xsl:choose>
  
-                        <xsl:when test=" $clsCode = 'ACT' ">
+            <xsl:when test=" $clsCode = 'ACT' ">
  
-                                <xsl:text>healthcare service</xsl:text>
+                <xsl:text>healthcare service</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'ACCM' ">
+            <xsl:when test=" $clsCode = 'ACCM' ">
  
-                                <xsl:text>accommodation</xsl:text>
+                <xsl:text>accommodation</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'ACCT' ">
+            <xsl:when test=" $clsCode = 'ACCT' ">
  
-                                <xsl:text>account</xsl:text>
+                <xsl:text>account</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'ACSN' ">
+            <xsl:when test=" $clsCode = 'ACSN' ">
  
-                                <xsl:text>accession</xsl:text>
+                <xsl:text>accession</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'ADJUD' ">
+            <xsl:when test=" $clsCode = 'ADJUD' ">
  
-                                <xsl:text>financial adjudication</xsl:text>
+                <xsl:text>financial adjudication</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'CONS' ">
+            <xsl:when test=" $clsCode = 'CONS' ">
  
-                                <xsl:text>consent</xsl:text>
+                <xsl:text>consent</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'CONTREG' ">
+            <xsl:when test=" $clsCode = 'CONTREG' ">
  
-                                <xsl:text>container registration</xsl:text>
+                <xsl:text>container registration</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'CTTEVENT' ">
+            <xsl:when test=" $clsCode = 'CTTEVENT' ">
  
-                                <xsl:text>clinical trial timepoint event</xsl:text>
+                <xsl:text>clinical trial timepoint event</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'DISPACT' ">
+            <xsl:when test=" $clsCode = 'DISPACT' ">
  
-                                <xsl:text>disciplinary action</xsl:text>
+                <xsl:text>disciplinary action</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'ENC' ">
+            <xsl:when test=" $clsCode = 'ENC' ">
  
-                                <xsl:text>encounter</xsl:text>
+                <xsl:text>encounter</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'INC' ">
+            <xsl:when test=" $clsCode = 'INC' ">
  
-                                <xsl:text>incident</xsl:text>
+                <xsl:text>incident</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'INFRM' ">
+            <xsl:when test=" $clsCode = 'INFRM' ">
  
-                                <xsl:text>inform</xsl:text>
+                <xsl:text>inform</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'INVE' ">
+            <xsl:when test=" $clsCode = 'INVE' ">
  
-                                <xsl:text>invoice element</xsl:text>
+                <xsl:text>invoice element</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'LIST' ">
+            <xsl:when test=" $clsCode = 'LIST' ">
  
-                                <xsl:text>working list</xsl:text>
+                <xsl:text>working list</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'MPROT' ">
+            <xsl:when test=" $clsCode = 'MPROT' ">
  
-                                <xsl:text>monitoring program</xsl:text>
+                <xsl:text>monitoring program</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'PCPR' ">
+            <xsl:when test=" $clsCode = 'PCPR' ">
  
-                                <xsl:text>care provision</xsl:text>
+                <xsl:text>care provision</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'PROC' ">
+            <xsl:when test=" $clsCode = 'PROC' ">
  
-                                <xsl:text>procedure</xsl:text>
+                <xsl:text>procedure</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'REG' ">
+            <xsl:when test=" $clsCode = 'REG' ">
  
-                                <xsl:text>registration</xsl:text>
+                <xsl:text>registration</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'REV' ">
+            <xsl:when test=" $clsCode = 'REV' ">
  
-                                <xsl:text>review</xsl:text>
+                <xsl:text>review</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'SBADM' ">
+            <xsl:when test=" $clsCode = 'SBADM' ">
  
-                                <xsl:text>substance administration</xsl:text>
+                <xsl:text>substance administration</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'SPCTRT' ">
+            <xsl:when test=" $clsCode = 'SPCTRT' ">
  
-                                <xsl:text>speciment treatment</xsl:text>
+                <xsl:text>speciment treatment</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'SUBST' ">
+            <xsl:when test=" $clsCode = 'SUBST' ">
  
-                                <xsl:text>substitution</xsl:text>
+                <xsl:text>substitution</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'TRNS' ">
+            <xsl:when test=" $clsCode = 'TRNS' ">
  
-                                <xsl:text>transportation</xsl:text>
+                <xsl:text>transportation</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'VERIF' ">
+            <xsl:when test=" $clsCode = 'VERIF' ">
  
-                                <xsl:text>verification</xsl:text>
+                <xsl:text>verification</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $clsCode = 'XACT' ">
+            <xsl:when test=" $clsCode = 'XACT' ">
  
-                                <xsl:text>financial transaction</xsl:text>
+                <xsl:text>financial transaction</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                </xsl:choose>
+        </xsl:choose>
  
-        </xsl:template>
+    </xsl:template>
  
-        <!-- show participationType -->
+    <!-- show participationType -->
  
-        <xsl:template name="show-participationType">
+    <xsl:template name="show-participationType">
  
-                <xsl:param name="ptype"/>
+        <xsl:param name="ptype"/>
  
-                <xsl:choose>
+        <xsl:choose>
  
-                        <xsl:when test=" $ptype='PPRF' ">
+            <xsl:when test=" $ptype='PPRF' ">
  
-                                <xsl:text>primary performer</xsl:text>
+                <xsl:text>primary performer</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $ptype='PRF' ">
+            <xsl:when test=" $ptype='PRF' ">
  
-                                <xsl:text>performer</xsl:text>
+                <xsl:text>performer</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $ptype='VRF' ">
+            <xsl:when test=" $ptype='VRF' ">
  
-                                <xsl:text>verifier</xsl:text>
+                <xsl:text>verifier</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $ptype='SPRF' ">
+            <xsl:when test=" $ptype='SPRF' ">
  
-                                <xsl:text>secondary performer</xsl:text>
+                <xsl:text>secondary performer</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                </xsl:choose>
+        </xsl:choose>
  
-        </xsl:template>
+    </xsl:template>
  
-        <!-- show participationFunction -->
+    <!-- show participationFunction -->
  
-        <xsl:template name="show-participationFunction">
+    <xsl:template name="show-participationFunction">
  
-                <xsl:param name="pFunction"/>
+        <xsl:param name="pFunction"/>
  
-                <xsl:choose>
+        <xsl:choose>
  
-                        <xsl:when test=" $pFunction = 'ADMPHYS' ">
+            <xsl:when test=" $pFunction = 'ADMPHYS' ">
  
-                                <xsl:text>admitting physician</xsl:text>
+                <xsl:text>admitting physician</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'ANEST' ">
+            <xsl:when test=" $pFunction = 'ANEST' ">
  
-                                <xsl:text>anesthesist</xsl:text>
+                <xsl:text>anesthesist</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'ANRS' ">
+            <xsl:when test=" $pFunction = 'ANRS' ">
  
-                                <xsl:text>anesthesia nurse</xsl:text>
+                <xsl:text>anesthesia nurse</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'ATTPHYS' ">
+            <xsl:when test=" $pFunction = 'ATTPHYS' ">
  
-                                <xsl:text>attending physician</xsl:text>
+                <xsl:text>attending physician</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'DISPHYS' ">
+            <xsl:when test=" $pFunction = 'DISPHYS' ">
  
-                                <xsl:text>discharging physician</xsl:text>
+                <xsl:text>discharging physician</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'FASST' ">
+            <xsl:when test=" $pFunction = 'FASST' ">
  
-                                <xsl:text>first assistant surgeon</xsl:text>
+                <xsl:text>first assistant surgeon</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'MDWF' ">
+            <xsl:when test=" $pFunction = 'MDWF' ">
  
-                                <xsl:text>midwife</xsl:text>
+                <xsl:text>midwife</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'NASST' ">
+            <xsl:when test=" $pFunction = 'NASST' ">
  
-                                <xsl:text>nurse assistant</xsl:text>
+                <xsl:text>nurse assistant</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'PCP' ">
+            <xsl:when test=" $pFunction = 'PCP' ">
  
-                                <xsl:text>primary care physician</xsl:text>
+                <xsl:text>primary care physician</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'PRISURG' ">
+            <xsl:when test=" $pFunction = 'PRISURG' ">
  
-                                <xsl:text>primary surgeon</xsl:text>
+                <xsl:text>primary surgeon</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'RNDPHYS' ">
+            <xsl:when test=" $pFunction = 'RNDPHYS' ">
  
-                                <xsl:text>rounding physician</xsl:text>
+                <xsl:text>rounding physician</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'SASST' ">
+            <xsl:when test=" $pFunction = 'SASST' ">
  
-                                <xsl:text>second assistant surgeon</xsl:text>
+                <xsl:text>second assistant surgeon</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'SNRS' ">
+            <xsl:when test=" $pFunction = 'SNRS' ">
  
-                                <xsl:text>scrub nurse</xsl:text>
+                <xsl:text>scrub nurse</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test=" $pFunction = 'TASST' ">
+            <xsl:when test=" $pFunction = 'TASST' ">
  
-                                <xsl:text>third assistant</xsl:text>
+                <xsl:text>third assistant</xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                </xsl:choose>
+        </xsl:choose>
  
-        </xsl:template>
+    </xsl:template>
  
-        <xsl:template name="formatDateTime">
+    <xsl:template name="formatDateTime">
  
-                <xsl:param name="date"/>
+        <xsl:param name="date"/>
  
-                <!-- month -->
+        <!-- month -->
  
-                <xsl:variable name="month" select="substring ($date, 5, 2)"/>
+        <xsl:variable name="month" select="substring ($date, 5, 2)"/>
  
-                <xsl:choose>
+        <xsl:choose>
  
-                        <xsl:when test="$month='01'">
+            <xsl:when test="$month='01'">
  
-                                <xsl:text>January </xsl:text>
+                <xsl:text>January </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='02'">
+            <xsl:when test="$month='02'">
  
-                                <xsl:text>February </xsl:text>
+                <xsl:text>February </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='03'">
+            <xsl:when test="$month='03'">
  
-                                <xsl:text>March </xsl:text>
+                <xsl:text>March </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='04'">
+            <xsl:when test="$month='04'">
  
-                                <xsl:text>April </xsl:text>
+                <xsl:text>April </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='05'">
+            <xsl:when test="$month='05'">
  
-                                <xsl:text>May </xsl:text>
+                <xsl:text>May </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='06'">
+            <xsl:when test="$month='06'">
  
-                                <xsl:text>June </xsl:text>
+                <xsl:text>June </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='07'">
+            <xsl:when test="$month='07'">
  
-                                <xsl:text>July </xsl:text>
+                <xsl:text>July </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='08'">
+            <xsl:when test="$month='08'">
  
-                                <xsl:text>August </xsl:text>
+                <xsl:text>August </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='09'">
+            <xsl:when test="$month='09'">
  
-                                <xsl:text>September </xsl:text>
+                <xsl:text>September </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='10'">
+            <xsl:when test="$month='10'">
  
-                                <xsl:text>October </xsl:text>
+                <xsl:text>October </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='11'">
+            <xsl:when test="$month='11'">
  
-                                <xsl:text>November </xsl:text>
+                <xsl:text>November </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:when test="$month='12'">
+            <xsl:when test="$month='12'">
  
-                                <xsl:text>December </xsl:text>
+                <xsl:text>December </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                </xsl:choose>
+        </xsl:choose>
  
-                <!-- day -->
+        <!-- day -->
  
-                <xsl:choose>
+        <xsl:choose>
  
-                        <xsl:when test='substring ($date, 7, 1)="0"'>
+            <xsl:when test='substring ($date, 7, 1)="0"'>
  
-                                <xsl:value-of select="substring ($date, 8, 1)"/>
+                <xsl:value-of select="substring ($date, 8, 1)"/>
  
-                                <xsl:text>, </xsl:text>
+                <xsl:text>, </xsl:text>
  
-                        </xsl:when>
+            </xsl:when>
  
-                        <xsl:otherwise>
+            <xsl:otherwise>
  
-                                <xsl:value-of select="substring ($date, 7, 2)"/>
+                <xsl:value-of select="substring ($date, 7, 2)"/>
  
-                                <xsl:text>, </xsl:text>
+                <xsl:text>, </xsl:text>
  
-                        </xsl:otherwise>
+            </xsl:otherwise>
  
-                </xsl:choose>
+        </xsl:choose>
  
-                <!-- year -->
+        <!-- year -->
  
-                <xsl:value-of select="substring ($date, 1, 4)"/>
+        <xsl:value-of select="substring ($date, 1, 4)"/>
  
-                <!-- time and US timezone -->
+        <!-- time and US timezone -->
  
-                <xsl:if test="string-length($date) > 8">
+        <xsl:if test="string-length($date) > 8">
  
-                        <xsl:text>, </xsl:text>
+            <xsl:text>, </xsl:text>
  
-                        <!-- time -->
+            <!-- time -->
  
-                        <xsl:variable name="time">
+            <xsl:variable name="time">
  
-                                <xsl:value-of select="substring($date,9,6)"/>
+                <xsl:value-of select="substring($date,9,6)"/>
  
-                        </xsl:variable>
+            </xsl:variable>
  
-                        <xsl:variable name="hh">
+            <xsl:variable name="hh">
  
-                                <xsl:value-of select="substring($time,1,2)"/>
+                <xsl:value-of select="substring($time,1,2)"/>
  
-                        </xsl:variable>
+            </xsl:variable>
  
-                        <xsl:variable name="mm">
+            <xsl:variable name="mm">
  
-                                <xsl:value-of select="substring($time,3,2)"/>
+                <xsl:value-of select="substring($time,3,2)"/>
  
-                        </xsl:variable>
+            </xsl:variable>
  
-                        <xsl:variable name="ss">
+            <xsl:variable name="ss">
  
-                                <xsl:value-of select="substring($time,5,2)"/>
+                <xsl:value-of select="substring($time,5,2)"/>
  
-                        </xsl:variable>
+            </xsl:variable>
  
-                        <xsl:if test="string-length($hh)&gt;1">
+            <xsl:if test="string-length($hh)&gt;1">
  
-                                <xsl:value-of select="$hh"/>
+                <xsl:value-of select="$hh"/>
  
-                                <xsl:if test="string-length($mm)&gt;1 and not(contains($mm,'-')) and not (contains($mm,'+'))">
+                <xsl:if test="string-length($mm)&gt;1 and not(contains($mm,'-')) and not (contains($mm,'+'))">
  
-                                        <xsl:text>:</xsl:text>
+                    <xsl:text>:</xsl:text>
  
-                                        <xsl:value-of select="$mm"/>
+                    <xsl:value-of select="$mm"/>
  
-                                        <xsl:if test="string-length($ss)&gt;1 and not(contains($ss,'-')) and not (contains($ss,'+'))">
+                    <xsl:if test="string-length($ss)&gt;1 and not(contains($ss,'-')) and not (contains($ss,'+'))">
  
-                                                <xsl:text>:</xsl:text>
+                        <xsl:text>:</xsl:text>
  
-                                                <xsl:value-of select="$ss"/>
+                        <xsl:value-of select="$ss"/>
  
-                                        </xsl:if>
- 
-                                </xsl:if>
- 
-                        </xsl:if>
- 
-                        <!-- time zone -->
- 
-                        <xsl:variable name="tzon">
- 
-                                <xsl:choose>
- 
-                                        <xsl:when test="contains($date,'+')">
- 
-                                                <xsl:text>+</xsl:text>
- 
-                                                <xsl:value-of select="substring-after($date, '+')"/>
- 
-                                        </xsl:when>
- 
-                                        <xsl:when test="contains($date,'-')">
- 
-                                                <xsl:text>-</xsl:text>
- 
-                                                <xsl:value-of select="substring-after($date, '-')"/>
- 
-                                        </xsl:when>
- 
-                                </xsl:choose>
- 
-                        </xsl:variable>
- 
-                        <xsl:choose>
- 
-                                <!-- reference: http://www.timeanddate.com/library/abbreviations/timezones/na/ -->
- 
-                                <xsl:when test="$tzon = '-0500' ">
- 
-                                        <xsl:text>, EST</xsl:text>
- 
-                                </xsl:when>
- 
-                                <xsl:when test="$tzon = '-0600' ">
- 
-                                        <xsl:text>, CST</xsl:text>
- 
-                                </xsl:when>
- 
-                                <xsl:when test="$tzon = '-0700' ">
- 
-                                        <xsl:text>, MST</xsl:text>
- 
-                                </xsl:when>
- 
-                                <xsl:when test="$tzon = '-0800' ">
- 
-                                        <xsl:text>, PST</xsl:text>
- 
-                                </xsl:when>
- 
-                                <xsl:otherwise>
- 
-                                        <xsl:text> </xsl:text>
- 
-                                        <xsl:value-of select="$tzon"/>
- 
-                                </xsl:otherwise>
- 
-                        </xsl:choose>
+                    </xsl:if>
  
                 </xsl:if>
  
-        </xsl:template>
+            </xsl:if>
  
-        <!-- convert to lower case -->
+            <!-- time zone -->
  
-        <xsl:template name="caseDown">
+            <xsl:variable name="tzon">
  
-                <xsl:param name="data"/>
+                <xsl:choose>
  
-                <xsl:if test="$data">
+                    <xsl:when test="contains($date,'+')">
  
-                        <xsl:value-of select="translate($data, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                        <xsl:text>+</xsl:text>
  
-                </xsl:if>
+                        <xsl:value-of select="substring-after($date, '+')"/>
  
-        </xsl:template>
+                    </xsl:when>
  
-        <!-- convert to upper case -->
+                    <xsl:when test="contains($date,'-')">
  
-        <xsl:template name="caseUp">
+                        <xsl:text>-</xsl:text>
  
-                <xsl:param name="data"/>
+                        <xsl:value-of select="substring-after($date, '-')"/>
  
-                <xsl:if test="$data">
+                    </xsl:when>
  
-                        <xsl:value-of select="translate($data,'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+                </xsl:choose>
  
-                </xsl:if>
+            </xsl:variable>
  
-        </xsl:template>
+            <xsl:choose>
  
-        <!-- convert first character to upper case -->
+                <!-- reference: http://www.timeanddate.com/library/abbreviations/timezones/na/ -->
  
-        <xsl:template name="firstCharCaseUp">
+                <xsl:when test="$tzon = '-0500' ">
  
-                <xsl:param name="data"/>
+                    <xsl:text>, EST</xsl:text>
  
-                <xsl:if test="$data">
+                </xsl:when>
  
-                        <xsl:call-template name="caseUp">
+                <xsl:when test="$tzon = '-0600' ">
  
-                                <xsl:with-param name="data" select="substring($data,1,1)"/>
+                    <xsl:text>, CST</xsl:text>
  
-                        </xsl:call-template>
+                </xsl:when>
  
-                        <xsl:value-of select="substring($data,2)"/>
+                <xsl:when test="$tzon = '-0700' ">
  
-                </xsl:if>
+                    <xsl:text>, MST</xsl:text>
  
-        </xsl:template>
+                </xsl:when>
  
-        <!-- show-noneFlavor -->
+                <xsl:when test="$tzon = '-0800' ">
  
-        <!-- to do list -->
+                    <xsl:text>, PST</xsl:text>
  
-        <xsl:template name="show-noneFlavor">   
+                </xsl:when>
  
-        </xsl:template>
+                <xsl:otherwise>
+ 
+                    <xsl:text> </xsl:text>
+ 
+                    <xsl:value-of select="$tzon"/>
+ 
+                </xsl:otherwise>
+ 
+            </xsl:choose>
+ 
+        </xsl:if>
+ 
+    </xsl:template>
+ 
+    <!-- convert to lower case -->
+ 
+    <xsl:template name="caseDown">
+ 
+        <xsl:param name="data"/>
+ 
+        <xsl:if test="$data">
+ 
+            <xsl:value-of select="translate($data, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+ 
+        </xsl:if>
+ 
+    </xsl:template>
+ 
+    <!-- convert to upper case -->
+ 
+    <xsl:template name="caseUp">
+ 
+        <xsl:param name="data"/>
+ 
+        <xsl:if test="$data">
+ 
+            <xsl:value-of select="translate($data,'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+ 
+        </xsl:if>
+ 
+    </xsl:template>
+ 
+    <!-- convert first character to upper case -->
+ 
+    <xsl:template name="firstCharCaseUp">
+ 
+        <xsl:param name="data"/>
+ 
+        <xsl:if test="$data">
+ 
+            <xsl:call-template name="caseUp">
+ 
+                <xsl:with-param name="data" select="substring($data,1,1)"/>
+ 
+            </xsl:call-template>
+ 
+            <xsl:value-of select="substring($data,2)"/>
+ 
+        </xsl:if>
+ 
+    </xsl:template>
+ 
+    <!-- show-noneFlavor -->
+ 
+    <!-- to do list -->
+ 
+    <xsl:template name="show-noneFlavor">   
+ 
+    </xsl:template>
  
 </xsl:stylesheet>
  

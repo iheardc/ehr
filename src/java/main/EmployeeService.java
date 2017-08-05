@@ -23,7 +23,7 @@ public class EmployeeService {
     
     @PostConstruct
     public void init() {
-        list = getAllList();
+//        list = getAllList();
     }
     
     public static List<Employee> getAllList(){
@@ -40,6 +40,9 @@ public class EmployeeService {
     }
 
     public static List<Employee> getList() {
+        if(list == null || list.size() <= 0){
+            list = getAllList();
+        }
         return list;
     }
     

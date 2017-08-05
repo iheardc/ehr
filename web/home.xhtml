@@ -13,33 +13,124 @@
 
         <p:growl autoUpdate="true" showDetail="true" life="1500"/>
 
-        <h:form>
+        <h:form id="form">
 
             <b:container fluid="true">
 
                 <b:column col-md="12">
 
+                    <h1><p:outputLabel value="Welcome, #{signinBean.em.fn}" style="font-size:35px; font-weight:normal;"  /></h1>
+                    <hr></hr>
+
                     <b:row>
 
-                        <b:column col-sm="10">
-                            <h1><p:outputLabel value="Welcome, #{signinBean.em.fn}" style="font-size:35px; font-weight:normal;"  /></h1>
-                            <hr></hr>
+                        <b:column col-md="3">
+                            <div class="shadow-div" style="height: 200px;">
+
+                            </div>
+                        </b:column>
+                        <b:column col-md="3">
+                            <div class="shadow-div" style="height: 200px;">
+
+                            </div>
+                        </b:column>
+                        <b:column col-md="3">
+                            <div class="shadow-div" style="height: 200px;">
+
+                            </div>
+                        </b:column>
+                        <b:column col-md="3">
+                            <div class="shadow-div" style="height: 200px;">
+
+                            </div>
                         </b:column>
 
-                        <b:row>
 
-                            <b:column col-md="3">
-                            </b:column>
-                            <b:column col-md="3">
-                            </b:column>
-                            <b:column col-md="3">
-                            </b:column>
-                            <b:column col-md="3">
-                            </b:column>
+                    </b:row>
 
+                    <b:row>
+                        <b:column col-md="12">
+                            <div class="shadow-div">
+                                <p:column rendered="#{signinBean.em.role eq 'doctor'}">
+                                    <b:column col-md="12" rendered="#{treatmentBean.isShowWFDTable}">
+                                        <hr></hr>
 
-                        </b:row>
+                                        <p:dataTable var="d" value="#{treatmentBean.findWFDList}" id="searchTable1" paginator="true" rows="10"
+                                                     resizableColumns="true"  tableStyleClass="table table-striped"
+                                                     >
 
+                                            <!--<p:ajax event="rowSelect" listener="#{treatmentBean.onWFDSelectRowSelect}" />-->
+
+                                            <f:facet name="header">
+                                                Waiting for Doctor
+                                            </f:facet>
+
+                                            <p:column headerText="Patient Name" style="width: 30%">
+                                                <h:outputText value="#{d.p.name}" />
+                                            </p:column>
+                                            <p:column headerText="Nurse Name" style="width: 30%">
+                                                <h:outputText value="#{d.n.name}" />
+                                            </p:column>
+                                            <p:column headerText="Date" style="width: 40%">
+                                                <h:outputText value="#{d.dateString}" />
+                                            </p:column>
+<!--                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                                </p:row>
+                                            </p:columnGroup>-->
+
+                                        </p:dataTable>
+
+                                    </b:column>
+
+                                    <b:column col-md="12" rendered="#{treatmentBean.isShowWFDRTable}">
+                                        <hr></hr>
+
+                                        <p:dataTable var="d" value="#{treatmentBean.findWFDRList}" id="searchTable2" paginator="true" rows="10"
+                                                     resizableColumns="true" tableStyleClass="table table-striped"
+                                                     >
+
+                                            <!--<p:ajax event="rowSelect" listener="#{treatmentBean.onWFDRSelectRowSelect}" />-->
+
+                                            <f:facet name="header">
+                                                Waiting for Doctor with Result
+                                            </f:facet>
+
+                                            <p:column headerText="Patient Name" style="width: 30%">
+                                                <h:outputText value="#{d.p.name}" />
+                                            </p:column>
+                                            <p:column headerText="Nurse Name" style="width: 30%">
+                                                <h:outputText value="#{d.n.name}" />
+                                            </p:column>
+                                            <p:column headerText="Date" style="width: 40%">
+                                                <h:outputText value="#{d.dateString}" />
+                                            </p:column>
+<!--                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column colspan="3" style="text-align:left" footerText="Please select the row." />
+                                                </p:row>
+                                            </p:columnGroup>-->
+
+                                        </p:dataTable>
+
+                                    </b:column>
+                                </p:column>
+                            </div>
+                        </b:column>
+                    </b:row>
+
+                    <b:row>
+                        <b:column col-md="6">
+                            <div class="shadow-div" style="height: 200px;">
+
+                            </div>
+                        </b:column>
+                        <b:column col-md="6">
+                            <div class="shadow-div" style="height: 200px;">
+
+                            </div>
+                        </b:column>
                     </b:row>
 
                 </b:column>
@@ -47,6 +138,15 @@
             </b:container>
 
         </h:form>
+
+        <style type="text/css">
+            .shadow-div{
+                margin: auto;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 4px 0 rgba(0, 0, 0, 0.19);
+            }
+        </style>
 
     </ui:composition>
 

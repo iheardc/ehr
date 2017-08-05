@@ -23,7 +23,7 @@ public class PatientService {
     
     @PostConstruct
     public void init() {
-        list = getAllList();
+//        list = getAllList();
     }
     
     public static List<Patient> getAllList(){
@@ -35,6 +35,9 @@ public class PatientService {
     }
 
     public static List<Patient> getList() {
+        if(list == null || list.size() <= 0){
+            list = getAllList();
+        }
         return list;
     }
     

@@ -33,6 +33,10 @@ public class menuBean implements Serializable {
     }
     
     public static void redirectHome() {
+//        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+//        treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
+//        bean.reset();
+//        bean.findDynaPatient();
         pathCont = "/home.xhtml";
     }
     
@@ -115,6 +119,14 @@ public class menuBean implements Serializable {
         treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
         bean.reset();
         pathCont = "/treatment/write_visit_summary.xhtml";
+    }
+    
+    // Payment
+    public static void viewPatientBill() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        paymentBean bean = (paymentBean) elContext.getELResolver().getValue(elContext, null, "paymentBean");
+        bean.reset();
+        pathCont = "/payment/view_patient_bill.xhtml";
     }
 
     // Admin

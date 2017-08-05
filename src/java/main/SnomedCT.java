@@ -98,4 +98,9 @@ public class SnomedCT {
         this.codeSystemOID = codeSystemOID;
     }
     
+    @Override
+    public String toString(){
+        return code + " : " + description;
+    }
+    
 }
