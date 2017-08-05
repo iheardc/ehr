@@ -7,7 +7,10 @@ package main;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -466,6 +469,16 @@ public class Insurance {
         this.errormsg = errormsg;
     }
     
+    public String getDocString(){
+        return getDateString((long) ((double) date_of_claim));
     
+    }
 
+    public static String getDateString(long time) {
+
+        Date currentDate = new Date(time);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        return df.format(currentDate);
+
+    }
 }

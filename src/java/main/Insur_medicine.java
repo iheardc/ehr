@@ -5,6 +5,13 @@
  */
 package main;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
  *
  * @author 김정훈
@@ -31,6 +38,77 @@ public class Insur_medicine {
         this.date = date;
         this.dose = dose;
         this.status = status;
+    }
+    
+     public ArrayList<String> getKeySet(ResultSet rs) {
+        try {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int count = metaData.getColumnCount(); //number of column
+//            String columnName[] = new String[count];
+            ArrayList<String> columnName = new ArrayList<>();
+
+            for (int i = 1; i <= count; i++) {
+                columnName.add(metaData.getColumnLabel(i));
+//                columnName[i - 1] = metaData.getColumnLabel(i);
+//                System.out.println(columnName[i - 1]);
+            }
+            return columnName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+     
+     public void buildInsurmedicine(ResultSet rs) {
+        ArrayList<String> columnName = getKeySet(rs);
+//        Employee em = new Employee();
+        if (columnName != null) {
+            try {
+                String column = "id";
+                if (columnName.contains(column)) {
+                    this.id = Integer.toString(rs.getInt(column));
+                }
+                column = "insurance_ID";
+                if (columnName.contains(column)) {
+                    this.insurance_id = Integer.toString(rs.getInt(column));
+                }
+                column = "charge_code";
+                if (columnName.contains(column)) {
+                    this.charge_code = rs.getString(column);
+                }
+                column = "medicine_name";
+                if (columnName.contains(column)) {
+                    this.medicine_name = rs.getString(column);
+                }
+                column = "unit_price";
+                if (columnName.contains(column)) {
+                    this.unit_price = rs.getDouble(column);
+                }
+                column = "Qt";
+                if (columnName.contains(column)) {
+                    this.qt = rs.getDouble(column);
+                }
+                column = "Total_Amt";
+                if (columnName.contains(column)) {
+                    this.total_amt = rs.getDouble(column);
+                }
+                column = "Date";
+                if (columnName.contains(column)) {
+                    this.date = rs.getDouble(column);
+                }
+                column = "Dose";
+                if (columnName.contains(column)) {
+                    this.dose = rs.getString(column);
+                }
+                column = "status";
+                if (columnName.contains(column)) {
+                    this.status = rs.getString(column);
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String getId() {
@@ -113,4 +191,16 @@ public class Insur_medicine {
         this.status = status;
     }
 
+    public static String getDateString(long time) {
+
+        Date currentDate = new Date(time);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        return df.format(currentDate);
+
+    }
+    
+    public String getDatesString(){
+        return getDateString((long)((double)date));
+    }
+    
 }

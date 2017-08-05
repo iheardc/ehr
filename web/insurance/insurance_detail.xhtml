@@ -47,16 +47,16 @@
                 <table width="100%" border="1">
                     <tr style="border:0;">
                         <th style="padding:0 0 0 7px;" >SCHEME</th>
-                        <td colspan="3"><p:inputText value="TECHIMAN DISTRICT INSURANCE SCHEME" disabled="true" style="width:100%"></p:inputText></td>
+                        <td colspan="3"><p:inputText value="#{insuranceBean.selectedIns.scheme}" disabled="true" style="width:100%"></p:inputText></td>
                     </tr>
                     <tr style="border:0;">
                         <th width="25%" style="padding:0 0 0 7px">Form No.</th>
                         <td width="25%">
-                            <p:inputText value="#{insurance.id}" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.id}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                         <td width="25%" style="padding:0 0 0 10px">Date of Claim</td>
                         <td width="25%">
-                            <p:inputText value="#{insurance.date_of_claim}" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.docString}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                 </table>
@@ -67,26 +67,29 @@
                 <table width="100%" border="1" height="55.5px">
                     <tr>
                         <th style="padding:0 0 0 7px; border-right:0;">Type of Service</th>
-                        <th colspan="2" style="border-left:0; border-right:0;" class="checkbox_size9">
-                            <p:selectManyCheckbox id="basic">
-                                <f:selectItem itemLabel="Out-Patient" itemValue="Out-Patient" />
-                                <f:selectItem itemLabel="In-Patient" itemValue="In-Patient" />
-                            </p:selectManyCheckbox>
+                        <th colspan="2" style="border-left:0; border-right:0;" class="raddiobutton_size9">
+                            <h:panelGrid columns="2" >
+                                <p:selectOneRadio id="patient_type" value="#{insuranceBean.selectpatienttype()}">
+                                    <f:selectItem itemLabel="Out-Patient" itemValue="Out-Patient" itemDisabled="true" />
+                                    <f:selectItem itemLabel="In-Patient" itemValue="In-Patient" itemDisabled="true" />
+                                </p:selectOneRadio>
+                            </h:panelGrid>
                         </th>
-                        <th rowspan="2"  class="checkbox_size9">
-                            <p:selectManyCheckbox id="basic3">
-                                <f:selectItem itemLabel="Pharmacy" itemValue="Pharmacy" />
-                            </p:selectManyCheckbox>
+                        <th rowspan="2"  class="checkbox_size9" >
+                            <p:selectBooleanCheckbox value="#{insuranceBean.selectpatienttype3()}" disabled="true" />
+                            <h:outputText value="Pharmacy" style="font-size:9px"/>
                         </th>
                     </tr>
                     <tr style="border:0;">
                         <th></th>
-                        <th  class="checkbox_size9">
-                            <p:selectManyCheckbox id="basic2">
-                                <f:selectItem itemLabel="Diagnosis" itemValue="Diagnosis" />
-                                <f:selectItem itemLabel="All-Inclusive" itemValue="All-Inclusive" />
-                                <f:selectItem itemLabel="Unbundled" itemValue="Unbundled" />
-                            </p:selectManyCheckbox>
+                        <th  class="raddiobutton_size9">
+                            <h:panelGrid columns="2">
+                                <p:selectOneRadio id="patient_type2" value="#{insuranceBean.selectpatienttype2()}">
+                                    <f:selectItem itemLabel="Diagnosis" itemValue="Diagnosis"  itemDisabled="true" />
+                                    <f:selectItem itemLabel="All-Inclusive" itemValue="All-Inclusive"  itemDisabled="true" />
+                                    <f:selectItem itemLabel="Unbundled" itemValue="Unbundled"  itemDisabled="true" />
+                                </p:selectOneRadio>
+                            </h:panelGrid>
                         </th>
                     </tr>
                 </table>
@@ -101,46 +104,46 @@
                     <tr>
                         <td style="padding:0 0 0 3px; width:130px; border-bottom:0;">Surname</td>
                         <th colspan="4" style="border-bottom:0;">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedP.fn}" disabled="true" style="width:100%"></p:inputText>
                         </th>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 3px; width:130px; border-bottom:0; border-top:0;">Other Names</td>
                         <td colspan="4" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedP.ln}" disabled="true" style="width:100%"></p:inputText>
                         </td>                     
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 3px; width:30%; border-bottom:0; border-top:0;">Date of Birth</td>
                         <td style="width:25%; border-top:0; border-bottom:0; border-right:0">
-                            <p:inputText value="" disabled="true" style="width:100%; border-top:0; border-bottom:0"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedP.dobString}" disabled="true" style="width:100%; border-top:0; border-bottom:0"></p:inputText>
                         </td>
                         <td style="text-align:right; width:20%; border:0 ">Age</td>
                         <td style="width:20%; border:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectage()}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                         <td style="padding : 0 0 0 2px; width:5%; border-top:0; border-bottom:0; border-left:0">y</td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 3px; width:130px; border-bottom:0; border-top:0;">Member No</td>
                         <th colspan="4" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.member_no}" disabled="true" style="width:100%"></p:inputText>
                         </th>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 3px; width:130px; border-bottom:0; border-top:0;">Serial No</td>
                         <td colspan="4" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.serial_no}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 3px; width:130px; border-top:0;">Hosp. Record No</td>
                         <th colspan="2" style="border-top:0; border-right:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.hosp_record_no}" disabled="true" style="width:100%"></p:inputText>
                         </th>
                         <td style="text-align:right; width:80px; border-top:0; border-left:0; border-right:0">Sex</td>
                         <td style="border-top:0; border-left:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectsex()}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                 </table>
@@ -150,37 +153,37 @@
                 <table width="100%" border="1">
                     <tr>
                         <td style="padding:0 0 0 7px;">Admission</td>
-                        <td width="340px" style="border-bottom:0;">
+                        <td width="74%" style="border-bottom:0;">
                             <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">Discharge</td>
-                        <td width="340px" style="border-top:0; border-bottom:0">
+                        <td width="74%" style="border-top:0; border-bottom:0">
                             <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
                         </td>                    
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">3rd visit</td>
-                        <td width="340px" style="border-top:0; border-bottom:0">
+                        <td width="74%" style="border-top:0; border-bottom:0">
                             <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">Spell(days)</td>
-                        <td width="340px" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                        <td width="74%" style="border-top:0; border-bottom:0">
+                            <p:inputText value="#{insuranceBean.selectedIns.spell}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">CC code</td>
-                        <td width="340px" style="border-top:0; border-bottom:0">
+                        <td width="74%" style="border-top:0; border-bottom:0">
                             <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">Physician</td>
-                        <td width="340px" style="border-top:0">
+                        <td width="74%" style="border-top:0">
                             <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
@@ -190,27 +193,24 @@
             <div style="float:left; width:50%; padding:5px">
                 <table width="100%" border="1">
                     <tr>
-                        <td style="padding:0 0 0 3px; border-bottom:0;" class="checkbox_size13" height="25px">
-                            <p:selectManyCheckbox id="basic4">
-                                <f:selectItem itemLabel="Discharge" itemValue="Discharge" />
-                                <f:selectItem itemLabel="Died" itemValue="Died" />
-                                <f:selectItem itemLabel="Transferred Out" itemValue="Trnasferred Out" />
-                            </p:selectManyCheckbox>
+                        <td style="padding:0 0 0 3px; border-bottom:0;" height="25px">
+                            <h:panelGrid columns="2">
+                                <p:selectOneRadio id="detail_type" value="#{insuranceBean.selectdetailtype()}" columns="2" layout="grid">
+                                    <f:selectItem itemLabel="Discharge" itemValue="Discharge"  itemDisabled="true" />
+                                    <f:selectItem itemLabel="Died" itemValue="Died"  itemDisabled="true" />
+                                    <f:selectItem itemLabel="Transferred Out" itemValue="Transferred Out"  itemDisabled="true" />
+                                    <f:selectItem itemLabel="Absconded/Discharged against medical advise" itemValue="Absconded/Discharged against medical advise"  itemDisabled="true" />
+                                </p:selectOneRadio>
+                            </h:panelGrid>
                         </td>
                     </tr>
+
                     <tr>
-                        <td style="padding:0 0 0 3px; border-top:0;" class="checkbox_size13" height="25px">
-                            <p:selectManyCheckbox id="basic5">
-                                <f:selectItem itemLabel="Absconded/Discharged against medical advise" itemValue="Absconded/Discharged against medical advise" />
-                            </p:selectManyCheckbox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="padding:0 0 0 3px;" class="checkbox_size13" height="25px">
-                            <p:selectManyCheckbox id="basic6">
-                                <f:selectItem itemLabel="Chronic Follow-up" itemValue="Chronic Follow-up" />
-                                <f:selectItem itemLabel="Emergency/Acute Episode" itemValue="Emergency/Acute Episode" />
-                            </p:selectManyCheckbox>
+                        <td colspan="2" style="padding:0 0 0 3px;" height="30.5px">
+                            <p:selectOneRadio id="detail_type2" value="#{insuranceBean.selectdetailtype2()}">
+                                <f:selectItem itemLabel="Chronic Follow-up" itemValue="Chronic Follow-up" itemDisabled="true" />
+                                <f:selectItem itemLabel="Emgergency/Acute Episode" itemValue="Emgergency/Acute Episode" itemDisabled="true" />
+                            </p:selectOneRadio>
                         </td>
                     </tr>
                 </table>
@@ -221,7 +221,7 @@
                     <tr>
                         <td style="padding:0 0 0 7px; width:26%; border-bottom:0;">Specialty</td>
                         <td width="70px">
-                            <p:inputText value="" disabled="true" style="width:100%" />
+                            <p:inputText value="#{insuranceBean.selectedIns.specialty}" disabled="true" style="width:100%" />
                         </td>
                     </tr>
                     <tr style="height:20.5px;">
@@ -230,7 +230,7 @@
                     <tr>
                         <td style="padding:0 0 0 7px; border-top:0;">Specialty Code</td>
                         <td>
-                            <p:inputText value="" disabled="true" style="width:100%" />
+                            <p:inputText value="#{insuranceBean.selectedIns.specialty_code}" disabled="true" style="width:100%" />
                         </td>
                     </tr>
                 </table>
@@ -266,15 +266,32 @@
             </div>
 
             <div style="float:left; width:100%; padding:5px"> 
-                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
-                    <p:column width="2%" style="text-align: center"></p:column>
-                    <p:column headerText="Medicine" width="33%" style="text-align: center"></p:column>
-                    <p:column headerText="Unit Price" width="7%" style="text-align: center"></p:column>
-                    <p:column headerText="Qt." width="4%" style="text-align: center"></p:column>
-                    <p:column headerText="Total Amt" width="8%" style="text-align: center"></p:column>
-                    <p:column headerText="Date" width="13%" style="text-align: center"></p:column>
-                    <p:column headerText="Code" width="15%" style="text-align: center"></p:column>
-                    <p:column headerText="Dose" width="18%" style="text-align: center"></p:column>
+                <p:dataTable var="p" resizableColumns="true"  value="#{insuranceBean.findMlist}" tableStyle="width:100%;"  paginator="true" rows="10" 
+                             tableStyleClass="table table-striped"  emptyMessage="">
+                    <p:column width="2%" style="text-align: center">
+                        <h:outputText value="#{p.id}" />
+                    </p:column>
+                    <p:column headerText="Medicine" width="33%" style="text-align: center">
+                        <h:outputText value="#{p.medicine_name}" />
+                    </p:column>
+                    <p:column headerText="Unit Price" width="7%" style="text-align: center">
+                        <h:outputText value="#{p.unit_price}" />
+                    </p:column>
+                    <p:column headerText="Qt." width="4%" style="text-align: center">
+                        <h:outputText value="#{p.qt}" />
+                    </p:column>
+                    <p:column headerText="Total Amt" width="8%" style="text-align: center">
+                        <h:outputText value="#{p.total_amt}" />
+                    </p:column>
+                    <p:column headerText="Date" width="13%" style="text-align: center">
+                        <h:outputText value="#{p.datesString}" />
+                    </p:column>
+                    <p:column headerText="Code" width="15%" style="text-align: center">
+                        <h:outputText value="#{p.charge_code}" />
+                    </p:column>
+                    <p:column headerText="Dose" width="18%" style="text-align: center">
+                        <h:outputText value="#{p.dose}" />
+                    </p:column>
                 </p:dataTable>
             </div>
 
@@ -329,10 +346,10 @@
             <div style="float:left; width:50%; padding:5px">
                 <table width="100%" border="true">
                     <tr style="height:20.5px;">
-                        <td></td> 
+                        <td style="text-align: center">NANA KOJO BONSU</td> 
                     </tr>
                     <tr>
-                        <td  style="text-align: center">(Health Facility Insurance Officer)</td>
+                        <td style="text-align: center">(Health Facility Insurance Officer)</td>
                     </tr>
                 </table>
             </div>

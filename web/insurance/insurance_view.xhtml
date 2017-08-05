@@ -105,11 +105,14 @@
                                 </p:dataTable>
 
                             </div>
+                            <br></br>
+                            <br></br>
                         </b:column>
 
-                        <br></br>
 
-                        <p:column >
+                        <p:column rendered="#{insuranceBean.isShowMore}">
+
+
                             <b:column col-md="12" class="form-horizontal">
 
                                 <div class="form-group">
@@ -118,13 +121,13 @@
                                                  resizableColumns="true" tableStyleClass="table table-striped"
                                                  selectionMode="single" selection="#{insuranceBean.selectedIns}" rowKey="#{i.id}">
 
-                                        <p:ajax event="rowSelect" listener="#{menuBean.detailInsurance}" update="content" />
+                                        <p:ajax event="rowSelect" listener="#{insuranceBean.selectInsurance}" update="content" />
 
                                         <p:column headerText="From No." style="width:30%">
                                             <h:outputText value="#{i.id}" />
                                         </p:column>
                                         <p:column headerText="Date of Claim" style="width:70%">
-                                            <h:outputText value="#{i.date_of_claim}" />
+                                            <h:outputText value="#{i.docString}" />
                                         </p:column>
 
                                         <p:columnGroup type="footer">

@@ -231,6 +231,9 @@ tfoot .ui-state-default{
 .checkbox_size13>table>tbody>tr>td>label{
     font-size:13px;
 }
+.raddiobutton_size9>table>tbody>tr>td>table>tbody>tr>td>label{
+    font-size:9px;
+}
 /*.btn-default{
     padding: 6px 12px;
 }

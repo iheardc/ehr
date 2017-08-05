@@ -77,6 +77,8 @@ public class DbDAO {
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
             + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
+    private static final String FIND_INSURMEDICINE
+            = "SELECT * FROM insurance_medicine WHERE insurance_id = ?";
     private static final String FIND_INSURANCE
             = "SELECT * FROM insurance "
             + "WHERE patient_id=?";
@@ -249,6 +251,14 @@ public class DbDAO {
         }
 
         return date;
+    }
+
+    public static int getDateYear(long time) {
+
+        Date currentDate = new Date(time);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        return Integer.parseInt(df.format(currentDate));
+
     }
 
     public static String getDateString(long time) {
@@ -473,7 +483,32 @@ public class DbDAO {
         return list;
     }
 
-    public List<Insurance> findInsuracne(String findId, Double findDoB) {
+    public List<Insur_medicine> findInsMedicine(String findId) {
+        List<Insur_medicine> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_INSURMEDICINE);
+            pstmt.setString(1, findId);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Insur_medicine ins = new Insur_medicine();
+                ins.buildInsurmedicine(rs);
+                list.add(ins);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findInsurance medicine : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<Insurance> findInsuracne(String findId) {
         List<Insurance> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -540,6 +575,7 @@ public class DbDAO {
         }
         return list;
     }
+
     public List<Patient> findPatientWithDate(Double date, String findId, String findName, String findDoB) {
         if (findId == null || "".equals(findId)) {
             findId = "%";
@@ -1231,7 +1267,7 @@ public class DbDAO {
 //            em.errormsg = "Failed to add specialty.Failed to add specialty.";
         }
     }
-    
+
     public List<PayInfo> getPayList(Patient p, Double startDate, Double finishDate) {
         List<PayInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -1256,8 +1292,8 @@ public class DbDAO {
         }
         return list;
     }
-    
-    public void checkOutPatient(DynamicInfo d){
+
+    public void checkOutPatient(DynamicInfo d) {
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
