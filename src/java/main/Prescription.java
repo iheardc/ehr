@@ -7,7 +7,10 @@ package main;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -102,6 +105,10 @@ public class Prescription {
                 if (columnName.contains(column)) {
                     this.p.ln = rs.getString(column);
                 }
+                column = "patient_pic";
+                if (columnName.contains(column)) {
+                    this.p.arr = rs.getBytes(column);
+                }
                 column = "doctor_id";
                 if (columnName.contains(column)) {
                     this.doc.id = rs.getString(column);
@@ -176,8 +183,24 @@ public class Prescription {
         this.date = date;
     }
 
+    public String getDateString() {
+        return getDateString((long) ((double) date));
+    }
+
+    public static String getDateString(long time) {
+
+        Date currentDate = new Date(time);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return df.format(currentDate);
+
+    }
+
     public Double getDateComplete() {
         return dateComplete;
+    }
+
+    public String getDateCompleteString() {
+        return getDateString((long) ((double) dateComplete));
     }
 
     public void setDateComplete(Double dateComplete) {
@@ -223,5 +246,7 @@ public class Prescription {
     public void setDetail(List<PrescriptionDetail> detail) {
         this.detail = detail;
     }
+    
+    
 
 }

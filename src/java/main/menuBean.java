@@ -149,6 +149,15 @@ public class menuBean implements Serializable {
         pathCont = "/treatment/write_visit_summary.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+    
+    // Prescription
+    public static void fulFillPrescription(){
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        prescriptionBean bean = (prescriptionBean) elContext.getELResolver().getValue(elContext, null, "prescriptionBean");
+        bean.reset();
+        pathCont = "/prescription/fulfill_prescription.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
 
     // Payment
     public static void viewPatientBill() {

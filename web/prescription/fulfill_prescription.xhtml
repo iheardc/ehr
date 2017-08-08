@@ -1,0 +1,276 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+
+        <f:metadata>
+            <f:viewAction action="#{prescriptionBean.reset()}" immediate="true"/>
+        </f:metadata>
+
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
+
+        <b:container fluid="true" class="customContainer">
+
+            <h:form enctype="multipart/form-data" id="form">
+
+                <b:column col-md="12">
+
+                    <h1>Fulfill Prescription</h1>
+                    <hr></hr>
+                    <!--<p:outputLabel value="This page is updated every 5 seconds."/>-->
+                    <p:commandButton class="btn btn-default" value="Refresh" action="#{prescriptionBean.findPrescription()}" update="form"/>
+                    <!--<p:poll interval="5" listener="#{prescriptionBean.findPrescription}" update="form" />-->
+
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Pending Prescription</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+
+                            <div class="form-group">
+
+                                <p:dataTable var="p" value="#{prescriptionBean.allPrescription}" id="pendingTable" paginator="true" rows="10"
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{prescriptionBean.selectedPres}" rowKey="#{p.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{prescriptionBean.onAllPrescriptionRowSelect}" oncomplete="PF('dDialog').show()" />
+
+                                    <p:column headerText="Patient Name" style="width:20%">
+                                        <h:outputText value="#{p.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Comment" style="width:30%">
+                                        <h:outputText value="#{p.comment}" />
+                                    </p:column>
+                                    <p:column headerText="Date" style="width:30%">
+                                        <h:outputText value="#{p.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Status" style="width:10%" >
+                                        <p:graphicImage value="/images/checked.png" style="height:1.5em;"/>
+                                    </p:column>
+                                    <p:column headerText="Detail" style="width:10%">
+                                        <h:outputText value="Detail" />
+                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+                                </p:dataTable>
+
+                            </div>
+                        </b:column>
+
+                        <br/>
+                        <br/>
+
+                        <h2>Complete Prescription</h2>
+                        <hr></hr>
+                        <b:column col-md="12" class="form-horizontal">
+
+                            <div class="form-group">
+
+                                <p:dataTable var="p" value="#{prescriptionBean.myPrescription}" id="completeTable" paginator="true" rows="10"
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{prescriptionBean.selectedPres}" rowKey="#{p.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{prescriptionBean.onMyPrescriptionRowSelect}" oncomplete="PF('pdDialog').show()" />
+
+                                    <p:column headerText="Patient Name" style="width:20%">
+                                        <h:outputText value="#{p.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="Date" style="width:30%">
+                                        <h:outputText value="#{p.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Total" style="width:10%;">
+                                        <h:outputText value="" />
+                                    </p:column>
+                                    <p:column headerText="Detail" style="width:10%">
+                                        <h:outputText value="Detail" />
+                                    </p:column>
+                                </p:dataTable>
+
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+
+                    <p:dialog header="Detail" widgetVar="dDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="dDetail">
+
+                            <!--<p:panelGrid>-->
+
+                            <b:column col-md="12">
+
+                                <b:column col-md="2">
+                                    <b:column col-md="12">
+                                        <p:graphicImage value="#{prescriptionBean.selectedPres.p.image}" style="width:100%; margin-bottom: 10px;" cache="false"/> 
+                                    </b:column>
+                                </b:column>
+                                <b:column col-md="10">
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Patient ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.p.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Patient Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.p.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Doctor ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.doc.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Doctor Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.doc.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Date: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.dateString}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Comment: " class="col-sm-3"/>
+                                        <p:outputLabel value="None" class="col-sm-3" rendered="#{empty prescriptionBean.selectedPres.comment}"/>
+                                    </b:column>
+                                    <b:column col-md="12" rendered="#{not empty prescriptionBean.selectedPres.comment}">
+                                        <p:inputTextarea disabled="true" value="#{prescriptionBean.selectedPres.comment}" style="width:100%;"/>
+                                    </b:column>
+                                </b:column>
+
+                                <br/><br/>
+
+                                <b:column col-md="12">
+                                    <p:dataTable var="p" value="#{prescriptionBean.selectedPres.detail}" id="dDetailTable" 
+                                                 resizableColumns="true" tableStyleClass="table table-striped" rowIndexVar="index"
+                                                 >
+
+                                        <p:column headerText="#" style="width:5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="RxNORM" style="width:10%">
+                                            <h:outputText value="#{p.rx.code}" />
+                                        </p:column>
+                                        <p:column headerText="Description" style="width:30%">
+                                            <h:outputText value="#{p.rx.description}" />
+                                        </p:column>
+                                        <p:column headerText="SD" style="width:5%">
+                                            <h:outputText value="#{p.singleDose}" />
+                                        </p:column>
+                                        <p:column headerText="NDD" style="width:5%">
+                                            <h:outputText value="#{p.numOfDailyDos}" />
+                                        </p:column>
+                                        <p:column headerText="TDD" style="width:5%">
+                                            <h:outputText value="#{p.totalDosingDays}" />
+                                        </p:column>
+                                        <p:column headerText="Current / Remaining" style="width:30%">
+                                            <h:outputText value="" />
+                                        </p:column>
+                                        <p:column headerText="Availability" style="width:10%">
+                                            <p:graphicImage value="/images/checked.png" style="height:1.5em;"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </b:column>
+                                <b:column col-md="12">
+                                    <center>
+                                        <p:commandButton styleClass="btn btn-primary" value="Start Preparation" action="#{prescriptionBean.accept()}" oncomplete="PF('dDialog').hide()" update="form"/>
+                                    </center>
+                                </b:column>
+
+                            </b:column>
+
+                            <!--</p:panelGrid>-->
+                        </p:outputPanel>
+                    </p:dialog>
+
+                    <p:dialog header="Prescription Detail" widgetVar="pdDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="pdDetail">
+
+                            <!--<p:panelGrid>-->
+
+                            <b:column col-md="12">
+                                <b:column col-md="2">
+                                    <b:column col-md="12">
+                                        <p:graphicImage value="#{prescriptionBean.selectedPres.p.image}" style="width:100%; margin-bottom: 10px;" cache="false"/> 
+                                    </b:column>
+                                </b:column>
+                                <b:column col-md="10">
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Patient ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.p.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Patient Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.p.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Pharmacist ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.pharmacist.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Pharmacist Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.pharmacist.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Date: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{prescriptionBean.selectedPres.dateString}" class="col-sm-3"/>
+                                    </b:column>
+
+                                </b:column>
+                                <br/><br/>
+                                
+                                <b:column col-md="12">
+                                    <p:dataTable var="p" value="#{prescriptionBean.selectedPres.detail}" id="dpDetailTable" 
+                                                 resizableColumns="true" tableStyleClass="table table-striped" rowIndexVar="index"
+                                                 >
+
+                                        <p:column headerText="#" style="width:5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="RxNORM" style="width:10%">
+                                            <h:outputText value="#{p.rx.code}" />
+                                        </p:column>
+                                        <p:column headerText="Description" style="width:30%">
+                                            <h:outputText value="#{p.rx.description}" />
+                                        </p:column>
+                                        <p:column headerText="SD" style="width:5%">
+                                            <h:outputText value="#{p.singleDose}" />
+                                        </p:column>
+                                        <p:column headerText="NDD" style="width:5%">
+                                            <h:outputText value="#{p.numOfDailyDos}" />
+                                        </p:column>
+                                        <p:column headerText="TDD" style="width:5%">
+                                            <h:outputText value="#{p.totalDosingDays}" />
+                                        </p:column>
+                                        <p:column headerText="Usage" style="width:40%">
+                                            <h:outputText value="#{p.usage}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </b:column>
+
+                                <b:column col-md="12">
+                                    <h2><p:outputLabel value="Total: "/></h2>
+                                </b:column>
+
+                                <b:column col-md="12">
+                                    <center>
+                                        <p:commandButton styleClass="btn btn-primary" value="Complete" action="#{prescriptionBean.complete()}" oncomplete="PF('pdDialog').hide()" update="form"/>
+                                    </center>
+                                </b:column>
+
+                            </b:column>
+
+                            <!--</p:panelGrid>-->
+                        </p:outputPanel>
+                    </p:dialog>
+
+                </b:column>
+
+            </h:form>
+
+        </b:container>
+
+    </ui:composition>
+
+</html>

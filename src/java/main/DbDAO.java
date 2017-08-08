@@ -594,7 +594,7 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT_WITH_DATE);
-            pstmt.setDouble(1, date-86400000);
+            pstmt.setDouble(1, date - 86400000);
             pstmt.setDouble(2, date);
             pstmt.setString(3, findId);
             pstmt.setString(4, findName);
@@ -1315,6 +1315,99 @@ public class DbDAO {
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
+    }
+
+    public static final String GET_PRESCRIPTION
+            = "SELECT A.*, B.first_name as patient_fn, B.last_name as patient_ln, B.pic as patient_pic, C.first_name as doctor_fn, C.last_name as doctor_ln, D.first_name as pharmacist_fn, D.last_name as pharmacist_ln "
+            + "FROM prescription as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM patient "
+            + "GROUP BY id) as B on(B.id = A.patient_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM employee "
+            + "GROUP BY id) as C on(C.id = A.doctor_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM employee "
+            + "GROUP BY id) as D on(D.id = A.pharmacist_id) "
+            + "WHERE status like ? and ifnull(pharmacist_id,'') like ? "
+            + "GROUP BY A.id;";
+    public static final String GET_PRESCRIPTION_DETAIL
+            = "select * from prescription_detail WHERE prescription_id = ?";
+
+    public List<Prescription> getPrescriptionList(String status, String pharmacistId) {
+        if (status == null || status.isEmpty()) {
+            status = "%";
+        }
+        if (pharmacistId == null || pharmacistId.isEmpty()) {
+            pharmacistId = "%";
+        }
+        List<Prescription> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_PRESCRIPTION);
+            pstmt.setString(1, status);
+            pstmt.setString(2, pharmacistId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Prescription pr = new Prescription();
+                pr.buildPrescription(rs);
+                pr.detail = getPrescriptionDetailList(connect, pr.id);
+                list.add(pr);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<PrescriptionDetail> getPrescriptionDetailList(Connection connect, String id) {
+        List<PrescriptionDetail> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connect.prepareStatement(GET_PRESCRIPTION_DETAIL);
+            pstmt.setString(1, id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                PrescriptionDetail pr = new PrescriptionDetail();
+                pr.buildDetail(rs);
+                list.add(pr);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        }
+        return list;
+    }
+
+    public static final String ACCEPT_PRESCRIPTION
+            = "UPDATE prescription SET pharmacist_id=?, status='ING' WHERE id=?";
+
+    public boolean acceptPrescription(Prescription pres, Employee pharmacist) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ACCEPT_PRESCRIPTION);
+
+            pstmt.setString(1, pharmacist.id);
+            pstmt.setString(2, pres.id);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
     }
 
 }

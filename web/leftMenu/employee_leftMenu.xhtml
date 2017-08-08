@@ -94,7 +94,7 @@
                         <p:menuitem value="End"  icon="fa fa-edit" update="content"/>
                     </p:submenu>
                     <p:submenu label="Prescription"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist')}">
-                        <p:menuitem value="Fulfill Prescription"  icon="fa fa-info" update="content" rendered="#{menuBean.isRendered('pharmacist')}"/>
+                        <p:menuitem value="Fulfill Prescription"  icon="fa fa-info" action="#{menuBean.fulFillPrescription()}" update="content" rendered="#{menuBean.isRendered('pharmacist')}"/>
                         <p:menuitem value="Search"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist')}"/>
                     </p:submenu>
                     <p:submenu label="Emergency"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/radiologist/lab technician/receptionist')}" >
@@ -223,7 +223,7 @@
                     <p:menuitem value="End"  icon="fa fa-edit" update="content"/>
                 </p:submenu>
                 <p:submenu label="Prescription"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist')}">
-                    <p:menuitem value="Fulfill Prescription"  icon="fa fa-info" update="content" rendered="#{menuBean.isRendered('pharmacist')}"/>
+                    <p:menuitem value="Fulfill Prescription"  icon="fa fa-info" action="#{menuBean.fulFillPrescription()}" update="content" rendered="#{menuBean.isRendered('pharmacist')}"/>
                     <p:menuitem value="Search"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist')}"/>
                 </p:submenu>
                 <p:submenu label="Emergency"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/radiologist/lab technician/receptionist')}" >
