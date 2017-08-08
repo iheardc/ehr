@@ -71,7 +71,7 @@ public class DbDAO {
             + "LEFT OUTER JOIN( "
             + "SELECT patient_id, count(id) as cot "
             + "FROM outpatient_dynamic "
-            + "WHERE date <= ? "
+            + "WHERE ? <= date and date <= ? "
             + "GROUP BY patient_id) as B on (B.patient_id = P.id) "
             + "where id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ? and IFNULL(B.cot,0) <= 0";
     private static final String FIND_PATIENT
@@ -594,12 +594,13 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT_WITH_DATE);
-            pstmt.setDouble(1, date);
-            pstmt.setString(2, findId);
-            pstmt.setString(3, findName);
+            pstmt.setDouble(1, date-86400000);
+            pstmt.setDouble(2, date);
+            pstmt.setString(3, findId);
             pstmt.setString(4, findName);
             pstmt.setString(5, findName);
-            pstmt.setString(6, findDoB);
+            pstmt.setString(6, findName);
+            pstmt.setString(7, findDoB);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
