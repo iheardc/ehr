@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
+        
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>View Supply Inventory</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data" id="form">
+
+                    <b:column col-md="11" offset-md="1">
+                        <hr></hr>
+
+    <!-- Item Name Input --> 
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="name" value="Supply Item Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    
+                                    <!-- Item Name Auto-Completion -->
+                                    <p:autoComplete id="name"
+                                                    value="#{inventorySupplyBean.findSupplyName}" converter="patientConverter"
+                                                    completeMethod="#{inventorySupplyBean.supplyCompleteItem}" var="it"
+                                                    itemLabel="#{it.name}" itemValue="#{it}" forceSelection="false"
+                                                    >
+                                        <p:ajax event="itemSelect"/>
+                                        <p:ajax event="itemUnselect" />
+                                        <p:column >
+                                            <h:outputText value="#{it.name}" />
+                                        </p:column>
+                                    </p:autoComplete>
+                                    
+                                </b:column>
+                            </div>
+                        </b:column>
+                        
+    <!-- Search Button --> 
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <b:column col-md="6" offset-md="2">
+                                    <p:commandButton class="btn btn-primary" value="Search" action="#{inventorySupplyBean.findSupply()}" update=":form:supplyInfo"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+    <!-- Result Table with Row Select -->
+                        <b:column id="searchTables">
+                            <b:column col-md="12" rendered="#{inventorySupplyBean.isShowSupplyTable}">
+                                <hr></hr>
+
+                                <p:dataTable var="i" value="#{inventorySupplyBean.findSupplyList}" id="supplyInfo" paginator="true" rows="10"
+                                             resizableColumns="true"  tableStyleClass="table table-striped" selectionMode="single"
+                                             selection="#{inventorySupplyBean.selectedSupply}" rowKey="#{p.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{inventorySupplyBean.onSearchSupplySelectRow}" />
+
+                                    <p:column headerText="Supply ID" style="width: 10%">
+                                        <h:outputText value="#{i.id}" />
+                                    </p:column>
+                                    <p:column headerText="Supply Name" style="width: 50%">
+                                        <h:outputText value="#{i.name}" />
+                                    </p:column>
+                                    <p:column headerText="Qty" style="width: 10%">
+                                        <h:outputText value="#{i.qty}" />
+                                    </p:column>
+                                    <p:column headerText="Registered" style="width: 30%">
+                                        <h:outputText value="#{i.registered_date}" />
+                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+
+                                </p:dataTable>
+
+                            </b:column>
+
+                        </b:column>
+
+<!-- Item Detail Information  TDL
+
+                        <b:column col-md="12">
+                            <hr></hr>
+                        </b:column>
+
+                        <br></br>
+
+                        <div>
+                            <b:column id="wfdInfo" rendered="#{treatmentBean.isShowWriteSummary}">
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <b:column col-md="9">
+                                        <p:outputLabel value="Patient ID: #{treatmentBean.selectedD.p.id}"></p:outputLabel>
+                                        <br></br>
+                                        <p:outputLabel value="Patient Name: #{treatmentBean.selectedD.p.name}"></p:outputLabel>
+                                        <br></br>
+                                        <p:outputLabel value="Gender: #{treatmentBean.selectedD.p.gender}"></p:outputLabel>
+                                        <br></br>
+                                        <p:outputLabel value="Date of Birth: #{treatmentBean.selectedD.p.dobString}"></p:outputLabel>
+                                   </b:column>
+
+                                </b:column>
+
+                                <b:column col-md="11" offset-md="1">
+
+                                    <h3>Supply Detail</h3>
+                                    <hr></hr>
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="datetime" value="Date and Time" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="6">
+                                                <p:calendar id="datetime" value="#{treatmentBean.datetime}" pattern="MM/dd/yyyy HH:mm:ss" />
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:inputTextarea id="visitSummary" style="width:100%;" value="#{treatmentBean.hl7.visitSummary}"/>
+                                        </div>
+                                    </b:column>
+
+                                </b:column>
+
+                            </b:column>
+
+                        </div>
+
+                        <br></br>
+
+                        <b:column col-md="12" rendered="#{treatmentBean.isShowWriteSummary}">
+                            <hr></hr>
+                            <p:commandButton class="btn btn-primary" process="@parent" value="Submit" action="#{treatmentBean.submitNewRecord()}" update="content"/>
+                            <p:commandButton class="btn btn-danger" value="Reset" action="#{treatmentBean.reset()}" update="form"/>
+                        </b:column>
+-->
+                    </b:column>
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+    </ui:composition>
+
+</html>
+
