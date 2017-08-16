@@ -24,7 +24,10 @@ public class Insurance {
     String detail_type, detail_type2;
     String member_no, serial_no, hosp_record_no;
     String g_drg;
+    String health_facility;
     double third_visit;
+    double admission_date;
+    double discharge_date;
     String spell, cc_code, physician;
     String specialty, specialty_code;
     String date_received, action1, signed1, signed2, action2, signed3;
@@ -39,7 +42,7 @@ public class Insurance {
         
     }
 
-    public Insurance(String id, String patient_id, String scheme, double date_of_claim, String patient_type, String patient_type2, String patient_type3, String detail_type, String detail_type2, String member_no, String serial_no, String hosp_record_no, String g_drg, double third_visit, String spell, String cc_code, String physician, String specialty, String specialty_code, String date_received, String action1, String signed1, String signed2, String action2, String signed3, double date1, double date2) {
+    public Insurance(String id, String patient_id, String scheme, double date_of_claim, String patient_type, String patient_type2, String patient_type3, String detail_type, String detail_type2, String member_no, String serial_no, String hosp_record_no, String g_drg, double third_visit, String spell, String cc_code, String physician, String specialty, String specialty_code, String date_received, String action1, String signed1, String signed2, String action2, String signed3, double date1, double date2, double admission_date, double discharge_date, String health_facility) {
         this.id = id;
         this.patient_id = patient_id;
         this.scheme = scheme;
@@ -67,6 +70,9 @@ public class Insurance {
         this.signed3 = signed3;
         this.date1 = date1;
         this.date2 = date2;
+        this.admission_date=admission_date;
+        this.discharge_date=discharge_date;
+        this.health_facility=health_facility;
     }
 
     public ArrayList<String> getKeySet(ResultSet rs) {
@@ -158,7 +164,20 @@ public class Insurance {
                 if (columnName.contains(column)) {
                     this.cc_code= rs.getString(column);
                 }
+                column = "health_facility";
+                if (columnName.contains(column)) {
+                    this.health_facility= rs.getString(column);
+                }
 
+                column = "admission_date";
+                if (columnName.contains(column)) {
+                    this.admission_date = rs.getDouble(column);
+                }
+                column = "discharge_date";
+                if (columnName.contains(column)) {
+                    this.discharge_date = rs.getDouble(column);
+                }
+                
                 column = "Physician";
                 if (columnName.contains(column)) {
                     this.physician = rs.getString(column);
@@ -365,6 +384,23 @@ public class Insurance {
         this.specialty_code = specialty_code;
     }
 
+    public double getAdmission_date() {
+        return admission_date;
+    }
+
+    public void setAdmission_date(double admission_date) {
+        this.admission_date = admission_date;
+    }
+
+    public double getDischarge_date() {
+        return discharge_date;
+    }
+
+    public void setDischarge_date(double discharge_date) {
+        this.discharge_date = discharge_date;
+    }
+
+
     public String getDate_received() {
         return date_received;
     }
@@ -461,6 +497,14 @@ public class Insurance {
         this.insur_proce = insur_proce;
     }
 
+    public String getHealth_facility() {
+        return health_facility;
+    }
+
+    public void setHealth_facility(String health_facility) {
+        this.health_facility = health_facility;
+    }
+
     public String getErrormsg() {
         return errormsg;
     }
@@ -473,12 +517,23 @@ public class Insurance {
         return getDateString((long) ((double) date_of_claim));
     
     }
+    public String getAdmission_dateString() {
+        return getDateString((long) ((double) admission_date));
+    }
+    
+    public String getDischarge_dateString() {
+        return getDateString((long) ((double) discharge_date));
+    }
+    
+    public String getThird_visitString() {
+        return getDateString((long) ((double) third_visit));
+    }
+
 
     public static String getDateString(long time) {
 
         Date currentDate = new Date(time);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         return df.format(currentDate);
-
     }
 }

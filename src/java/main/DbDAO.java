@@ -79,6 +79,12 @@ public class DbDAO {
             + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
     private static final String FIND_INSURMEDICINE
             = "SELECT * FROM insurance_medicine WHERE insurance_id = ?";
+    private static final String FIND_INSURINVESTIGATIONS
+            = "SELECT * FROM insurance_investigations WHERE insurance_id = ?";
+    private static final String FIND_INSURDIAGNOSIS
+            = "SELECT * FROM insurance_diagnosis WHERE insurance_id = ?";
+    private static final String FIND_INSURPROCEDURE
+            = "SELECT * FROM insurance_procedure WHERE insurance_id = ?";
     private static final String FIND_INSURANCE
             = "SELECT * FROM insurance "
             + "WHERE patient_id=?";
@@ -483,6 +489,81 @@ public class DbDAO {
         return list;
     }
 
+    public List<Insur_procedure> findInsProcedure(String findId){
+        List<Insur_procedure> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_INSURPROCEDURE);
+            pstmt.setString(1, findId);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Insur_procedure ins = new Insur_procedure();
+                ins.buildInsurprocedure(rs);
+                list.add(ins);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findInsurance procedure : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
+    public List<Insur_diagnosis> findInsDiagnosis(String findId){
+        List<Insur_diagnosis> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_INSURDIAGNOSIS);
+            pstmt.setString(1, findId);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Insur_diagnosis ins = new Insur_diagnosis();
+                ins.buildInsurdiagnosis(rs);
+                list.add(ins);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findInsurance diagnosis : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
+    public List<Insur_investigations> findInsInvestigations(String findId){
+        List<Insur_investigations> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_INSURINVESTIGATIONS);
+            pstmt.setString(1, findId);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Insur_investigations ins = new Insur_investigations();
+                ins.buildInsurinvestigations(rs);
+                list.add(ins);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! findInsurance investigations : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    
     public List<Insur_medicine> findInsMedicine(String findId) {
         List<Insur_medicine> list = new ArrayList<>();
         PreparedStatement pstmt = null;

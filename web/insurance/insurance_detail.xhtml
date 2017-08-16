@@ -154,19 +154,19 @@
                     <tr>
                         <td style="padding:0 0 0 7px;">Admission</td>
                         <td width="74%" style="border-bottom:0;">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.admission_dateString}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">Discharge</td>
                         <td width="74%" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.discharge_dateString}" disabled="true" style="width:100%"></p:inputText>
                         </td>                    
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">3rd visit</td>
                         <td width="74%" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.third_visitString}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
@@ -178,13 +178,13 @@
                     <tr>
                         <td style="padding:0 0 0 7px;">CC code</td>
                         <td width="74%" style="border-top:0; border-bottom:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.cc_code}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 7px;">Physician</td>
                         <td width="74%" style="border-top:0">
-                            <p:inputText value="" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.selectedIns.physician}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                 </table>
@@ -237,36 +237,62 @@
             </div>
 
             <div style="float:left; width:100%; padding:5px">
-                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped" emptyMessage="">
-                    <p:column width="3%" style="text-align: center"></p:column>
-                    <p:column headerText="Procedure" width="70%" style="text-align: center"></p:column>
-                    <p:column headerText="Date" width="15%" style="text-align: center"></p:column>
-                    <p:column headerText="G-DRG" width="12%" style="text-align: center"></p:column>
+                <p:dataTable var="p" resizableColumns="true" value="#{insuranceBean.findPlist}" tableStyle="width:100%;" tableStyleClass="table table-striped" emptyMessage="">
+                    <p:column width="3%" style="text-align: center">
+                        <h:outputText value="#{p.id}" />
+                    </p:column>
+                    <p:column headerText="Procedure" width="70%" style="text-align: center">
+                        <h:outputText value="#{p.procedure}" />
+                    </p:column>
+                    <p:column headerText="Date" width="15%" style="text-align: center">
+                        <h:outputText value="#{p.dateString}" />
+                    </p:column>
+                    <p:column headerText="G-DRG" width="12%" style="text-align: center">
+                        <h:outputText value="#{p.g_drg}" />
+                    </p:column>
                 </p:dataTable>
             </div>
 
 
             <div style="float:left; width:100%; padding:5px"> 
-                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
-                    <p:column width="3%" style="text-align: center"></p:column>
-                    <p:column headerText="Diagnosis" width="70%" style="text-align: center"></p:column>
-                    <p:column headerText="ICD-10" width="15%" style="text-align: center"></p:column>
-                    <p:column headerText="G-DRG" width="12%" style="text-align: center"></p:column>
+                <p:dataTable var="p" resizableColumns="true" value="#{insuranceBean.findDlist}" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
+                    <p:column width="3%" style="text-align: center">
+                        <h:outputText value="#{p.id}" />
+                    </p:column>
+                    <p:column headerText="Diagnosis" width="70%" style="text-align: center">
+                        <h:outputText value="#{p.diagnosis}" />
+                    </p:column>
+                    <p:column headerText="ICD-10" width="15%" style="text-align: center">
+                        <h:outputText value="#{p.icd_10}" />
+                    </p:column>
+                    <p:column headerText="G-DRG" width="12%" style="text-align: center">
+                        <h:outputText value="#{p.g_drg}" />
+                    </p:column>
                 </p:dataTable>
             </div>
 
             <div style="float:left; width:100%; padding:5px"> 
-                <p:dataTable resizableColumns="true" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
-                    <p:column style="text-align: center" width="3%"></p:column>
-                    <p:column headerText="Investigations" style="text-align: center" width="60%"></p:column>
-                    <p:column headerText="Date" style="text-align: center" width="15%"></p:column>
-                    <p:column headerText="G-DRG" style="text-align: center" width="12%"></p:column>
-                    <p:column headerText="COST" style="text-align: center" width="10%"></p:column>
+                <p:dataTable var="p" resizableColumns="true" value="#{insuranceBean.findIlist}" tableStyle="width:100%;" tableStyleClass="table table-striped"  emptyMessage="">
+                    <p:column style="text-align: center" width="3%">
+                        <h:outputText value="#{p.id}" />
+                    </p:column>
+                    <p:column headerText="Investigations" style="text-align: center" width="60%">
+                        <h:outputText value="#{p.investigations}" />
+                    </p:column>
+                    <p:column headerText="Date" style="text-align: center" width="15%">
+                        <h:outputText value="#{p.dateString}" />
+                    </p:column>
+                    <p:column headerText="G-DRG" style="text-align: center" width="12%">
+                        <h:outputText value="#{p.g_drg}" />
+                    </p:column>
+                    <p:column headerText="COST" style="text-align: center" width="10%">
+                        <h:outputText value="#{p.cost}" />
+                    </p:column>
                 </p:dataTable>
             </div>
 
             <div style="float:left; width:100%; padding:5px"> 
-                <p:dataTable var="p" resizableColumns="true"  value="#{insuranceBean.findMlist}" tableStyle="width:100%;"  paginator="true" rows="10" 
+                <p:dataTable var="p" resizableColumns="true"  value="#{insuranceBean.findMlist}" tableStyle="width:100%;"
                              tableStyleClass="table table-striped"  emptyMessage="">
                     <p:column width="2%" style="text-align: center">
                         <h:outputText value="#{p.id}" />
@@ -310,7 +336,9 @@
                     </tr>
                     <tr>
                         <td style="padding:0 0 0 15px; border-top:0; border-bottom:0" width="120px">A. In-Patient</td>
-                        <td></td>
+                        <td>
+                            <p:inputText value="#{insuranceBean.selectedIns.specialty_code}" disabled="true" style="width:100%"></p:inputText>
+                        </td>
                         <td></td>
                     </tr>
                     <tr>
@@ -330,7 +358,9 @@
                     </tr>
                     <tr>
                         <th colspan="2" style="text-align: right; padding:0 20px 0 0; border-top:0;">TOTAL</th>
-                        <td width="70px"></td>
+                        <td width="70px">
+                             <p:inputText value="#{insuranceBean.total()}" disabled="true" style="width:100%"></p:inputText>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -345,10 +375,12 @@
 
             <div style="float:left; width:50%; padding:5px">
                 <table width="100%" border="true">
-                    <tr style="height:20.5px;">
-                        <td style="text-align: center">NANA KOJO BONSU</td> 
+                    <tr style="height:26px;">
+                        <td style="text-align: center">
+                            <p:inputText value="#{insuranceBean.selectedIns.health_facility}" disabled="true" style="width:100%; text-align:center;"></p:inputText>
+                        </td> 
                     </tr>
-                    <tr>
+                    <tr style="height:26px;">
                         <td style="text-align: center">(Health Facility Insurance Officer)</td>
                     </tr>
                 </table>
