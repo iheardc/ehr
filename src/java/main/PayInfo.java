@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,7 +21,9 @@ import java.util.Random;
 public class PayInfo {
     
     String SEQ, billedTo, PIF;
-    Double billingAmount, balance, date, PIFDate;
+    Double billingAmount, balance, date, PIFDate, total;
+    
+    List<PayDetail> detail;
     
     public PayInfo(){
         
@@ -89,10 +92,18 @@ public class PayInfo {
                 if (columnName.contains(column)) {
                     this.PIFDate = rs.getDouble(column);
                 }
+                column = "total";
+                if (columnName.contains(column)) {
+                    this.total = rs.getDouble(column);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public void getPaymentDetailInfo(){
+        
     }
 
     public String getSEQ() {
@@ -150,7 +161,7 @@ public class PayInfo {
     public static String getDateString(long time) {
 
         Date currentDate = new Date(time);
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return df.format(currentDate);
 
     }
@@ -163,10 +174,22 @@ public class PayInfo {
         this.PIFDate = PIFDate;
     }
     
-    public Double getTotal(){
-        Random rand = new Random();
-        return (double)rand.nextInt(300) + 50;
+    public void setTotal(Double total){
+        this.total = total;
     }
     
+    public Double getTotal(){
+        return total;
+//        Random rand = new Random();
+//        return (double)rand.nextInt(300) + 50;
+    }
+
+    public List<PayDetail> getDetail() {
+        return detail;
+    }
+
+    public void setDetail(List<PayDetail> detail) {
+        this.detail = detail;
+    }
     
 }

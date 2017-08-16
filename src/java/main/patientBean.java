@@ -34,8 +34,8 @@ public class patientBean implements Serializable {
     Patient p;
 
     // Find Patient
-    private List<Patient> findList;
-    private Patient selectedP;
+    List<Patient> findList;
+    Patient selectedP;
 
     String findId, findName;
 
