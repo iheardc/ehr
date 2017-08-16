@@ -167,7 +167,13 @@ public class DbDAO {
             + "date=?,status=? "
             + "WHERE id=?";
     private static final String FIND_PATIENT_BILLING
-            = "SELECT * FROM billing WHERE billed_to like ? and ? <= date and date <= ?";
+            = "SELECT  A.*, ifnull(B.total,0) as total "
+            + "FROM billing as A LEFT OUTER JOIN ( "
+            + "SELECT billing_SEQ, SUM(amount) as total "
+            + "FROM charge_detail "
+            + "GROUP BY billing_SEQ) as B on (B.billing_SEQ = A.SEQ) "
+            + "WHERE billed_to like ? and PIF is null "
+            + "GROUP BY A.SEQ";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -1350,7 +1356,55 @@ public class DbDAO {
         }
     }
 
-    public List<PayInfo> getPayList(Patient p, Double startDate, Double finishDate) {
+    public static final String ADD_PRESCRIPTION_CHARGE_CODE
+            = "INSERT INTO charge_detail(billing_SEQ, charge_code, amount) VALUES( "
+            + "(SELECT SEQ FROM billing WHERE billed_to like ? order by SEQ DESC limit 0, 1), "
+            + "?, "
+            + "(SELECT amount FROM charge_code WHERE code = ?) "
+            + ")";
+    public static final String COMPLETE_PRESCRIPTION
+            = "UPDATE prescription SET status='DONE', date_complete=? WHERE id=?";
+
+    public boolean completePrescription(Prescription pres) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+
+            int count = 0;
+            connect = DbConnectionPools.getPoolConnection();
+            for (PrescriptionDetail de : pres.detail) {
+
+                pstmt = connect.prepareStatement(ADD_PRESCRIPTION_CHARGE_CODE);
+                pstmt.setString(1, pres.p.id);
+                pstmt.setString(2, de.rx.code);
+                pstmt.setString(3, de.rx.code);
+
+                pstmt.executeUpdate();
+
+                count += 1;
+
+            }
+
+            if (count == pres.detail.size()) {
+                pstmt = connect.prepareStatement(COMPLETE_PRESCRIPTION);
+                pstmt.setDouble(1, getTodayMillisecondsWithTime());
+                pstmt.setString(2, pres.id);
+
+                pstmt.executeUpdate();
+            }
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR! Add Prescription Bill" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    public List<PayInfo> getChargesDueList(Patient p) {
         List<PayInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1358,8 +1412,6 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT_BILLING);
             pstmt.setString(1, p.id);
-            pstmt.setDouble(2, startDate);
-            pstmt.setDouble(3, finishDate);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {

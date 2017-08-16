@@ -22,7 +22,7 @@
 
             <b:column col-md="12">
 
-                <h1>Triage</h1>
+                <h1>View Patient Bill</h1>
                 <hr></hr>
 
 
@@ -34,9 +34,42 @@
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
-                                <p:outputLabel for="date" value="Date" class="col-sm-2 control-label" ></p:outputLabel>
+                                <p:outputLabel for="id" value="Patient ID" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="6">
-                                    <p:calendar id="date" value="#{paymentBean.date}" pattern="MM/dd/yyyy" style="width: 100%;"/>
+                                    <p:inputText value="#{paymentBean.findId}" id="id" autocomplete="off" class="form-control" placeholder="Patient ID"></p:inputText>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="name" value="Patient Name" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <!--<p:inputText value="#{paymentBean.findName}" id="name" autocomplete="off" class="form-control" placeholder="Patient Name"></p:inputText>-->
+                                    <p:autoComplete id="name"
+                                                    value="#{paymentBean.findName}" converter="patientConverter"
+                                                    completeMethod="#{paymentBean.patientCompleteItem}" var="it"
+                                                    itemLabel="#{it.name}" itemValue="#{it}" forceSelection="false"
+                                                    >
+                                        <p:ajax event="itemSelect"/>
+                                        <p:ajax event="itemUnselect" />
+                                        <!--<p:ajax event="change" listener="paymentBean.changeFindNameListener"/>-->
+                                        <p:column >
+                                            <h:outputText value="#{it.name}" />
+                                        </p:column>
+                                    </p:autoComplete>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <!--<p:inputText value="#{paymentBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
+                                    <p:calendar id="dob" value="#{paymentBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
+                                        <!--<p:ajax event="dateSelect" listener="#{paymentBean.onDateSelect}" />-->
+                                    </p:calendar>
                                 </b:column>
                             </div>
                         </b:column>
@@ -44,47 +77,84 @@
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
                                 <b:column col-md="6" offset-md="2">
-                                    <p:commandButton class="btn btn-primary" value="Search" action="#{paymentBean.findDynaPatient()}" update=":form:searchTables"/>
+                                    <p:commandButton class="btn btn-primary" value="Search" action="#{paymentBean.findPatientWithDate()}" update=":form:patientData"/>
                                 </b:column>
                             </div>
                         </b:column>
 
-                        <b:column id="searchTables">
-                            <b:column col-md="12" rendered="#{paymentBean.isShowDynaTable}">
-                                <hr></hr>
+                        <b:column col-md="12" class="form-horizontal">
 
-                                <p:dataTable var="d" value="#{paymentBean.findDynaList}" id="searchTable1" paginator="true" rows="10"
-                                             resizableColumns="true"  tableStyleClass="table table-striped" 
-                                             selectionMode="single" selection="#{paymentBean.selectedD}" rowKey="#{d.id}">
+                            <div class="form-group">
 
-                                    <p:ajax event="rowSelect" listener="#{paymentBean.onDynaSelectRowSelect}" />
+                                <p:dataTable var="p" value="#{paymentBean.findList}" id="patientData" paginator="true" rows="10"
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{paymentBean.selectedP}" rowKey="#{p.id}">
 
-                                    <p:column headerText="Patient ID" style="width: 10%">
-                                        <h:outputText value="#{d.p.id}" />
+                                    <p:ajax event="rowSelect" listener="#{paymentBean.onPatientSelectRowSelect}" />
+
+                                    <p:column headerText="Patient ID" style="width:10%">
+                                        <h:outputText value="#{p.id}" />
                                     </p:column>
-                                    <p:column headerText="Name" style="width: 30%">
-                                        <h:outputText value="#{d.p.name}" />
+                                    <p:column headerText="Name" style="width:40%">
+                                        <h:outputText value="#{p.name}" />
                                     </p:column>
-                                    <p:column headerText="Date of Birth" style="width: 25%">
-                                        <h:outputText value="#{d.p.dobString}" />
+                                    <p:column headerText="Gender" style="width:20%">
+                                        <h:outputText value="#{p.gender}" />
                                     </p:column>
-                                    <p:column headerText="Gender" style="width: 10%">
-                                        <h:outputText value="#{d.p.gender}" />
-                                    </p:column>
-                                    <p:column headerText="Date" style="width: 25%">
-                                        <h:outputText value="#{d.dateString}" />
+                                    <p:column headerText="Date of Birth" style="width:30%">
+                                        <h:outputText value="#{p.dobString}" />
                                     </p:column>
                                     <p:columnGroup type="footer">
                                         <p:row>
-                                            <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
+                                            <p:column colspan="4" style="text-align:left" footerText="Please select the row." />
                                         </p:row>
                                     </p:columnGroup>
-
+                                    <!--                                    <p:column style="width:10%; text-align: center" headerText="Select">
+                                                                            <p:commandButton update=":form:pDetail" title="View" value="Select" action="#{paymentBean.selectPatient()}">
+                                                                                <f:setPropertyActionListener value="#{p}" target="#{paymentBean.selectedP}" />
+                                                                            </p:commandButton>
+                                                                        </p:column>-->
                                 </p:dataTable>
 
-                            </b:column>
-
+                            </div>
                         </b:column>
+
+                        <!--                        <b:column id="searchTables">
+                                                    <b:column col-md="12" rendered="#{paymentBean.isShowDynaTable}">
+                                                        <hr></hr>
+                        
+                                                        <p:dataTable var="d" value="#{paymentBean.findDynaList}" id="searchTable1" paginator="true" rows="10"
+                                                                     resizableColumns="true"  tableStyleClass="table table-striped" 
+                                                                     selectionMode="single" selection="#{paymentBean.selectedD}" rowKey="#{d.id}">
+                        
+                                                            <p:ajax event="rowSelect" listener="#{paymentBean.onDynaSelectRowSelect}" />
+                        
+                                                            <p:column headerText="Patient ID" style="width: 10%">
+                                                                <h:outputText value="#{d.p.id}" />
+                                                            </p:column>
+                                                            <p:column headerText="Name" style="width: 30%">
+                                                                <h:outputText value="#{d.p.name}" />
+                                                            </p:column>
+                                                            <p:column headerText="Date of Birth" style="width: 25%">
+                                                                <h:outputText value="#{d.p.dobString}" />
+                                                            </p:column>
+                                                            <p:column headerText="Gender" style="width: 10%">
+                                                                <h:outputText value="#{d.p.gender}" />
+                                                            </p:column>
+                                                            <p:column headerText="Date" style="width: 25%">
+                                                                <h:outputText value="#{d.dateString}" />
+                                                            </p:column>
+                                                            <p:columnGroup type="footer">
+                                                                <p:row>
+                                                                    <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
+                                                                </p:row>
+                                                            </p:columnGroup>
+                        
+                                                        </p:dataTable>
+                        
+                                                    </b:column>
+                        
+                                                </b:column>-->
 
 
 
@@ -99,17 +169,15 @@
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3>Selected Patient</h3>
-                                    <hr></hr>
                                     <b:column col-md="12" class="form-horizontal" id="patientInfo">
                                         <b:column col-md="3">
-                                            <p:graphicImage value="#{paymentBean.selectedD.p.image}" style="width:100%" cache="false"/> 
+                                            <p:graphicImage value="#{paymentBean.selectedP.image}" style="width:100%" cache="false"/> 
                                         </b:column>
                                         <b:column col-md="9">
-                                            <p:outputLabel value="Patient Id : #{paymentBean.selectedD.p.id} " class="col-sm-6"/>
-                                            <p:outputLabel value="Patient Name : #{paymentBean.selectedD.p.name} " class="col-sm-6"/>
-                                            <p:outputLabel value="Patient Gender : #{paymentBean.selectedD.p.gender} " class="col-sm-6"/>
-                                            <p:outputLabel value="Status : #{paymentBean.selectedD.statusFull} " class="col-sm-6"/>
+                                            <p:outputLabel value="Patient Id : #{paymentBean.selectedP.id} " class="col-sm-6"/>
+                                            <p:outputLabel value="Patient Name : #{paymentBean.selectedP.name} " class="col-sm-6"/>
+                                            <p:outputLabel value="Gender : #{paymentBean.selectedP.gender} " class="col-sm-6"/>
+                                            <p:outputLabel value="Date of Birth : #{paymentBean.selectedP.dobString} " class="col-sm-6"/>
                                         </b:column>
                                     </b:column>
 
@@ -120,31 +188,34 @@
 
                                 <b:column col-md="11" offset-md="1">
 
-                                    <h3><p:outputLabel value="Charges Due for #{paymentBean.selectedD.p.name}"/></h3>
+                                    <h3><p:outputLabel value="Charges Due for #{paymentBean.selectedP.name}"/></h3>
                                     <hr></hr>
-                                    <p:dataTable var="pa" value="#{paymentBean.payList}" id="payTable" paginator="true" rows="10"
+                                    <p:dataTable var="pa" value="#{paymentBean.payList}" id="payTable"
                                                  resizableColumns="true"  tableStyleClass="table table-striped" 
                                                  selectionMode="single" selection="#{paymentBean.selectedPay}" rowKey="#{pa.SEQ}">
 
-                                        <!--<p:ajax event="rowSelect" listener="#{paymentBean.onDynaSelectRowSelect}" />-->
+                                        <p:ajax event="rowSelect" listener="#{paymentBean.onPaymentSelectRowSelect}" update="form"  oncomplete="PF('dDialog').show()" />
 
                                         <p:column headerText="SEQ" style="width: 10%">
                                             <h:outputText value="#{pa.SEQ}" />
                                         </p:column>
-                                        <p:column headerText="Total" style="width: 30%">
+                                        <p:column headerText="Total" style="width: 20%">
                                             <h:outputText value="$ #{pa.total}" />
                                         </p:column>
-                                        <p:column headerText="Balance" style="width: 25%">
+                                        <p:column headerText="Balance" style="width: 20%">
                                             <h:outputText value="$ #{pa.balance}" />
                                         </p:column>
-                                        <p:column headerText="Date" style="width: 10%">
+                                        <p:column headerText="Date" style="width: 40%">
                                             <h:outputText value="#{pa.dateString}" />
                                         </p:column>
-<!--                                        <p:columnGroup type="footer">
-                                            <p:row>
-                                                <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
-                                            </p:row>
-                                        </p:columnGroup>-->
+                                        <p:column headerText="Detail" style="width: 10%">
+                                            <h:outputText value="Detail" />
+                                        </p:column>
+                                        <!--                                        <p:columnGroup type="footer">
+                                                                                    <p:row>
+                                                                                        <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
+                                                                                    </p:row>
+                                                                                </p:columnGroup>-->
 
                                     </p:dataTable>
 
@@ -161,11 +232,87 @@
 
                         <b:column col-md="12" rendered="#{paymentBean.isShowMore}">
                             <hr></hr>
-                            <p:commandButton class="btn btn-primary" process="@parent" value="Check-Out" action="#{paymentBean.submitPayment()}" update="content"/>
+                            <!--<p:commandButton class="btn btn-primary" process="@parent" value="Check-Out" action="#{paymentBean.submitPayment()}" update="content"/>-->
                             <p:commandButton class="btn btn-danger" value="Reset" action="#{paymentBean.reset()}" update="form"/>
                         </b:column>
 
                     </b:column>
+
+                    <p:dialog header="Detail" widgetVar="dDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" >
+                        <p:outputPanel id="dDetail">
+                            <!--<p:scrollPanel id="wpDetail">-->
+
+                            <b:column id="pres_popup">
+
+                                <b:column col-md="12">
+
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Patient ID: #{paymentBean.selectedP.id}" class="col-sm-6"></p:outputLabel>
+                                        <p:outputLabel value="Patient Name: #{paymentBean.selectedP.name}" class="col-sm-6"></p:outputLabel>
+                                        <p:outputLabel value="SEQ: #{paymentBean.selectedPay.SEQ}" class="col-sm-6"></p:outputLabel>
+                                        <p:outputLabel value="Date: #{paymentBean.selectedPay.dateString}" class="col-sm-6"></p:outputLabel>
+                                    </b:column>
+
+                                </b:column>
+
+                                <b:column col-md="12" style="margin-top: 2em;">
+
+                                    <h3>Charge Detail</h3>
+                                    <hr></hr>
+<!--                                        <p:dataTable var="de" value="#{paymentBean.selectedPay.date}" id="chargeDetailTable"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                        <p:column headerText="#" style="width: 5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="RxNORM" style="width: 15%">
+                                            <h:outputText value="#{de.rx.code}" />
+                                        </p:column>
+                                        <p:column headerText="Description" style="width: 40%">
+                                            <h:outputText value="#{de.rx.description}" />
+                                        </p:column>
+                                        <p:column headerText="SD" style="width: 5%">
+                                            <h:outputText value="#{de.singleDose}" />
+                                        </p:column>
+                                        <p:column headerText="NDD" style="width: 5%">
+                                            <h:outputText value="#{de.numOfDailyDos}" />
+                                        </p:column>
+                                        <p:column headerText="TDD" style="width: 5%">
+                                            <h:outputText value="#{de.totalDosingDays}" />
+                                        </p:column>
+                                        <p:column headerText="Usage" style="width: 15%">
+                                            <h:outputText value="#{de.usage}" />
+                                        </p:column>
+                                        <p:column style="width:10%;text-align: center">
+                                            <p:commandButton icon="fa fa-remove" title="Delete" action="#{treatmentBean.removePrescriptionDetail(index)}">
+                                            </p:commandButton>
+                                        </p:column>
+
+                                    </p:dataTable>-->
+
+                                </b:column>
+
+                                <b:column col-md="12" style="margin-top: 2em;">
+
+                                    <h3>Payment History</h3>
+                                    <hr></hr>
+
+                                </b:column>
+
+                                <b:column col-md="12" style="margin-top: 2em;">
+
+                                    <h1><p:outputLabel value="Total Amount Due: $#{paymentBean.selectedPay.total}"/></h1>
+
+                                </b:column>
+
+                                <b:column col-md="12">
+                                    <p:commandButton title="Pay" value="Pay" styleClass="btn btn-primary" oncomplete="PF('dDialog').hide()" update="form" ></p:commandButton>
+                                </b:column>
+
+                            </b:column>
+                            <!--</p:scrollPanel>-->
+                        </p:outputPanel>
+                    </p:dialog>
 
                 </h:form>
 

@@ -106,14 +106,25 @@ public class prescriptionBean implements Serializable {
         FacesMessage message;
         if ((new DbDAO()).acceptPrescription(selectedPres, sBean.em)) {
             findPrescription();
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully ", "!");
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully ", "TODO");
         } else {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed ", "!");
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed ", "TODO");
         }
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
     public void complete() {
+
+        FacesMessage message;
+        DbDAO dao = new DbDAO();
+        if (dao.completePrescription(selectedPres)) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully ", "TODO");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            menuBean.fulFillPrescription();
+        } else {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed ", "TODO");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
 
     }
 

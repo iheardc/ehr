@@ -23,9 +23,9 @@ import org.primefaces.event.SelectEvent;
  */
 @Named(value = "paymentBean")
 @SessionScoped
-public class paymentBean implements Serializable {
+public class paymentBean extends patientBean implements Serializable {
 
-    Date date;
+//    Date date;
 
     private List<DynamicInfo> findDynaList;
     private DynamicInfo selectedD;
@@ -38,70 +38,97 @@ public class paymentBean implements Serializable {
     List<PayInfo> payList;
     PayInfo selectedPay;
 
-    public void findDynaPatient() {
-        DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate("ALL", null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
-
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        FacesMessage message;
-        if (dList.size() > 0) {
-            message = new FacesMessage("Search ", "There are " + dList.size() + " results.");
-        } else {
-            message = new FacesMessage("Search ", "There are no matching results.");
-        }
-        FacesContext.getCurrentInstance().addMessage(null, message);
-
-        findDynaList = dList;
-
-        isShowDynaTable = true;
-
-        selectedD = null;
-        resetMoreForm();
-
-//        resetFindItem();
-        RequestContext.getCurrentInstance().update("form");
-//        return "/userInfo/find_employee.xhtml?faces-redirect=true";
-    }
-
-    public void onDynaSelectRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-
-        DbDAO dao = new DbDAO();
-        payList = dao.getPayList(selectedD.p, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
-
-        selectDynaPatient();
-    }
-
-    public void selectDynaPatient() {
+//    public void findDynaPatient() {
+//        DbDAO dao = new DbDAO();
+//        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate("ALL", null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
+//
+//        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+//        FacesMessage message;
+//        if (dList.size() > 0) {
+//            message = new FacesMessage("Search ", "There are " + dList.size() + " results.");
+//        } else {
+//            message = new FacesMessage("Search ", "There are no matching results.");
+//        }
+//        FacesContext.getCurrentInstance().addMessage(null, message);
+//
+//        findDynaList = dList;
+//
+//        isShowDynaTable = true;
+//
+//        selectedD = null;
 //        resetMoreForm();
+//
+////        resetFindItem();
+//        RequestContext.getCurrentInstance().update("form");
+////        return "/userInfo/find_employee.xhtml?faces-redirect=true";
+//    }
+
+//    public void onDynaSelectRowSelect(SelectEvent event) {
+//        FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
+//        FacesContext.getCurrentInstance().addMessage(null, msg);
+//
+//        DbDAO dao = new DbDAO();
+//        payList = dao.getPayList(selectedD.p, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
+//
+//        selectDynaPatient();
+//    }
+//
+//    public void selectDynaPatient() {
+////        resetMoreForm();
+//        isShowMore = true;
+//        RequestContext context = RequestContext.getCurrentInstance();
+//        context.update("form");
+//    }
+
+//    public void submitPayment() {
+//
+//        DbDAO dao = new DbDAO();
+//        dao.checkOutPatient(selectedD);
+//
+//        if (selectedD.errormsg.length() > 0) {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed ", selectedD.errormsg));
+//        } else {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully ", "Successfully Check-Out"));
+//            menuBean.viewPatientBill();
+//            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+//        }
+//
+//    }
+    
+    @Override
+    public void onPatientSelectRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        
+        DbDAO dao = new DbDAO();
+        payList = dao.getChargesDueList(selectedP);
+        
+        selectPatient();
+    }
+    
+    @Override
+    public void selectPatient() {
+        
         isShowMore = true;
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
+        
     }
-
-    public void submitPayment() {
-
-        DbDAO dao = new DbDAO();
-        dao.checkOutPatient(selectedD);
-
-        if (selectedD.errormsg.length() > 0) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed ", selectedD.errormsg));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully ", "Successfully Check-Out"));
-            menuBean.viewPatientBill();
-            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
-        }
-
+    
+    public void onPaymentSelectRowSelect(SelectEvent event){
+        
+        
+        
     }
 
     public void reset() {
+        super.reset();
         resetPatientFindItem();
         resetMoreForm();
     }
 
     public void resetPatientFindItem() {
-        date = DbDAO.getTodayDate();
+//        date = DbDAO.getTodayDate();
         findDynaList = null;
         isShowDynaTable = false;
         selectedD = null;
@@ -120,13 +147,13 @@ public class paymentBean implements Serializable {
         this.selectedD = selectedD;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
+//    public Date getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(Date date) {
+//        this.date = date;
+//    }
 
     public List<DynamicInfo> getFindDynaList() {
         return findDynaList;
