@@ -31,6 +31,9 @@ public class insuranceBean implements Serializable {
     private Insurance selectedIns;
     private List<Insurance> findList;
     private List<Insur_medicine> findMlist;
+    private List<Insur_investigations> findIlist;
+    private List<Insur_diagnosis> findDlist;
+    private List<Insur_procedure> findPlist;
     boolean isShowMore = false;
 
     public void onPatientSelectRowSelect(SelectEvent event) {
@@ -73,7 +76,77 @@ public class insuranceBean implements Serializable {
         }
     }
 
-    public void selectInsurance() {
+    public void selectInsurance(){
+        selectInsurmedicine();
+        selectInsurinvestigations();
+        selectInsurdiagnosis();
+        selectInsurprocedure();
+    }
+    
+    public void selectInsurprocedure(){
+        DbDAO dao = new DbDAO();
+        findPlist = dao.findInsProcedure(selectedIns.id);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message;
+        if (findPlist.size() > 0) {
+            message = new FacesMessage("Search ", "There are " + findPlist.size() + " results.");
+        } else {
+            message = new FacesMessage("Search ", "There are no matching results.");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+//        selectedP = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
+        bean.reset();
+        pathCont = "/insurance/insurance_detail.xhtml";
+    }
+    
+    public void selectInsurdiagnosis(){
+        DbDAO dao = new DbDAO();
+        findDlist = dao.findInsDiagnosis(selectedIns.id);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message;
+        if (findDlist.size() > 0) {
+            message = new FacesMessage("Search ", "There are " + findDlist.size() + " results.");
+        } else {
+            message = new FacesMessage("Search ", "There are no matching results.");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+//        selectedP = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
+        bean.reset();
+        pathCont = "/insurance/insurance_detail.xhtml";
+    }
+    
+    public void selectInsurinvestigations(){
+        DbDAO dao = new DbDAO();
+        findIlist = dao.findInsInvestigations(selectedIns.id);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message;
+        if (findIlist.size() > 0) {
+            message = new FacesMessage("Search ", "There are " + findIlist.size() + " results.");
+        } else {
+            message = new FacesMessage("Search ", "There are no matching results.");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+//        selectedP = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
+        bean.reset();
+        pathCont = "/insurance/insurance_detail.xhtml";
+    }
+    
+    public void selectInsurmedicine() {
         DbDAO dao = new DbDAO();
         findMlist = dao.findInsMedicine(selectedIns.id);
 
@@ -112,6 +185,14 @@ public class insuranceBean implements Serializable {
         }
     }
     
+    public double total(){
+        double totals=0;
+        for(int i=0; i<findMlist.size(); i++)
+        {
+            totals=totals+findMlist.get(i).total_amt;
+        }
+        return totals;
+    }
 
     public boolean selectpatienttype3() {
         return "Pharmacy".equals(selectedIns.patient_type3);
@@ -183,6 +264,30 @@ public class insuranceBean implements Serializable {
 
     public void setFindMlist(List<Insur_medicine> findMlist) {
         this.findMlist = findMlist;
+    }
+
+    public List<Insur_investigations> getFindIlist() {
+        return findIlist;
+    }
+
+    public void setFindIlist(List<Insur_investigations> findIlist) {
+        this.findIlist = findIlist;
+    }
+
+    public List<Insur_diagnosis> getFindDlist() {
+        return findDlist;
+    }
+
+    public void setFindDlist(List<Insur_diagnosis> findDlist) {
+        this.findDlist = findDlist;
+    }
+
+    public List<Insur_procedure> getFindPlist() {
+        return findPlist;
+    }
+
+    public void setFindPlist(List<Insur_procedure> findPlist) {
+        this.findPlist = findPlist;
     }
     
     
