@@ -1542,5 +1542,104 @@ public class DbDAO {
         }
         return result;
     }
+    
+// INVENTORY ----------------------------------------------------------------------
+
+    public static final String GET_SUPPLY 
+            = "SELECT A.*, B.id, B.qty, B.used_qty, B.registered_date "
+            + "FROM supply_inventory as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM supply_detail "
+            + "GROUP BY id) as B on(B.supply_inventory_id = A.id) "
+            + "WHERE name like ? and type like ? "
+            + "GROUP BY A.id;";
+    public static final String GET_SUPPLY_DETAIL
+            = "select * from supply_detail WHERE supply_inventory_id = ?";
+
+    public List<InventorySupply> getSupplyList(String name, String type) {
+        if (name == null || name.isEmpty()) {
+            name = "%";
+        }
+        if (type == null || type.isEmpty()) {
+            type = "%";
+        }
+        List<InventorySupply> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_SUPPLY);
+            pstmt.setString(1, name);
+            pstmt.setString(2, type);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                InventorySupply i = new InventorySupply();
+                i.buildInventorySupply(rs);
+                i.supplyDetail = getSupplyDetailList(connect, i.id);
+                list.add(i);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<InventorySupplyDetail> getSupplyDetailList(Connection connect, String id) {
+        List<InventorySupplyDetail> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connect.prepareStatement(GET_SUPPLY_DETAIL);
+            pstmt.setString(1, id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                InventorySupplyDetail isd = new InventorySupplyDetail();
+                isd.buildDetail(rs);
+                list.add(isd);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        }
+        return list;
+    }
+    
+    // For auto-completion of Name text field in manage_supply_inventory.xhtml
+     private static final String GET_SUPPLY_NAMES
+            = "SELECT name FROM supply_inventory WHERE name like ? or concat_ws(' ',name) like ?";
+    
+    public List<InventorySupply> getSupplyNames(String query) {
+        if (query == null || "".equals(query)) {
+            query = "%";
+        } else {
+            query = "%" + query + "%";
+        }
+        List<InventorySupply> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_SUPPLY_NAMES);
+
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+            pstmt.setString(3, query);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                InventorySupply i = new InventorySupply();
+                i.buildInventorySupply(rs);
+                list.add(i);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! getSupplyNames : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
 
 }

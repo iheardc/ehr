@@ -124,7 +124,7 @@
                             <p:menuitem value="Create"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         </p:submenu>
                         <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                            <p:menuitem value="Manage"  icon="fa fa-info" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
+                            <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageSupplyInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                             <p:menuitem value="Create"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         </p:submenu>
                     </p:submenu>
@@ -253,7 +253,7 @@
                         <p:menuitem value="Create"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                     </p:submenu>
                     <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                        <p:menuitem value="Manage"  icon="fa fa-info" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
+                        <p:menuitem value="Manage"  icon="fa fa-info" action="#{menuBean.manageSupplyInventory()}" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         <p:menuitem value="Create"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                     </p:submenu>
                 </p:submenu>

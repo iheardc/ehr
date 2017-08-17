@@ -176,6 +176,15 @@ public class menuBean implements Serializable {
         pathCont = "/admin/create_employee.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+    
+    //Inventory
+    public static void manageSupplyInventory() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        inventorySupplyBean bean = (inventorySupplyBean) elContext.getELResolver().getValue(elContext, null, "inventorySupplyBean");
+        bean.reset();
+        pathCont = "/inventory/manage_supply_inventory.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
 
     public String getPathCont() {
         return pathCont;
