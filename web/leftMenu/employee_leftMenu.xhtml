@@ -120,7 +120,7 @@
                     </p:submenu>
                     <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
                         <p:submenu label="Clinical" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                            <p:menuitem value="Manage"  icon="fa fa-info" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
+                            <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                             <p:menuitem value="Add"  icon="fa fa-edit" update="content" action="#{menuBean.addClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         </p:submenu>
                         <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
@@ -249,7 +249,7 @@
                 </p:submenu>
                 <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
                     <p:submenu label="Clinical" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                        <p:menuitem value="Manage"  icon="fa fa-info" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
+                        <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         <p:menuitem value="Add"  icon="fa fa-edit" update="content" action="#{menuBean.addClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                     </p:submenu>
                     <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">

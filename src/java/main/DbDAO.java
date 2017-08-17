@@ -21,6 +21,8 @@ import java.util.List;
  * @author tw
  */
 public class DbDAO {
+    
+    public static final int ONE_DAY_MS = 86400000;
 
 //    private static final String LOGIN_PATIENT = "SELECT * FROM patient WHERE email=? AND password=?";
     private static final String LOGIN_EMPLOYEE = "SELECT * FROM employee WHERE id=? AND password=?";
@@ -1698,12 +1700,12 @@ public class DbDAO {
             + "WHERE qty > used_qty and expire_date < ? "
             + "group by RxNORM_code "
             + ") as C on (C.RXNORM_code = A.RxNORM_code) "
-            + "WHERE A.RxNORM_code like ? "
+            + "WHERE A.RxNORM_code like ? and (A.threshold > ifnull(B.qty,0) or ?) and (ifnull(C.expired_qty, 0) > 0 or ?) "
             + "GROUP BY A.RxNORM_code";
 
     public List<ClinicalInven> getClinicalItems(RxNORM rx) {
         String code = "";
-        if (rx == null) {
+        if (rx == null || rx.code == null) {
             code = "%";
         } else {
             code = rx.code;
@@ -1716,6 +1718,73 @@ public class DbDAO {
             pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
             pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
             pstmt.setString(2, code);
+            pstmt.setString(3, "1");
+            pstmt.setString(4, "1");
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ClinicalInven c = new ClinicalInven();
+                c.build(rs);
+                c.detail = getClinicalItemDetails(connect, c);
+                list.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! getClinicalItems" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+    public List<ClinicalInven> getOrderRequiredClinicalItems(RxNORM rx) {
+        String code = "";
+        if (rx == null || rx.code == null) {
+            code = "%";
+        } else {
+            code = rx.code;
+        }
+        List<ClinicalInven> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
+            pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
+            pstmt.setString(2, code);
+            pstmt.setString(3, "0");
+            pstmt.setString(4, "1");
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ClinicalInven c = new ClinicalInven();
+                c.build(rs);
+                c.detail = getClinicalItemDetails(connect, c);
+                list.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! getOrderRequiredClinicalItems" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<ClinicalInven> getCloseExpiredClinicalItems(RxNORM rx) {
+        String code = "";
+        if (rx == null || rx.code == null) {
+            code = "%";
+        } else {
+            code = rx.code;
+        }
+        List<ClinicalInven> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
+            pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
+            pstmt.setString(2, code);
+            pstmt.setString(3, "1");
+            pstmt.setString(4, "0");
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {

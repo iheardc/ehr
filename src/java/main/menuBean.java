@@ -155,6 +155,7 @@ public class menuBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         prescriptionBean bean = (prescriptionBean) elContext.getELResolver().getValue(elContext, null, "prescriptionBean");
         bean.reset();
+        bean.findPrescription();
         pathCont = "/prescription/fulfill_prescription.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
@@ -185,6 +186,15 @@ public class menuBean implements Serializable {
         pathCont = "/inventory/add_clinical_inventory.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+    public static void manageClinicalInventory(){
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        inventoryBean bean = (inventoryBean) elContext.getELResolver().getValue(elContext, null, "inventoryBean");
+        bean.reset();
+        bean.searchAllManageInfo();
+        pathCont = "/inventory/manage_clinical_inventory.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
+    
     public static void manageSupplyInventory() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         inventorySupplyBean bean = (inventorySupplyBean) elContext.getELResolver().getValue(elContext, null, "inventorySupplyBean");

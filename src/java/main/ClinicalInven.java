@@ -19,7 +19,7 @@ public class ClinicalInven {
     RxNORM rx;
     String location;
     Double threshold, purchasePrice, sellPrice;
-    Double currentQty, expiredDate;
+    Double currentQty, expiredQty;
     
     List<ClinicalInvenDetail> detail;
 
@@ -84,9 +84,9 @@ public class ClinicalInven {
                 if (columnName.contains(column)) {
                     this.sellPrice = rs.getDouble(column);
                 }
-                column = "expired_date";
+                column = "expired_qty";
                 if (columnName.contains(column)) {
-                    this.expiredDate = rs.getDouble(column);
+                    this.expiredQty = rs.getDouble(column);
                 }
                 column = "current_qty";
                 if (columnName.contains(column)) {
@@ -156,12 +156,12 @@ public class ClinicalInven {
         this.currentQty = currentQty;
     }
 
-    public Double getExpiredDate() {
-        return expiredDate;
+    public Double getExpiredQty() {
+        return expiredQty;
     }
 
-    public void setExpiredDate(Double expiredDate) {
-        this.expiredDate = expiredDate;
+    public void setExpiredQty(Double expiredQty) {
+        this.expiredQty = expiredQty;
     }
     
     public double getAllQty(){

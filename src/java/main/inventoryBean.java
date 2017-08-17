@@ -32,6 +32,7 @@ import org.primefaces.model.StreamedContent;
 @SessionScoped
 public class inventoryBean implements Serializable {
 
+    // ADD CLINICAL ITEMS
     ClinicalInven cl;
 
     boolean isEditBasicField;
@@ -42,6 +43,12 @@ public class inventoryBean implements Serializable {
     double addTempQty;
     Date addTempExpDate;
     List<ClinicalInvenDetail> addTempList;
+    
+    // MANAGE CLINICAL ITEMS
+    ClinicalInven selectedInven;
+    List<ClinicalInven> clinicalItems;
+    List<ClinicalInven> orderRequiredClinicalItems;
+    List<ClinicalInven> closeExpDateClinicalItems;
 
     public void onRxNORMSelect(SelectEvent event) {
 
@@ -62,6 +69,14 @@ public class inventoryBean implements Serializable {
             isEditBasicField = false;
             cl = list.get(0);
         }
+
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form");
+
+    }
+    public void onRxNORMSelectInManage(SelectEvent event) {
+
+        searchAllManageInfo();
 
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
@@ -149,6 +164,26 @@ public class inventoryBean implements Serializable {
             context.update("form");
         }
     }
+    
+    
+    /*========= Manage Clinical Item ==========*/
+    public void searchAllManageInfo(){
+        searchClinicalItems();
+        searchOrderRequiredItems();
+        searchCloseExpDateItems();
+    }
+    public void searchClinicalItems(){
+        DbDAO dao = new DbDAO();
+        this.clinicalItems = dao.getClinicalItems(cl.rx);
+    }
+    public void searchOrderRequiredItems(){
+        DbDAO dao = new DbDAO();
+        this.orderRequiredClinicalItems = dao.getOrderRequiredClinicalItems(null);
+    }
+    public void searchCloseExpDateItems(){
+        DbDAO dao = new DbDAO();
+        this.closeExpDateClinicalItems = dao.getCloseExpiredClinicalItems(null);
+    }
 
     public void reset() {
         cl = new ClinicalInven();
@@ -159,6 +194,14 @@ public class inventoryBean implements Serializable {
         addTempQty = 0.0;
         addTempExpDate = null;
         addTempList = new ArrayList<>();
+        resetManage();
+    }
+    
+    public void resetManage(){
+        this.selectedInven = null;
+        this.clinicalItems = null;
+        this.orderRequiredClinicalItems = null;
+        this.closeExpDateClinicalItems = null;
     }
 
     public List<RxNORM> rxnormCompleteItem(String query) {
@@ -237,5 +280,39 @@ public class inventoryBean implements Serializable {
         }
         return a;
     }
+
+    public ClinicalInven getSelectedInven() {
+        return selectedInven;
+    }
+
+    public void setSelectedInven(ClinicalInven selectedInven) {
+        this.selectedInven = selectedInven;
+    }
+
+    public List<ClinicalInven> getClinicalItems() {
+        return clinicalItems;
+    }
+
+    public void setClinicalItems(List<ClinicalInven> clinicalItems) {
+        this.clinicalItems = clinicalItems;
+    }
+
+    public List<ClinicalInven> getOrderRequiredClinicalItems() {
+        return orderRequiredClinicalItems;
+    }
+
+    public void setOrderRequiredClinicalItems(List<ClinicalInven> orderRequiredClinicalItems) {
+        this.orderRequiredClinicalItems = orderRequiredClinicalItems;
+    }
+
+    public List<ClinicalInven> getCloseExpDateClinicalItems() {
+        return closeExpDateClinicalItems;
+    }
+
+    public void setCloseExpDateClinicalItems(List<ClinicalInven> closeExpDateClinicalItems) {
+        this.closeExpDateClinicalItems = closeExpDateClinicalItems;
+    }
+    
+    
 
 }
