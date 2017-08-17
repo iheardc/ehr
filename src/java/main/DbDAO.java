@@ -167,11 +167,16 @@ public class DbDAO {
             + "date=?,status=? "
             + "WHERE id=?";
     private static final String FIND_PATIENT_BILLING
-            = "SELECT  A.*, ifnull(B.total,0) as total "
-            + "FROM billing as A LEFT OUTER JOIN ( "
+            = "SELECT  A.*, ifnull(B.total,0) as total, (ifnull(B.total, 0) - ifnull(C.paid, 0)) as bal "
+            + "FROM billing as A "
+            + "LEFT OUTER JOIN ( "
             + "SELECT billing_SEQ, SUM(amount) as total "
             + "FROM charge_detail "
             + "GROUP BY billing_SEQ) as B on (B.billing_SEQ = A.SEQ) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT billing_SEQ, SUM(paid_amount) as paid "
+            + "FROM payment "
+            + "GROUP BY billing_SEQ) as C on (C.billing_SEQ = A.SEQ) "
             + "WHERE billed_to like ? and PIF is null "
             + "GROUP BY A.SEQ";
 
@@ -191,7 +196,7 @@ public class DbDAO {
         "TRF" // Transfer
     };
 
-    public static double getTodayMillisecondsWithOutTime() {
+    public static double getTodayMillisecondsWithoutTime() {
         Calendar now = Calendar.getInstance();
         return (double) ((long) getMilliseconds(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH)));
     }
@@ -495,7 +500,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Insur_procedure> findInsProcedure(String findId){
+    public List<Insur_procedure> findInsProcedure(String findId) {
         List<Insur_procedure> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -519,8 +524,8 @@ public class DbDAO {
         }
         return list;
     }
-    
-    public List<Insur_diagnosis> findInsDiagnosis(String findId){
+
+    public List<Insur_diagnosis> findInsDiagnosis(String findId) {
         List<Insur_diagnosis> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -544,8 +549,8 @@ public class DbDAO {
         }
         return list;
     }
-    
-    public List<Insur_investigations> findInsInvestigations(String findId){
+
+    public List<Insur_investigations> findInsInvestigations(String findId) {
         List<Insur_investigations> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -569,7 +574,7 @@ public class DbDAO {
         }
         return list;
     }
-    
+
     public List<Insur_medicine> findInsMedicine(String findId) {
         List<Insur_medicine> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -1416,6 +1421,7 @@ public class DbDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 PayInfo pa = new PayInfo();
+                System.out.println(rs.getDouble("bal"));
                 pa.buildInfo(rs);
                 list.add(pa);
             }
@@ -1425,6 +1431,54 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
         return list;
+    }
+
+    public static final String GET_PAY_DETAIL_INFO
+            = "SELECT * FROM charge_detail WHERE billing_SEQ=?";
+
+    public void getPaymentDetailInfo(PayInfo pi) {
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_PAY_DETAIL_INFO);
+            pstmt.setString(1, pi.SEQ);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                PayDetail pa = new PayDetail();
+                pa.buildInfo(rs);
+                pi.detail.add(pa);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
+
+    public static final String GET_PAYMENT_HISTORY
+            = "SELECT * FROM payment WHERE billing_SEQ=?";
+
+    public void getPaymentHistory(PayInfo pi) {
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_PAYMENT_HISTORY);
+            pstmt.setString(1, pi.SEQ);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Payment pa = new Payment();
+                pa.buildInfo(rs);
+                pi.history.add(pa);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
     }
 
     public void checkOutPatient(DynamicInfo d) {
@@ -1542,10 +1596,165 @@ public class DbDAO {
         }
         return result;
     }
-    
-// INVENTORY ----------------------------------------------------------------------
 
-    public static final String GET_SUPPLY 
+// INVENTORY ----------------------------------------------------------------------
+    public static final String ADD_NEW_CLINICAL_ITEM
+            = "INSERT INTO medicine_inventory(RxNORM_code, name, threshold, purchase_price, sell_price) VALUES(?,?,?,?,?)";
+
+    public boolean insertNewClinical(ClinicalInven cl) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ADD_NEW_CLINICAL_ITEM);
+
+            pstmt.setString(1, cl.rx.code);
+            pstmt.setString(2, cl.rx.description);
+            pstmt.setDouble(3, cl.threshold);
+            pstmt.setDouble(4, cl.purchasePrice);
+            pstmt.setDouble(5, cl.sellPrice);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+    public static final String UPDATE_CLINICAL_ITEM_BASIC_INFO
+            = "UPDATE medicine_inventory SET threshold=?, purchase_price=?, sell_price=? WHERE RxNORM_code=?";
+
+    public boolean updateClinicalBasicInfo(ClinicalInven cl) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(UPDATE_CLINICAL_ITEM_BASIC_INFO);
+
+            pstmt.setDouble(1, cl.threshold);
+            pstmt.setDouble(2, cl.purchasePrice);
+            pstmt.setDouble(3, cl.sellPrice);
+            pstmt.setString(4, cl.rx.code);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+    public static final String ADD_CLINICAL_ITEM
+            = "INSERT INTO inventory_detail(RxNORM_code, qty, used_qty, registered_date, expire_date) VALUES(?,?,'0',?,?)";
+
+    public boolean addClinicalItem(ClinicalInven cl, List<ClinicalInvenDetail> detail) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            for (ClinicalInvenDetail cid : detail) {
+                pstmt = connect.prepareStatement(ADD_CLINICAL_ITEM);
+
+                pstmt.setString(1, cl.rx.code);
+                pstmt.setDouble(2, cid.qty);
+                pstmt.setDouble(3, getTodayMillisecondsWithTime());
+                pstmt.setDouble(4, cid.expireDate);
+
+                pstmt.executeUpdate();
+            }
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+
+    public static final String GET_CLINICAL_ITEM
+            = "SELECT  A.*, ifnull(B.qty,0) as current_qty, ifnull(C.expired_qty, 0) as expired_qty "
+            + "FROM medicine_inventory as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT RxNORM_code, (SUM(qty) - SUM(used_qty)) as qty "
+            + "FROM inventory_detail "
+            + "WHERE qty > used_qty "
+            + "GROUP BY RxNORM_code) as B on (B.RxNORM_code = A.RxNORM_code) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT RxNORM_code, SUM(qty-used_qty) as expired_qty "
+            + "FROM inventory_detail "
+            + "WHERE qty > used_qty and expire_date < ? "
+            + "group by RxNORM_code "
+            + ") as C on (C.RXNORM_code = A.RxNORM_code) "
+            + "WHERE A.RxNORM_code like ? "
+            + "GROUP BY A.RxNORM_code";
+
+    public List<ClinicalInven> getClinicalItems(RxNORM rx) {
+        String code = "";
+        if (rx == null) {
+            code = "%";
+        } else {
+            code = rx.code;
+        }
+        List<ClinicalInven> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
+            pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
+            pstmt.setString(2, code);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ClinicalInven c = new ClinicalInven();
+                c.build(rs);
+                c.detail = getClinicalItemDetails(connect, c);
+                list.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! getClinicalItems" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public static final String GET_CLINICAL_ITEM_DETAIL
+            = "SELECT * FROM inventory_detail WHERE RxNORM_code = ? ORDER BY id DESC";
+
+    public List<ClinicalInvenDetail> getClinicalItemDetails(Connection connect, ClinicalInven cl) {
+        List<ClinicalInvenDetail> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connect.prepareStatement(GET_CLINICAL_ITEM_DETAIL);
+            pstmt.setString(1, cl.rx.code);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ClinicalInvenDetail c = new ClinicalInvenDetail();
+                c.build(rs);
+                list.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! getClinicalItemDetails" + e.toString());
+        }
+        return list;
+    }
+
+    public static final String GET_SUPPLY
             = "SELECT A.*, B.id, B.qty, B.used_qty, B.registered_date "
             + "FROM supply_inventory as A "
             + "LEFT OUTER JOIN ( "
@@ -1605,11 +1814,11 @@ public class DbDAO {
         }
         return list;
     }
-    
+
     // For auto-completion of Name text field in manage_supply_inventory.xhtml
-     private static final String GET_SUPPLY_NAMES
+    private static final String GET_SUPPLY_NAMES
             = "SELECT name FROM supply_inventory WHERE name like ? or concat_ws(' ',name) like ?";
-    
+
     public List<InventorySupply> getSupplyNames(String query) {
         if (query == null || "".equals(query)) {
             query = "%";

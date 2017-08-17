@@ -19,14 +19,15 @@ import java.util.Random;
  * @author tw
  */
 public class PayInfo {
-    
+
     String SEQ, billedTo, PIF;
     Double billingAmount, balance, date, PIFDate, total;
-    
+
     List<PayDetail> detail;
-    
-    public PayInfo(){
-        
+    List<Payment> history;
+
+    public PayInfo() {
+
     }
 
     public PayInfo(String SEQ, String billedTo, String PIF, Double billingAmount, Double balance, Double date, Double PIFDate) {
@@ -38,7 +39,6 @@ public class PayInfo {
         this.date = date;
         this.PIFDate = PIFDate;
     }
-    
 
     public ArrayList<String> getKeySet(ResultSet rs) {
         try {
@@ -58,7 +58,7 @@ public class PayInfo {
             return null;
         }
     }
-    
+
     public void buildInfo(ResultSet rs) {
         ArrayList<String> columnName = getKeySet(rs);
 //        Employee em = new Employee();
@@ -80,7 +80,7 @@ public class PayInfo {
                 if (columnName.contains(column)) {
                     this.billingAmount = rs.getDouble(column);
                 }
-                column = "balance";
+                column = "bal";
                 if (columnName.contains(column)) {
                     this.balance = rs.getDouble(column);
                 }
@@ -101,9 +101,25 @@ public class PayInfo {
             }
         }
     }
-    
-    public void getPaymentDetailInfo(){
-        
+
+    public void getPaymentDetailInfo() {
+
+        if (this.detail == null) {
+            detail = new ArrayList<>();
+            new DbDAO().getPaymentDetailInfo(this);
+        }
+
+        getPaymentHistory();
+
+    }
+
+    public void getPaymentHistory() {
+
+        if (this.history == null) {
+            history = new ArrayList<>();
+            new DbDAO().getPaymentHistory(this);
+        }
+
     }
 
     public String getSEQ() {
@@ -153,9 +169,9 @@ public class PayInfo {
     public void setDate(Double date) {
         this.date = date;
     }
-    
-    public String getDateString(){
-        return getDateString((long)((double)date));
+
+    public String getDateString() {
+        return getDateString((long) ((double) date));
     }
 
     public static String getDateString(long time) {
@@ -173,15 +189,19 @@ public class PayInfo {
     public void setPIFDate(Double PIFDate) {
         this.PIFDate = PIFDate;
     }
-    
-    public void setTotal(Double total){
+
+    public void setTotal(Double total) {
         this.total = total;
     }
-    
-    public Double getTotal(){
+
+    public Double getTotal() {
         return total;
 //        Random rand = new Random();
 //        return (double)rand.nextInt(300) + 50;
+    }
+    
+    public Double getTotalAmountDue(){
+        return Math.max(0, total-balance);
     }
 
     public List<PayDetail> getDetail() {
@@ -191,5 +211,53 @@ public class PayInfo {
     public void setDetail(List<PayDetail> detail) {
         this.detail = detail;
     }
+
+    public List<Payment> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<Payment> history) {
+        this.history = history;
+    }
+
+    public Double getAllAmount() {
+        Double a = 0.0;
+        if (detail != null) {
+            for (PayDetail pa : detail) {
+                a += pa.amount;
+            }
+        }
+        return a;
+    }
+
+    public Double getAllDiscount() {
+        Double a = 0.0;
+        if (detail != null) {
+            for (PayDetail pa : detail) {
+                a += pa.discountAmount;
+            }
+        }
+        return a;
+    }
+
+    public Double getAllAmountDue() {
+        Double a = 0.0;
+        if (detail != null) {
+            for (PayDetail pa : detail) {
+                a += pa.getAmountDue();
+            }
+        }
+        return a;
+    }
     
+    public Double getAllHistoryAmount(){
+        Double a = 0.0;
+        if (detail != null) {
+            for (Payment pa : history) {
+                a += pa.paidAmount;
+            }
+        }
+        return a;
+    }
+
 }

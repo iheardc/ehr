@@ -26,7 +26,6 @@ import org.primefaces.event.SelectEvent;
 public class paymentBean extends patientBean implements Serializable {
 
 //    Date date;
-
     private List<DynamicInfo> findDynaList;
     private DynamicInfo selectedD;
 
@@ -62,7 +61,6 @@ public class paymentBean extends patientBean implements Serializable {
 //        RequestContext.getCurrentInstance().update("form");
 ////        return "/userInfo/find_employee.xhtml?faces-redirect=true";
 //    }
-
 //    public void onDynaSelectRowSelect(SelectEvent event) {
 //        FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
 //        FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -79,7 +77,6 @@ public class paymentBean extends patientBean implements Serializable {
 //        RequestContext context = RequestContext.getCurrentInstance();
 //        context.update("form");
 //    }
-
 //    public void submitPayment() {
 //
 //        DbDAO dao = new DbDAO();
@@ -94,31 +91,32 @@ public class paymentBean extends patientBean implements Serializable {
 //        }
 //
 //    }
-    
     @Override
     public void onPatientSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
-        
+
         DbDAO dao = new DbDAO();
         payList = dao.getChargesDueList(selectedP);
-        
+
         selectPatient();
     }
-    
+
     @Override
     public void selectPatient() {
-        
+
         isShowMore = true;
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
-        
+
     }
-    
-    public void onPaymentSelectRowSelect(SelectEvent event){
-        
-        
-        
+
+    public void onPaymentSelectRowSelect(SelectEvent event) {
+
+        selectedPay.getPaymentDetailInfo();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form");
+
     }
 
     public void reset() {
@@ -154,7 +152,6 @@ public class paymentBean extends patientBean implements Serializable {
 //    public void setDate(Date date) {
 //        this.date = date;
 //    }
-
     public List<DynamicInfo> getFindDynaList() {
         return findDynaList;
     }

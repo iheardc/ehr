@@ -259,36 +259,38 @@
 
                                     <h3>Charge Detail</h3>
                                     <hr></hr>
-<!--                                        <p:dataTable var="de" value="#{paymentBean.selectedPay.date}" id="chargeDetailTable"
+                                    <p:dataTable var="de" value="#{paymentBean.selectedPay.detail}" id="chargeDetailTable"
                                                  resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
 
                                         <p:column headerText="#" style="width: 5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="RxNORM" style="width: 15%">
-                                            <h:outputText value="#{de.rx.code}" />
+                                        <p:column headerText="Charge Code" style="width: 30%">
+                                            <h:outputText value="#{de.chargeCode}" />
                                         </p:column>
-                                        <p:column headerText="Description" style="width: 40%">
-                                            <h:outputText value="#{de.rx.description}" />
+                                        <p:column headerText="Amount" style="width: 10%">
+                                            <h:outputText value="$ #{de.amount}" />
                                         </p:column>
-                                        <p:column headerText="SD" style="width: 5%">
-                                            <h:outputText value="#{de.singleDose}" />
+                                        <p:column headerText="Discount" style="width: 10%">
+                                            <h:outputText value="$ #{de.discountAmount}" />
                                         </p:column>
-                                        <p:column headerText="NDD" style="width: 5%">
-                                            <h:outputText value="#{de.numOfDailyDos}" />
+                                        <p:column headerText="Amount Due" style="width: 15%">
+                                            <h:outputText value="$ #{de.amountDue}" />
                                         </p:column>
-                                        <p:column headerText="TDD" style="width: 5%">
-                                            <h:outputText value="#{de.totalDosingDays}" />
+                                        <p:column headerText="Reason for Discount" style="width: 30%">
+                                            <h:outputText value="#{de.discountReason}" />
                                         </p:column>
-                                        <p:column headerText="Usage" style="width: 15%">
-                                            <h:outputText value="#{de.usage}" />
-                                        </p:column>
-                                        <p:column style="width:10%;text-align: center">
-                                            <p:commandButton icon="fa fa-remove" title="Delete" action="#{treatmentBean.removePrescriptionDetail(index)}">
-                                            </p:commandButton>
-                                        </p:column>
+                                        <p:columnGroup type="footer">
+                                            <p:row>
+                                                <p:column footerText="Totals: " style="text-align:right" colspan="2"/>
+                                                <p:column footerText="$ #{paymentBean.selectedPay.allAmount}" />
+                                                <p:column footerText="$ #{paymentBean.selectedPay.allDiscount}" />
+                                                <p:column footerText="$ #{paymentBean.selectedPay.allAmountDue}" />
+                                                <p:column footerText="" />
+                                            </p:row>
+                                        </p:columnGroup>
 
-                                    </p:dataTable>-->
+                                    </p:dataTable>
 
                                 </b:column>
 
@@ -296,12 +298,36 @@
 
                                     <h3>Payment History</h3>
                                     <hr></hr>
+                                    <p:dataTable var="h" value="#{paymentBean.selectedPay.history}" id="pHistoryTable"
+                                                 resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                        <p:column headerText="#" style="width: 5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="Date" style="width: 40%">
+                                            <h:outputText value="#{h.dateString}" />
+                                        </p:column>
+                                        <p:column headerText="Amount" style="width: 40%">
+                                            <h:outputText value="$ #{h.paidAmount}" />
+                                        </p:column>
+                                        <p:column headerText="Method" style="width: 15%">
+                                            <h:outputText value="#{h.method}" />
+                                        </p:column>
+                                        <p:columnGroup type="footer">
+                                            <p:row>
+                                                <p:column footerText="Totals: " style="text-align:right" colspan="2"/>
+                                                <p:column footerText="$ #{paymentBean.selectedPay.allHistoryAmount}" />
+                                                <p:column footerText="" />
+                                            </p:row>
+                                        </p:columnGroup>
+
+                                    </p:dataTable>
 
                                 </b:column>
 
                                 <b:column col-md="12" style="margin-top: 2em;">
 
-                                    <h1><p:outputLabel value="Total Amount Due: $#{paymentBean.selectedPay.total}"/></h1>
+                                    <h1><p:outputLabel value="Total Amount Due: $#{paymentBean.selectedPay.totalAmountDue}"/></h1>
 
                                 </b:column>
 

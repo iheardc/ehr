@@ -71,7 +71,7 @@ public class patientBean implements Serializable {
     
     public void findPatientWithDate(){ // for check-in
         DbDAO dao = new DbDAO();
-        findList = dao.findPatientWithDate(DbDAO.getTodayMillisecondsWithOutTime()+86400000, findId, findName, dateToDoubleString(findDoB));
+        findList = dao.findPatientWithDate(DbDAO.getTodayMillisecondsWithoutTime()+86400000, findId, findName, dateToDoubleString(findDoB));
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

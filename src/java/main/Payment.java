@@ -17,21 +17,22 @@ import java.util.Random;
  *
  * @author tw
  */
-public class PayDetail {
+public class Payment {
     
-    String id, chargeCode, discountReason;
-    Double amount, discountAmount;
+    String id, billingSEQ, receivedBy, method;
+    Double paidAmount, date;
     
-    public PayDetail(){
+    public Payment(){
         
     }
 
-    public PayDetail(String id, String chargeCode, String discountReason, Double amount, Double discountAmount) {
+    public Payment(String id, String billingSEQ, String receivedBy, String method, Double paidAmount, Double date) {
         this.id = id;
-        this.chargeCode = chargeCode;
-        this.discountReason = discountReason;
-        this.amount = amount;
-        this.discountAmount = discountAmount;
+        this.billingSEQ = billingSEQ;
+        this.receivedBy = receivedBy;
+        this.method = method;
+        this.paidAmount = paidAmount;
+        this.date = date;
     }
 
     public ArrayList<String> getKeySet(ResultSet rs) {
@@ -61,21 +62,25 @@ public class PayDetail {
                 if (columnName.contains(column)) {
                     this.id = rs.getString(column);
                 }
-                column = "charge_code";
+                column = "billing_SEQ";
                 if (columnName.contains(column)) {
-                    this.chargeCode = rs.getString(column);
+                    this.billingSEQ = rs.getString(column);
                 }
-                column = "discount_reason";
+                column = "received_by";
                 if (columnName.contains(column)) {
-                    this.discountReason = rs.getString(column);
+                    this.receivedBy = rs.getString(column);
                 }
-                column = "amount";
+                column = "method";
                 if (columnName.contains(column)) {
-                    this.amount = rs.getDouble(column);
+                    this.method = rs.getString(column);
                 }
-                column = "discount_amount";
+                column = "paid_amount";
                 if (columnName.contains(column)) {
-                    this.discountAmount = rs.getDouble(column);
+                    this.paidAmount = rs.getDouble(column);
+                }
+                column = "date";
+                if (columnName.contains(column)) {
+                    this.date = rs.getDouble(column);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -91,43 +96,58 @@ public class PayDetail {
         this.id = id;
     }
 
-    public String getChargeCode() {
-        return chargeCode;
+    public String getBillingSEQ() {
+        return billingSEQ;
     }
 
-    public void setChargeCode(String chargeCode) {
-        this.chargeCode = chargeCode;
+    public void setBillingSEQ(String billingSEQ) {
+        this.billingSEQ = billingSEQ;
     }
 
-    public String getDiscountReason() {
-        if(this.discountReason == null || this.discountReason.isEmpty()){
-            return "-";
-        }
-        return discountReason;
+    public String getReceivedBy() {
+        return receivedBy;
     }
 
-    public void setDiscountReason(String discountReason) {
-        this.discountReason = discountReason;
+    public void setReceivedBy(String receivedBy) {
+        this.receivedBy = receivedBy;
     }
 
-    public Double getAmount() {
-        return amount;
+    public String getMethod() {
+        return method;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
-    public Double getDiscountAmount() {
-        return discountAmount;
+    public Double getPaidAmount() {
+        return paidAmount;
     }
 
-    public void setDiscountAmount(Double discountAmount) {
-        this.discountAmount = discountAmount;
+    public void setPaidAmount(Double paidAmount) {
+        this.paidAmount = paidAmount;
     }
 
-    public Double getAmountDue(){
-        return Math.max(0,amount-discountAmount);
+    public Double getDate() {
+        return date;
     }
+
+    public void setDate(Double date) {
+        this.date = date;
+    }
+
+    public String getDateString() {
+        return getDateString((long) ((double) date));
+    }
+
+    public static String getDateString(long time) {
+
+        Date currentDate = new Date(time);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return df.format(currentDate);
+
+    }
+
+    
     
 }

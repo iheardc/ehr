@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
+
+        <b:container fluid="true" class="customContainer">
+            <h:form enctype="multipart/form-data" id="form">
+
+                <b:column col-md="12">
+
+                    <h1>New Clinical Item</h1>
+                    <hr></hr>
+
+                    <b:column col-md="12" class="form-horizontal">
+                        <div class="form-group">
+                            <p:outputLabel for="rxSearch" value="RxNORM" class="col-sm-2 control-label"></p:outputLabel>
+                            <b:column col-sm="10">
+                                <p:autoComplete multiple="false" id="rxSearch" placeholder="Enter RxNORM code or description"
+                                                value="#{inventoryBean.cl.rx}" converter="rxnormConverter"
+                                                completeMethod="#{inventoryBean.rxnormCompleteItem}" var="it"
+                                                itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                style="width: 100%;" >
+                                    <p:ajax event="itemSelect" update="form" listener="#{inventoryBean.onRxNORMSelect}"/>
+                                    <p:ajax event="itemUnselect" />
+                                    <p:column style="width: 20%;">
+                                        <h:outputText value="#{it.code}" />
+                                    </p:column>
+                                    <p:column style="width: 80%;">
+                                        <h:outputText value="#{it.description}" />
+                                    </p:column>
+                                </p:autoComplete>
+                            </b:column>
+                        </div>
+                    </b:column>
+
+                    <b:column col-md="12" class="form-horizontal">
+                        <div class="form-group">
+                            <p:outputLabel for="rxnorm" value="RxNORM Code" class="col-sm-2 control-label"></p:outputLabel>
+                            <b:column col-sm="10">
+                                <p:outputLabel value="#{inventoryBean.cl.rx.code}" id="rxnorm" class="control-label"/>
+                            </b:column>
+                        </div>
+                    </b:column>
+
+                    <b:column col-md="12" class="form-horizontal">
+                        <div class="form-group">
+                            <p:outputLabel for="description" value="Description" class="col-sm-2 control-label"></p:outputLabel>
+                            <b:column col-sm="10">
+                                <p:outputLabel value="#{inventoryBean.cl.rx.description}" id="description" class="control-label" />
+                            </b:column>
+                        </div>
+                    </b:column>
+                    
+                    <br/><br/>
+
+                    <b:column col-md="11" offset-md="1" rendered="#{inventoryBean.isShowBasicField or inventoryBean.isShowBasicFieldEdit}">
+
+                        <h2>Basic Information</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="threshold" value="Low Inventory Limit" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:spinner id="threshold" value="#{inventoryBean.cl.threshold}" min="0" disabled="#{not inventoryBean.isEditBasicField}"/>
+                                    <!--<p:inputText value="#{treatmentBean.presTempTDD}" id="preTDD" autocomplete="off" class="form-control" placeholder="" type="number"></p:inputText>-->
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="purchase_price" value="Purchase Price" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <!--<p:spinner id="purchase_price" value="#{inventoryBean.cl.purchasePrice}" min="0"/>-->
+                                    <p:inputText id="purchase_price" value="#{inventoryBean.cl.purchasePrice}" autocomplete="off" class="form-control" placeholder="Purchase Price" type="number" disabled="#{not inventoryBean.isEditBasicField}"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="sell_price" value="Sell Price" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:inputText id="sell_price" value="#{inventoryBean.cl.sellPrice}" autocomplete="off" class="form-control" placeholder="Sell Price" type="number" disabled="#{not inventoryBean.isEditBasicField}"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <!-- Search Button --> 
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <b:column col-md="10" offset-md="2">
+                                    <p:commandButton class="btn btn-primary" value="Submit" action="#{inventoryBean.createClinicalInventory()}" update="form" disabled="#{not inventoryBean.isEditBasicField}"/>
+                                    <p:commandButton class="btn btn-success" value="Edit" update="form" action="#{inventoryBean.editableBasciField()}" rendered="#{inventoryBean.isShowBasicFieldEdit}"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+                    <br/><br/><br/><br/>
+
+                    <!--<b:column col-md="11" offset-md="1">-->
+                    <b:column col-md="11" offset-md="1" rendered="#{inventoryBean.isShowMore or inventoryBean.isShowBasicFieldEdit}">
+
+                        <h3>Add Item</h3>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="add_qty" value="Quantity" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:spinner id="add_qty" value="#{inventoryBean.addTempQty}" min="0"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="add_exp_date" value="Expire Date" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <p:calendar id="add_exp_date" value="#{inventoryBean.addTempExpDate}" navigator="true" pattern="dd-MM-yyyy">
+                                        <!--<p:ajax event="dateSelect" listener="#{signupBean.onDateSelect}" />-->
+                                    </p:calendar>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <b:column col-md="6" offset-md="2">
+                                    <p:commandButton class="btn btn-success" value="Add" update="form" action="#{inventoryBean.addAddedList()}"/>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="11" offset-md="1" rendered="#{not empty inventoryBean.addTempList}">
+
+                            <h3>Added Item</h3>
+                            <hr></hr>
+
+                            <p:dataTable var="ci" value="#{inventoryBean.addTempList}" id="addedTable"
+                                         resizableColumns="true" tableStyleClass="table table-striped" rowIndexVar="index"
+                                         >
+
+                                <p:column headerText="#" style="width:15%">
+                                    <h:outputText value="#{index + 1}" />
+                                </p:column>
+                                <p:column headerText="Qty" style="width:40%">
+                                    <h:outputText value="#{ci.qty}" />
+                                </p:column>
+                                <p:column headerText="Expire Date" style="width:35%">
+                                    <h:outputText value="#{ci.expireDateString}" />
+                                </p:column>
+                                <p:column headerText="Delete" style="width:10%">
+                                    <p:commandButton icon="fa fa-remove" title="Delete" action="#{inventoryBean.removeAddedList(index)}"/>
+                                </p:column>
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column footerText="Totals: " style="text-align:right"/>
+                                        <p:column footerText="#{inventoryBean.allAddedQty}" />
+                                        <p:column footerText="" />
+                                        <p:column footerText="" />
+                                    </p:row>
+                                </p:columnGroup>
+
+                            </p:dataTable>
+
+                            <b:column col-md="12" class="form-horizontal">
+                                <div class="form-group">
+                                    <b:column col-md="6">
+                                        <p:commandButton class="btn btn-primary" value="Submit" update="form" action="#{inventoryBean.saveDetailInventory()}" immediate="true"/>
+                                    </b:column>
+                                </div>
+                            </b:column>
+
+                        </b:column>
+                        
+                        <br/><br/><br/><br/>
+
+                        <p:column rendered="#{inventoryBean.isShowBasicFieldEdit}">
+
+                            <h3>Item History</h3>
+                            <hr></hr>
+
+                            <p:dataTable var="cid" value="#{inventoryBean.cl.detail}" id="historyTable"
+                                         resizableColumns="true" tableStyleClass="table table-striped" rowIndexVar="index"
+                                         >
+
+                                <p:column headerText="#" style="width:10%">
+                                    <h:outputText value="#{index + 1}" />
+                                </p:column>
+                                <p:column headerText="Qty" style="width:20%">
+                                    <h:outputText value="#{cid.qty}" />
+                                </p:column>
+                                <p:column headerText="Used Qty" style="width:20%">
+                                    <h:outputText value="#{cid.usedQty}" />
+                                </p:column>
+                                <p:column headerText="Registered Date" style="width:30%">
+                                    <h:outputText value="#{cid.registeredDateString}" />
+                                </p:column>
+                                <p:column headerText="Expire Date" style="width:20%">
+                                    <h:outputText value="#{cid.expireDateString}" />
+                                </p:column>
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column footerText="Totals: " style="text-align:right"/>
+                                        <p:column footerText="#{inventoryBean.cl.allQty}" />
+                                        <p:column footerText="#{inventoryBean.cl.allUsedQty}" />
+                                        <p:column footerText="" />
+                                        <p:column footerText="" />
+                                    </p:row>
+                                </p:columnGroup>
+
+                            </p:dataTable>
+
+                        </p:column>
+
+                    </b:column>
+
+
+
+                    <b:column col-md="12" rendered="#{inventoryBean.isShowMore or inventoryBean.isShowBasicFieldEdit}">
+                        <hr></hr>
+<!--                        <p:commandButton class="btn btn-primary" process="@parent" value="Save" action="#{inventoryBean.saveItems()}" update="content" rendered="#{not empty inventoryBean.addTempList}"/>-->
+                        <p:commandButton class="btn btn-danger" value="Reset" action="#{inventoryBean.reset()}" update="form"/>
+                    </b:column>
+
+
+                </b:column>
+
+            </h:form>
+
+        </b:container>
+
+    </ui:composition>
+
+</html>
+
