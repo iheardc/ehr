@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -165,6 +166,8 @@ public class DbDAO {
             = "select * from hcpcs_code WHERE code like ? or description like ?";
     private static final String GET_SNOMEDCT_CODES
             = "select * from snomed_ct_code WHERE code like ? or description like ?";
+    private static final String GET_CHARGE_CODES
+            = "select * from charge_code WHERE code like ? or description like ? or name like ?";
     private static final String UPDATE_PATIENT_DAYNAMIC_STATUS
             = "UPDATE outpatient_dynamic SET "
             + "date=?,status=? "
@@ -1284,6 +1287,142 @@ public class DbDAO {
         return list;
     }
 
+    public List<ChargeCode> getChargeCodes(String query) {
+        if (query == null || "".equals(query)) {
+            query = "%";
+        } else {
+            query = "%" + query + "%";
+        }
+        List<ChargeCode> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_CHARGE_CODES);
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+            pstmt.setString(3, query);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ChargeCode c = new ChargeCode();
+                c.build(rs);
+                list.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public String getRandomString(int len) {
+        String tempStr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        String code = "";
+        Random rand = new Random();
+        for (int i = 0; i < len; i++) {
+            code += tempStr.charAt(rand.nextInt(tempStr.length()));
+        }
+        return code;
+    }
+
+    public static final String CHECK_CHARGE_CODE_DUPLICATE
+            = "SELECT count(code) as count FROM charge_code WHERE code=?";
+
+    public String generateNewChargeCode() {
+        String code = "";
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            boolean check = false;
+            while (!check) {
+                code = getRandomString(10);
+                pstmt = connect.prepareStatement(CHECK_CHARGE_CODE_DUPLICATE);
+                pstmt.setString(1, code);
+
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    check = "0".equals(rs.getString("count"));
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+            code = "";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return code;
+    }
+
+    public static final String INSERT_NEW_CHARGE_CODE
+            = "INSERT INTO charge_code(code, name, description, amount, registered_date) VALUES(?,?,?,?,?)";
+
+    public boolean insertNewChargeCode(ChargeCode c) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(INSERT_NEW_CHARGE_CODE);
+            pstmt.setString(1, c.code);
+            pstmt.setString(2, c.name);
+            pstmt.setString(3, c.description);
+            pstmt.setDouble(4, c.amount);
+            pstmt.setDouble(5, getTodayMillisecondsWithTime());
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    public static final String ADD_CHARGE_CODE
+            = "INSERT INTO charge_detail(billing_SEQ, charge_code, amount) VALUES( "
+            + "(SELECT SEQ FROM billing WHERE billed_to like ? order by SEQ DESC limit 0, 1),?,? "
+            + ")";
+
+    public boolean addChargeCodeToPatient(Patient p, List<ChargeCode> list) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+
+            int count = 0;
+            connect = DbConnectionPools.getPoolConnection();
+            for (ChargeCode cc : list) {
+
+                pstmt = connect.prepareStatement(ADD_CHARGE_CODE);
+                pstmt.setString(1, p.id);
+                pstmt.setString(2, cc.code);
+                pstmt.setDouble(3, cc.amount);
+
+                pstmt.executeUpdate();
+
+                count += 1;
+
+            }
+
+            if (count == list.size()) {
+                result = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERROR! addChargeCodeToPatient" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
     private static final String INSERT_PRESCRIPTION
             = "INSERT INTO prescription("
             + "doctor_id, patient_id, comment, status, date) "
@@ -1392,7 +1531,7 @@ public class DbDAO {
             result = true;
 
         } catch (Exception e) {
-            System.out.println("ERROR! Add Prescription Bill" + e.toString());
+            System.out.println("ERROR! completePrescription" + e.toString());
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
@@ -1410,7 +1549,7 @@ public class DbDAO {
             + "SELECT billing_SEQ, SUM(paid_amount) as paid "
             + "FROM payment "
             + "GROUP BY billing_SEQ) as C on (C.billing_SEQ = A.SEQ) "
-            + "WHERE billed_to like ? and PIF is null "
+            + "WHERE billed_to like ? and PIF is null and ifnull(B.total,0) > 0 "
             + "GROUP BY A.SEQ";
 
     public List<PayInfo> getChargesDueList(Patient p) {

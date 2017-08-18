@@ -67,6 +67,11 @@ public class treatmentBean implements Serializable {
     // Injection Order
     private List<HCPCS> injectionList, injectionTempList;
 
+    // Write Charge Code
+    List<ChargeCode> chargeCodeList, chargeCodeTempList;
+    String ccTempCode, ccTempName, ccTempDesc;
+    double ccTempAmount;
+
     public void findDynaPatient() {
 
         DbDAO dao = new DbDAO();
@@ -205,6 +210,32 @@ public class treatmentBean implements Serializable {
         menuBean.writeVisitSummary();
     }
 
+    public void generateNewChargeCode() {
+        DbDAO dao = new DbDAO();
+        ccTempCode = dao.generateNewChargeCode();
+        RequestContext.getCurrentInstance().update("form");
+    }
+
+    public void createNewChargeCode() {
+        ChargeCode addTempChargeCode = new ChargeCode(ccTempCode, ccTempName, ccTempDesc, ccTempAmount, 0.0);
+        List<FacesMessage> msgs = addTempChargeCode.checkInsertValidate();
+        if (msgs.size() <= 0) {
+            DbDAO dao = new DbDAO();
+            if (dao.insertNewChargeCode(addTempChargeCode)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully", "TODO"));
+                chargeCodeList.add(addTempChargeCode);
+                resetNewChargeCode();
+                RequestContext.getCurrentInstance().update("form");
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed", "TODO"));
+            }
+        } else {
+            for (FacesMessage msg : msgs) {
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+        }
+    }
+
     public String viewFile(String file) throws Exception {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message = new FacesMessage("View", file);
@@ -282,8 +313,18 @@ public class treatmentBean implements Serializable {
         visitSummary = null;
         injectionList = new ArrayList<>();
         injectionTempList = new ArrayList<>();
+        chargeCodeList = new ArrayList<>();
+        chargeCodeTempList = new ArrayList<>();
+        resetNewChargeCode();
         prescription = new Prescription();
         resetPrescriptionItem();
+    }
+
+    public void resetNewChargeCode() {
+        ccTempCode = null;
+        ccTempName = null;
+        ccTempDesc = null;
+        ccTempAmount = 0.0;
     }
 
     public void resetPrescriptionItem() {
@@ -346,6 +387,14 @@ public class treatmentBean implements Serializable {
                 return;
             }
         }
+        
+        if(chargeCodeList.size()>0){
+            if(dao.addChargeCodeToPatient(selectedD.p, chargeCodeList)){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Charge code was successfully reflected."));
+            }else{
+                return;
+            }
+        }
 
         if (dao.changePatientDynamicStatus(selectedD.id, DbDAO.DYNAMIN_DATA[5]).length() > 0) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "Please try again."));
@@ -377,15 +426,35 @@ public class treatmentBean implements Serializable {
         return HCPCSService.getFilteredList(query);
     }
 
+    public List<ChargeCode> chargeCodeCompleteItem(String query) {
+        if (chargeCodeList == null) {
+            chargeCodeList = new ArrayList<>();
+        }
+        query = query.toLowerCase();
+        return ChargeCodeService.getFilteredList(query);
+    }
+
     public void onInjectionItemSelect(SelectEvent event) {
         injectionList.addAll(injectionTempList);
         injectionTempList.clear();
         RequestContext.getCurrentInstance().update("form");
     }
 
+    public void onChargeCodeItemSelect(SelectEvent event) {
+        chargeCodeList.addAll(chargeCodeTempList);
+        chargeCodeTempList.clear();
+        RequestContext.getCurrentInstance().update("form");
+    }
+
     public void removeInjection(int index) {
         if (index < injectionList.size()) {
             injectionList.remove(index);
+        }
+    }
+
+    public void removeChargeCode(int index) {
+        if (index < chargeCodeList.size()) {
+            chargeCodeList.remove(index);
         }
     }
 
@@ -593,6 +662,54 @@ public class treatmentBean implements Serializable {
 
     public void setInjectionTempList(List<HCPCS> injectionTempList) {
         this.injectionTempList = injectionTempList;
+    }
+
+    public List<ChargeCode> getChargeCodeList() {
+        return chargeCodeList;
+    }
+
+    public void setChargeCodeList(List<ChargeCode> chargeCodeList) {
+        this.chargeCodeList = chargeCodeList;
+    }
+
+    public List<ChargeCode> getChargeCodeTempList() {
+        return chargeCodeTempList;
+    }
+
+    public void setChargeCodeTempList(List<ChargeCode> chargeCodeTempList) {
+        this.chargeCodeTempList = chargeCodeTempList;
+    }
+
+    public String getCcTempCode() {
+        return ccTempCode;
+    }
+
+    public void setCcTempCode(String ccTempCode) {
+        this.ccTempCode = ccTempCode;
+    }
+
+    public String getCcTempName() {
+        return ccTempName;
+    }
+
+    public void setCcTempName(String ccTempName) {
+        this.ccTempName = ccTempName;
+    }
+
+    public String getCcTempDesc() {
+        return ccTempDesc;
+    }
+
+    public void setCcTempDesc(String ccTempDesc) {
+        this.ccTempDesc = ccTempDesc;
+    }
+
+    public double getCcTempAmount() {
+        return ccTempAmount;
+    }
+
+    public void setCcTempAmount(double ccTempAmount) {
+        this.ccTempAmount = ccTempAmount;
     }
 
     public Prescription getPrescription() {

@@ -114,16 +114,16 @@
                         </p:submenu>
                         <p:menuitem value="Write Charge Code"  icon="fa fa-edit" update="content"/>
                     </p:submenu>
-                    <p:submenu label="Payment"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/administrator/accountant')}" >
+                    <p:submenu label="Payment"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/administrator/accountant')}" >
                         <p:menuitem value="View Patient Bill"  icon="fa fa-info" action="#{menuBean.viewPatientBill()}" update="content"/>
                         <p:menuitem value="Payment History"  icon="fa fa-edit" update="content"/>
                     </p:submenu>
-                    <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                        <p:submenu label="Clinical" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                            <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
-                            <p:menuitem value="Add"  icon="fa fa-edit" update="content" action="#{menuBean.addClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
+                    <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/radiologist/lab technician')}">
+                        <p:submenu label="Clinical" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/radiologist/lab technician')}">
+                            <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageClinicalInventory()}"/>
+                            <p:menuitem value="Add"  icon="fa fa-edit" update="content" action="#{menuBean.addClinicalInventory()}"/>
                         </p:submenu>
-                        <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
+                        <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/radiologist/lab technician')}">
                             <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageSupplyInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                             <p:menuitem value="Create"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         </p:submenu>
@@ -243,16 +243,16 @@
                     </p:submenu>
                     <p:menuitem value="Write Charge Code"  icon="fa fa-edit" update="content"/>
                 </p:submenu>
-                <p:submenu label="Payment"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/administrator/accountant')}" >
+                <p:submenu label="Payment"  expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/administrator/accountant')}" >
                     <p:menuitem value="View Patient Bill"  icon="fa fa-info" action="#{menuBean.viewPatientBill()}" update="content"/>
                     <p:menuitem value="Payment History"  icon="fa fa-edit" update="content"/>
                 </p:submenu>
-                <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                    <p:submenu label="Clinical" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
-                        <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
-                        <p:menuitem value="Add"  icon="fa fa-edit" update="content" action="#{menuBean.addClinicalInventory()}" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
+                <p:submenu label="Inventory" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/radiologist/lab technician')}">
+                    <p:submenu label="Clinical" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/radiologist/lab technician')}">
+                        <p:menuitem value="Manage"  icon="fa fa-info" update="content" action="#{menuBean.manageClinicalInventory()}"/>
+                        <p:menuitem value="Add"  icon="fa fa-edit" update="content" action="#{menuBean.addClinicalInventory()}"/>
                     </p:submenu>
-                    <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/phamacist/radiologist/lab technician')}">
+                    <p:submenu label="Regular" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/pharmacist/radiologist/lab technician')}">
                         <p:menuitem value="Manage"  icon="fa fa-info" action="#{menuBean.manageSupplyInventory()}" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                         <p:menuitem value="Create"  icon="fa fa-edit" update="content" rendered="#{menuBean.isRendered('doctor/nurse')}"/>
                     </p:submenu>
