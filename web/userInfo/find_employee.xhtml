@@ -112,19 +112,19 @@
                         <p:dataTable var="em" value="#{employeeBean.findList}" id="resultTable" paginator="true" rows="10"
                                      resizableColumns="true" tableStyleClass="table table-striped">
 
-                            <p:column headerText="Employee Id" style="width:10%;">
+                            <p:column headerText="Employee Id" style="width:10%;" sortBy="#{em.id}">
                                 <h:outputText value="#{em.id}" />
                             </p:column>
-                            <p:column headerText="Name">
-                                <h:outputText value="#{em.name}" style="width:20%;" />
+                            <p:column headerText="Name" style="width:20%;"  sortBy="#{em.name}">
+                                <h:outputText value="#{em.name}"/>
                             </p:column>
-                            <p:column headerText="Email" style="width:20%;">
+                            <p:column headerText="Email" style="width:20%;" sortBy="#{em.email}">
                                 <h:outputText value="#{em.email}" />
                             </p:column>
-                            <p:column headerText="Role" style="width:10%;">
+                            <p:column headerText="Role" style="width:10%;" sortBy="#{em.role}">
                                 <h:outputText value="#{em.role}" />
                             </p:column>
-                            <p:column headerText="Specialty" style="width:20%;">
+                            <p:column headerText="Specialty" style="width:20%;" sortBy="#{em.specialty}">
                                 <h:outputText value="#{em.specialty}" />
                             </p:column>
                             <p:column style="width:10%; text-align: center" headerText="Detail">

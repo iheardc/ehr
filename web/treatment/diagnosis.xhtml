@@ -83,13 +83,13 @@
                                         Waiting for Doctor
                                     </f:facet>
 
-                                    <p:column headerText="Patient Name" style="width: 30%">
+                                    <p:column headerText="Patient Name" style="width: 30%" sortBy="#{d.p.name}">
                                         <h:outputText value="#{d.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Nurse Name" style="width: 30%">
+                                    <p:column headerText="Nurse Name" style="width: 30%" sortBy="#{d.n.name}">
                                         <h:outputText value="#{d.n.name}" />
                                     </p:column>
-                                    <p:column headerText="Date" style="width: 40%">
+                                    <p:column headerText="Date" style="width: 40%" sortBy="#{d.date}">
                                         <h:outputText value="#{d.dateString}" />
                                     </p:column>
                                     <p:columnGroup type="footer">
@@ -115,13 +115,13 @@
                                         Waiting for Doctor with Result
                                     </f:facet>
 
-                                    <p:column headerText="Patient Name" style="width: 30%">
+                                    <p:column headerText="Patient Name" style="width: 30%" sortBy="#{d.p.name}">
                                         <h:outputText value="#{d.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Nurse Name" style="width: 30%">
+                                    <p:column headerText="Nurse Name" style="width: 30%" sortBy="#{d.n.name}">
                                         <h:outputText value="#{d.n.name}" />
                                     </p:column>
-                                    <p:column headerText="Date" style="width: 40%">
+                                    <p:column headerText="Date" style="width: 40%" sortBy="#{d.date}">
                                         <h:outputText value="#{d.dateString}" />
                                     </p:column>
                                     <p:columnGroup type="footer">
@@ -177,10 +177,10 @@
                                         <p:column headerText="#" style="width: 5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="SNOMED-CT" style="width: 25%">
+                                        <p:column headerText="SNOMED-CT" style="width: 25%" sortBy="#{s.code}">
                                             <h:outputText value="#{s.code}" />
                                         </p:column>
-                                        <p:column headerText="Description" style="width: 70%">
+                                        <p:column headerText="Description" style="width: 70%" sortBy="#{s.description}">
                                             <h:outputText value="#{s.description}" />
                                         </p:column>
 
@@ -218,16 +218,16 @@
                                         <p:column headerText="#" style="width: 5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="Doctor Name" style="width: 20%">
+                                        <p:column headerText="Doctor Name" style="width: 20%" sortBy="#{vh.doc.name}">
                                             <h:outputText value="#{vh.doc.name}" />
                                         </p:column>
-                                        <p:column headerText="Cheif Complaint" style="width: 35%">
+                                        <p:column headerText="Cheif Complaint" style="width: 35%" sortBy="#{vh.cheifComplaintStr}">
                                             <h:outputText value="#{vh.cheifComplaintStr}" />
                                         </p:column>
-                                        <p:column headerText="Injection" style="width: 10%">
+                                        <p:column headerText="Injection" style="width: 10%" sortBy="#{vh.injectionStr}">
                                             <h:outputText value="#{vh.injectionStr}" />
                                         </p:column>
-                                        <p:column headerText="Date" style="width: 20%">
+                                        <p:column headerText="Date" style="width: 20%" sortBy="#{vh.date}">
                                             <h:outputText value="#{vh.dateString}" />
                                         </p:column>
                                         <p:column style="width:10%; text-align: center" headerText="Detail">
@@ -426,22 +426,22 @@
                             <p:dataTable var="vh" value="#{treatmentBean.selectedD.previousHistory}" id="vitalHistoryTable"  paginator="true" rows="10"
                                          resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
 
-                                <p:column headerText="Date" style="width: 20%">
+                                <p:column headerText="Date" style="width: 20%" sortBy="#{vh.date}">
                                     <h:outputText value="#{vh.dateString}" />
                                 </p:column>
-                                <p:column headerText="Nurse Name" style="width: 20%">
+                                <p:column headerText="Nurse Name" style="width: 20%" sortBy="#{vh.n.name}">
                                     <h:outputText value="#{vh.n.name}" />
                                 </p:column>
-                                <p:column headerText="Temperature" style="width: 15%">
+                                <p:column headerText="Temperature" style="width: 15%" sortBy="#{vh.temperature}">
                                     <h:outputText value="#{vh.temperature}" />
                                 </p:column>
-                                <p:column headerText="Blood Pressure" style="width: 25%">
+                                <p:column headerText="Blood Pressure" style="width: 25%" sortBy="#{vh.bloodPressure}">
                                     <h:outputText value="#{vh.bloodPressure}" />
                                 </p:column>
-                                <p:column headerText="SPO2" style="width: 10%">
+                                <p:column headerText="SPO2" style="width: 10%" sortBy="#{vh.spo2}">
                                     <h:outputText value="#{vh.spo2}" />
                                 </p:column>
-                                <p:column headerText="Weight" style="width: 10%">
+                                <p:column headerText="Weight" style="width: 10%" sortBy="#{vh.weight}">
                                     <h:outputText value="#{vh.weight}" />
                                 </p:column>
 

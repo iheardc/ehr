@@ -79,19 +79,19 @@
                                         Waiting for Nurse
                                     </f:facet>
 
-                                    <p:column headerText="Patient ID" style="width: 10%">
+                                    <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                         <h:outputText value="#{d.p.id}" />
                                     </p:column>
-                                    <p:column headerText="Name" style="width: 30%">
+                                    <p:column headerText="Name" style="width: 30%" sortBy="#{d.p.name}">
                                         <h:outputText value="#{d.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Date of Birth" style="width: 25%">
+                                    <p:column headerText="Date of Birth" style="width: 25%" sortBy="#{d.p.dob}">
                                         <h:outputText value="#{d.p.dobString}" />
                                     </p:column>
-                                    <p:column headerText="Gender" style="width: 10%">
+                                    <p:column headerText="Gender" style="width: 10%" sortBy="#{d.p.gender}">
                                         <h:outputText value="#{d.p.gender}" />
                                     </p:column>
-                                    <p:column headerText="Date" style="width: 25%">
+                                    <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                         <h:outputText value="#{d.dateString}" />
                                     </p:column>
                                     <p:columnGroup type="footer">
@@ -129,19 +129,19 @@
                                         Waiting for Nurse(Injection)
                                     </f:facet>
 
-                                    <p:column headerText="Patient ID" style="width:10%">
+                                    <p:column headerText="Patient ID" style="width:10%" sortBy="#{d.p.id}">
                                         <h:outputText value="#{d.p.id}" />
                                     </p:column>
-                                    <p:column headerText="Patient Name" style="width:30%">
+                                    <p:column headerText="Patient Name" style="width:30%" sortBy="#{d.p.name}">
                                         <h:outputText value="#{d.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Doctor Name" style="width:20%">
+                                    <p:column headerText="Doctor Name" style="width:20%" sortBy="#{d.doc.name}">
                                         <h:outputText value="#{d.doc.name}" />
                                     </p:column>
-                                    <p:column headerText="Nurse Name" style="width:20%">
+                                    <p:column headerText="Nurse Name" style="width:20%" sortBy="#{d.n.name}">
                                         <h:outputText value="#{d.n.name}" />
                                     </p:column>
-                                    <p:column headerText="Date" style="width:20%">
+                                    <p:column headerText="Date" style="width:20%" sortBy="#{d.date}">
                                         <h:outputText value="#{d.dateString}" />
                                     </p:column>
                                     <p:columnGroup type="footer">
@@ -336,13 +336,13 @@
                                                          selection="#{triageBean.selectedDoc}" rowKey="#{doc.id}">
                                                 <p:ajax event="rowSelect" listener="#{triageBean.onDoctorSelectRowSelect}" />
 
-                                                <p:column headerText="Doctor ID" style="width:15%;">
+                                                <p:column headerText="Doctor ID" style="width:15%;" sortBy="#{doc.id}">
                                                     <h:outputText value="#{doc.id}" />
                                                 </p:column>
-                                                <p:column headerText="Name" style="width:30%;">
+                                                <p:column headerText="Name" style="width:30%;" sortBy="#{doc.name}">
                                                     <h:outputText value="#{doc.name}" />
                                                 </p:column>
-                                                <p:column headerText="Specialty" style="width:55%;">
+                                                <p:column headerText="Specialty" style="width:55%;" sortBy="#{doc.specialty}">
                                                     <h:outputText value="#{doc.specialty}" />
                                                 </p:column>
                                                 <p:columnGroup type="footer">

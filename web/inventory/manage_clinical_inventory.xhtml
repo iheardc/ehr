@@ -58,25 +58,25 @@
                             <p:column headerText="#" style="width:5%">
                                 <h:outputText value="#{index + 1}" />
                             </p:column>
-                            <p:column headerText="RxNORM" style="width:11%">
+                            <p:column headerText="RxNORM" style="width:11%" sortBy="#{ci.rx.code}">
                                 <h:outputText value="#{ci.rx.code}" />
                             </p:column>
-                            <p:column headerText="Description" style="width:30%">
+                            <p:column headerText="Description" style="width:30%" sortBy="#{ci.rx.description}">
                                 <h:outputText value="#{ci.rx.description}" />
                             </p:column>
-                            <p:column headerText="Threshold" style="width:10%">
+                            <p:column headerText="Threshold" style="width:10%" sortBy="#{ci.threshold}">
                                 <h:outputText value="#{ci.threshold}" />
                             </p:column>
-                            <p:column headerText="P.P" style="width:7%">
+                            <p:column headerText="P.P" style="width:7%" sortBy="#{ci.purchasePrice}">
                                 <h:outputText value="$ #{ci.purchasePrice}" />
                             </p:column>
-                            <p:column headerText="S.P" style="width:7%">
+                            <p:column headerText="S.P" style="width:7%" sortBy="#{ci.sellPrice}">
                                 <h:outputText value="$ #{ci.sellPrice}" />
                             </p:column>
-                            <p:column headerText="Current Qty" style="width:15%">
+                            <p:column headerText="Current Qty" style="width:15%" sortBy="#{ci.currentQty}">
                                 <h:outputText value="#{ci.currentQty}" />
                             </p:column>
-                            <p:column headerText="Expired Qty" style="width:15%">
+                            <p:column headerText="Expired Qty" style="width:15%" sortBy="#{ci.expiredQty}">
                                 <h:outputText value="#{ci.expiredQty}" />
                             </p:column>
 
@@ -86,7 +86,7 @@
 
                     <b:column col-md="11" offset-md="1" style="margin-top: 1em">
 
-                        <h2>Order required</h2>
+                        <h2>Order Required</h2>
                         <hr/>
                         
                         <p:dataTable var="ci" value="#{inventoryBean.orderRequiredClinicalItems}" id="orciTable" paginator="true" rows="10"
@@ -99,25 +99,25 @@
                             <p:column headerText="#" style="width:5%">
                                 <h:outputText value="#{index + 1}" />
                             </p:column>
-                            <p:column headerText="RxNORM" style="width:11%">
+                            <p:column headerText="RxNORM" style="width:11%"  sortBy="#{ci.rx.code}">
                                 <h:outputText value="#{ci.rx.code}" />
                             </p:column>
-                            <p:column headerText="Description" style="width:30%">
+                            <p:column headerText="Description" style="width:30%" sortBy="#{ci.rx.description}">
                                 <h:outputText value="#{ci.rx.description}" />
                             </p:column>
-                            <p:column headerText="Threshold" style="width:10%">
+                            <p:column headerText="Threshold" style="width:10%" sortBy="#{ci.threshold}">
                                 <h:outputText value="#{ci.threshold}" />
                             </p:column>
-                            <p:column headerText="P.P" style="width:7%">
+                            <p:column headerText="P.P" style="width:7%" sortBy="#{ci.purchasePrice}">
                                 <h:outputText value="$ #{ci.purchasePrice}" />
                             </p:column>
-                            <p:column headerText="S.P" style="width:7%">
+                            <p:column headerText="S.P" style="width:7%" sortBy="#{ci.sellPrice}">
                                 <h:outputText value="$ #{ci.sellPrice}" />
                             </p:column>
-                            <p:column headerText="Current Qty" style="width:15%">
+                            <p:column headerText="Current Qty" style="width:15%" sortBy="#{ci.currentQty}">
                                 <h:outputText value="#{ci.currentQty}" />
                             </p:column>
-                            <p:column headerText="Expired Qty" style="width:15%">
+                            <p:column headerText="Expired Qty" style="width:15%" sortBy="#{ci.expiredQty}">
                                 <h:outputText value="#{ci.expiredQty}" />
                             </p:column>
 
@@ -127,7 +127,7 @@
 
                     <b:column col-md="11" offset-md="1" style="margin-top: 1em">
 
-                        <h2>Close to the expiration date</h2>
+                        <h2>Close to the Expiration Date</h2>
                         <hr/>
                         
                         <p:dataTable var="ci" value="#{inventoryBean.closeExpDateClinicalItems}" id="cedciTable" paginator="true" rows="10"
@@ -140,25 +140,25 @@
                             <p:column headerText="#" style="width:5%">
                                 <h:outputText value="#{index + 1}" />
                             </p:column>
-                            <p:column headerText="RxNORM" style="width:11%">
+                            <p:column headerText="RxNORM" style="width:11%" sortBy="#{ci.rx.code}">
                                 <h:outputText value="#{ci.rx.code}" />
                             </p:column>
-                            <p:column headerText="Description" style="width:30%">
+                            <p:column headerText="Description" style="width:30%" sortBy="#{ci.rx.description}">
                                 <h:outputText value="#{ci.rx.description}" />
                             </p:column>
-                            <p:column headerText="Threshold" style="width:10%">
+                            <p:column headerText="Threshold" style="width:10%" sortBy="#{ci.threshold}">
                                 <h:outputText value="#{ci.threshold}" />
                             </p:column>
-                            <p:column headerText="P.P" style="width:7%">
+                            <p:column headerText="P.P" style="width:7%" sortBy="#{ci.purchasePrice}">
                                 <h:outputText value="$ #{ci.purchasePrice}" />
                             </p:column>
-                            <p:column headerText="S.P" style="width:7%">
+                            <p:column headerText="S.P" style="width:7%" sortBy="#{ci.sellPrice}">
                                 <h:outputText value="$ #{ci.sellPrice}" />
                             </p:column>
-                            <p:column headerText="Current Qty" style="width:15%">
+                            <p:column headerText="Current Qty" style="width:15%" sortBy="#{ci.currentQty}">
                                 <h:outputText value="#{ci.currentQty}" />
                             </p:column>
-                            <p:column headerText="Expired Qty" style="width:15%">
+                            <p:column headerText="Expired Qty" style="width:15%" sortBy="#{ci.expiredQty}">
                                 <h:outputText value="#{ci.expiredQty}" />
                             </p:column>
 

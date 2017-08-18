@@ -153,10 +153,10 @@
                                 <p:column headerText="#" style="width:15%">
                                     <h:outputText value="#{index + 1}" />
                                 </p:column>
-                                <p:column headerText="Qty" style="width:40%">
+                                <p:column headerText="Qty" style="width:40%" sortBy="#{ci.qty}">
                                     <h:outputText value="#{ci.qty}" />
                                 </p:column>
-                                <p:column headerText="Expire Date" style="width:35%">
+                                <p:column headerText="Expire Date" style="width:35%" sortBy="#{ci.expireDate}">
                                     <h:outputText value="#{ci.expireDateString}" />
                                 </p:column>
                                 <p:column headerText="Delete" style="width:10%">
@@ -195,16 +195,16 @@
                                 <p:column headerText="#" style="width:10%">
                                     <h:outputText value="#{index + 1}" />
                                 </p:column>
-                                <p:column headerText="Qty" style="width:20%">
+                                <p:column headerText="Qty" style="width:20%" sortBy="#{cid.qty}">
                                     <h:outputText value="#{cid.qty}" />
                                 </p:column>
-                                <p:column headerText="Used Qty" style="width:20%">
+                                <p:column headerText="Used Qty" style="width:20%" sortBy="#{cid.usedQty}">
                                     <h:outputText value="#{cid.usedQty}" />
                                 </p:column>
-                                <p:column headerText="Registered Date" style="width:30%">
+                                <p:column headerText="Registered Date" style="width:30%" sortBy="#{cid.registeredDate}">
                                     <h:outputText value="#{cid.registeredDateString}" />
                                 </p:column>
-                                <p:column headerText="Expire Date" style="width:20%">
+                                <p:column headerText="Expire Date" style="width:20%" sortBy="#{cid.expireDate}">
                                     <h:outputText value="#{cid.expireDateString}" />
                                 </p:column>
                                 <p:columnGroup type="footer">

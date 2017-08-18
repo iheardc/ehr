@@ -44,16 +44,16 @@
 
                                     <p:ajax event="rowSelect" listener="#{prescriptionBean.onAllPrescriptionRowSelect}" oncomplete="PF('dDialog').show()" />
 
-                                    <p:column headerText="Patient Name" style="width:20%">
+                                    <p:column headerText="Patient Name" style="width:20%" sortBy="#{p.p.name}">
                                         <h:outputText value="#{p.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Comment" style="width:30%">
+                                    <p:column headerText="Comment" style="width:30%" sortBy="#{p.comment}">
                                         <h:outputText value="#{p.comment}" />
                                     </p:column>
-                                    <p:column headerText="Date" style="width:30%">
+                                    <p:column headerText="Date" style="width:30%" sortBy="#{p.date}">
                                         <h:outputText value="#{p.dateString}" />
                                     </p:column>
-                                    <p:column headerText="Status" style="width:10%" >
+                                    <p:column headerText="Status" style="width:10%">
                                         <p:graphicImage value="#{p.statusImg}" style="height:1.5em;"/>
                                     </p:column>
                                     <p:column headerText="Detail" style="width:10%">
@@ -84,13 +84,13 @@
 
                                     <p:ajax event="rowSelect" listener="#{prescriptionBean.onMyPrescriptionRowSelect}" oncomplete="PF('pdDialog').show()" />
 
-                                    <p:column headerText="Patient Name" style="width:20%">
+                                    <p:column headerText="Patient Name" style="width:20%" sortBy="#{p.p.name}">
                                         <h:outputText value="#{p.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Date" style="width:30%">
+                                    <p:column headerText="Date" style="width:30%" sortBy="#{p.date}">
                                         <h:outputText value="#{p.dateString}" />
                                     </p:column>
-                                    <p:column headerText="Total" style="width:10%;">
+                                    <p:column headerText="Total" style="width:10%;" sortBy="#{p.total}">
                                         <h:outputText value="$ #{p.total}" />
                                     </p:column>
                                     <p:column headerText="Detail" style="width:10%">
@@ -152,25 +152,25 @@
                                         <p:column headerText="#" style="width:5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="RxNORM" style="width:10%">
+                                        <p:column headerText="RxNORM" style="width:10%" sortBy="#{p.rx.code}">
                                             <h:outputText value="#{p.rx.code}" />
                                         </p:column>
-                                        <p:column headerText="Description" style="width:30%">
+                                        <p:column headerText="Description" style="width:30%" sortBy="#{p.rx.description}">
                                             <h:outputText value="#{p.rx.description}" />
                                         </p:column>
-                                        <p:column headerText="SD" style="width:5%">
+                                        <p:column headerText="SD" style="width:5%" sortBy="#{p.singleDose}">
                                             <h:outputText value="#{p.singleDose}" />
                                         </p:column>
-                                        <p:column headerText="NDD" style="width:5%">
+                                        <p:column headerText="NDD" style="width:5%" sortBy="#{p.numOfDailyDos}">
                                             <h:outputText value="#{p.numOfDailyDos}" />
                                         </p:column>
-                                        <p:column headerText="TDD" style="width:5%">
+                                        <p:column headerText="TDD" style="width:5%" sortBy="#{p.totalDosingDays}">
                                             <h:outputText value="#{p.totalDosingDays}" />
                                         </p:column>
                                         <p:column headerText="Current / Remaining" style="width:30%">
                                             <h:outputText value="#{p.currentQty} / #{p.remainQty}" />
                                         </p:column>
-                                        <p:column headerText="Availability" style="width:10%">
+                                        <p:column headerText="Availability" style="width:10%" sortBy="#{p.available}">
                                             <p:graphicImage value="#{p.statusImg}" style="height:1.5em;"/>
                                         </p:column>
                                     </p:dataTable>
@@ -227,25 +227,25 @@
                                         <p:column headerText="#" style="width:5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="RxNORM" style="width:10%">
+                                        <p:column headerText="RxNORM" style="width:10%" sortBy="#{p.rx.code}">
                                             <h:outputText value="#{p.rx.code}" />
                                         </p:column>
-                                        <p:column headerText="Description" style="width:30%">
+                                        <p:column headerText="Description" style="width:30%" sortBy="#{p.rx.description}">
                                             <h:outputText value="#{p.rx.description}" />
                                         </p:column>
-                                        <p:column headerText="SD" style="width:5%">
+                                        <p:column headerText="SD" style="width:5%" sortBy="#{p.singleDose}">
                                             <h:outputText value="#{p.singleDose}" />
                                         </p:column>
-                                        <p:column headerText="NDD" style="width:5%">
+                                        <p:column headerText="NDD" style="width:5%" sortBy="#{p.numOfDailyDos}">
                                             <h:outputText value="#{p.numOfDailyDos}" />
                                         </p:column>
-                                        <p:column headerText="TDD" style="width:5%">
+                                        <p:column headerText="TDD" style="width:5%" sortBy="#{p.totalDosingDays}">
                                             <h:outputText value="#{p.totalDosingDays}" />
                                         </p:column>
-                                        <p:column headerText="Usage" style="width:30%">
+                                        <p:column headerText="Usage" style="width:30%" sortBy="#{p.usage}">
                                             <h:outputText value="#{p.usage}" />
                                         </p:column>
-                                        <p:column headerText="Coast" style="width:10%">
+                                        <p:column headerText="Coast" style="width:10%" sortBy="#{p.coast}">
                                             <h:outputText value="$ #{p.coast}" />
                                         </p:column>
 

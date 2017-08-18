@@ -92,16 +92,16 @@
 
                                     <p:ajax event="rowSelect" listener="#{paymentBean.onPatientSelectRowSelect}" />
 
-                                    <p:column headerText="Patient ID" style="width:10%">
+                                    <p:column headerText="Patient ID" style="width:10%" sortBy="#{p.id}">
                                         <h:outputText value="#{p.id}" />
                                     </p:column>
-                                    <p:column headerText="Name" style="width:40%">
+                                    <p:column headerText="Name" style="width:40%" sortBy="#{p.name}">
                                         <h:outputText value="#{p.name}" />
                                     </p:column>
-                                    <p:column headerText="Gender" style="width:20%">
+                                    <p:column headerText="Gender" style="width:20%" sortBy="#{p.gender}">
                                         <h:outputText value="#{p.gender}" />
                                     </p:column>
-                                    <p:column headerText="Date of Birth" style="width:30%">
+                                    <p:column headerText="Date of Birth" style="width:30%" sortBy="#{p.dob}">
                                         <h:outputText value="#{p.dobString}" />
                                     </p:column>
                                     <p:columnGroup type="footer">
@@ -196,16 +196,16 @@
 
                                         <p:ajax event="rowSelect" listener="#{paymentBean.onPaymentSelectRowSelect}" update="form"  oncomplete="PF('dDialog').show()" />
 
-                                        <p:column headerText="SEQ" style="width: 10%">
+                                        <p:column headerText="SEQ" style="width: 10%" sortBy="#{pa.SEQ}">
                                             <h:outputText value="#{pa.SEQ}" />
                                         </p:column>
-                                        <p:column headerText="Total" style="width: 20%">
+                                        <p:column headerText="Total" style="width: 20%" sortBy="#{pa.total}">
                                             <h:outputText value="$ #{pa.total}" />
                                         </p:column>
-                                        <p:column headerText="Balance" style="width: 20%">
+                                        <p:column headerText="Balance" style="width: 20%" sortBy="#{pa.balance}">
                                             <h:outputText value="$ #{pa.balance}" />
                                         </p:column>
-                                        <p:column headerText="Date" style="width: 40%">
+                                        <p:column headerText="Date" style="width: 40%" sortBy="#{pa.date}">
                                             <h:outputText value="#{pa.dateString}" />
                                         </p:column>
                                         <p:column headerText="Detail" style="width: 10%">
@@ -265,19 +265,19 @@
                                         <p:column headerText="#" style="width: 5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="Charge Code" style="width: 30%">
+                                        <p:column headerText="Charge Code" style="width: 30%" sortBy="#{de.chargeCode}">
                                             <h:outputText value="#{de.chargeCode}" />
                                         </p:column>
-                                        <p:column headerText="Amount" style="width: 10%">
+                                        <p:column headerText="Amount" style="width: 10%" sortBy="#{de.amount}">
                                             <h:outputText value="$ #{de.amount}" />
                                         </p:column>
-                                        <p:column headerText="Discount" style="width: 10%">
+                                        <p:column headerText="Discount" style="width: 10%" sortBy="#{de.discountAmount}">
                                             <h:outputText value="$ #{de.discountAmount}" />
                                         </p:column>
-                                        <p:column headerText="Amount Due" style="width: 15%">
+                                        <p:column headerText="Amount Due" style="width: 15%" sortBy="#{de.amountDue}">
                                             <h:outputText value="$ #{de.amountDue}" />
                                         </p:column>
-                                        <p:column headerText="Reason for Discount" style="width: 30%">
+                                        <p:column headerText="Reason for Discount" style="width: 30%" sortBy="#{de.discountReason}">
                                             <h:outputText value="#{de.discountReason}" />
                                         </p:column>
                                         <p:columnGroup type="footer">
@@ -304,13 +304,13 @@
                                         <p:column headerText="#" style="width: 5%">
                                             <h:outputText value="#{index+1}" />
                                         </p:column>
-                                        <p:column headerText="Date" style="width: 40%">
+                                        <p:column headerText="Date" style="width: 40%" sortBy="#{h.date}">
                                             <h:outputText value="#{h.dateString}" />
                                         </p:column>
-                                        <p:column headerText="Amount" style="width: 40%">
+                                        <p:column headerText="Amount" style="width: 40%" sortBy="#{h.paidAmount}">
                                             <h:outputText value="$ #{h.paidAmount}" />
                                         </p:column>
-                                        <p:column headerText="Method" style="width: 15%">
+                                        <p:column headerText="Method" style="width: 15%" sortBy="#{h.method}">
                                             <h:outputText value="#{h.method}" />
                                         </p:column>
                                         <p:columnGroup type="footer">
