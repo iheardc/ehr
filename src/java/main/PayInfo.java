@@ -201,7 +201,7 @@ public class PayInfo {
     }
     
     public Double getTotalAmountDue(){
-        return Math.max(0, total-balance);
+        return Math.max(0, balance);
     }
 
     public List<PayDetail> getDetail() {

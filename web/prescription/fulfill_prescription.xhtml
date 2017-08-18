@@ -54,7 +54,7 @@
                                         <h:outputText value="#{p.dateString}" />
                                     </p:column>
                                     <p:column headerText="Status" style="width:10%" >
-                                        <p:graphicImage value="/images/checked.png" style="height:1.5em;"/>
+                                        <p:graphicImage value="#{p.statusImg}" style="height:1.5em;"/>
                                     </p:column>
                                     <p:column headerText="Detail" style="width:10%">
                                         <h:outputText value="Detail" />
@@ -91,7 +91,7 @@
                                         <h:outputText value="#{p.dateString}" />
                                     </p:column>
                                     <p:column headerText="Total" style="width:10%;">
-                                        <h:outputText value="" />
+                                        <h:outputText value="$ #{p.total}" />
                                     </p:column>
                                     <p:column headerText="Detail" style="width:10%">
                                         <h:outputText value="Detail" />
@@ -168,16 +168,16 @@
                                             <h:outputText value="#{p.totalDosingDays}" />
                                         </p:column>
                                         <p:column headerText="Current / Remaining" style="width:30%">
-                                            <h:outputText value="" />
+                                            <h:outputText value="#{p.currentQty} / #{p.remainQty}" />
                                         </p:column>
                                         <p:column headerText="Availability" style="width:10%">
-                                            <p:graphicImage value="/images/checked.png" style="height:1.5em;"/>
+                                            <p:graphicImage value="#{p.statusImg}" style="height:1.5em;"/>
                                         </p:column>
                                     </p:dataTable>
                                 </b:column>
                                 <b:column col-md="12">
                                     <center>
-                                        <p:commandButton styleClass="btn btn-primary" value="Start Preparation" action="#{prescriptionBean.accept()}" oncomplete="PF('dDialog').hide()" update="form"/>
+                                        <p:commandButton styleClass="btn btn-primary" value="Start Preparation" action="#{prescriptionBean.accept()}" oncomplete="PF('dDialog').hide()" update="form" disabled="#{not prescriptionBean.selectedPres.available}"/>
                                     </center>
                                 </b:column>
 
@@ -242,15 +242,18 @@
                                         <p:column headerText="TDD" style="width:5%">
                                             <h:outputText value="#{p.totalDosingDays}" />
                                         </p:column>
-                                        <p:column headerText="Usage" style="width:40%">
+                                        <p:column headerText="Usage" style="width:30%">
                                             <h:outputText value="#{p.usage}" />
+                                        </p:column>
+                                        <p:column headerText="Coast" style="width:10%">
+                                            <h:outputText value="$ #{p.coast}" />
                                         </p:column>
 
                                     </p:dataTable>
                                 </b:column>
 
                                 <b:column col-md="12">
-                                    <h2><p:outputLabel value="Total: "/></h2>
+                                    <h2><p:outputLabel value="Total: $ #{prescriptionBean.selectedPres.total}"/></h2>
                                 </b:column>
 
                                 <b:column col-md="12">

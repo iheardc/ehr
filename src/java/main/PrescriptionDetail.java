@@ -18,6 +18,8 @@ public class PrescriptionDetail {
     String id, type, usage;
     RxNORM rx;
     double singleDose, numOfDailyDos, totalDosingDays;
+    double currentQty, remainQty;
+    double coast;
 
     public PrescriptionDetail() {
         rx = new RxNORM();
@@ -93,6 +95,18 @@ public class PrescriptionDetail {
                 if (columnName.contains(column)) {
                     this.rx.description = rs.getString(column);
                 }
+                column = "current_qty";
+                if (columnName.contains(column)) {
+                    this.currentQty = rs.getDouble(column);
+                }
+                column = "remain_qty";
+                if (columnName.contains(column)) {
+                    this.remainQty = rs.getDouble(column);
+                }
+                column = "coast";
+                if (columnName.contains(column)) {
+                    this.coast = rs.getDouble(column);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -154,7 +168,42 @@ public class PrescriptionDetail {
     public void setTotalDosingDays(double totalDosingDays) {
         this.totalDosingDays = totalDosingDays;
     }
+
+    public double getCurrentQty() {
+        return currentQty;
+    }
+
+    public void setCurrentQty(double currentQty) {
+        this.currentQty = currentQty;
+    }
+
+    public double getRemainQty() {
+        return remainQty;
+    }
+
+    public void setRemainQty(double remainQty) {
+        this.remainQty = remainQty;
+    }
     
+    public boolean isAvailable(){
+        return remainQty >= 0;
+    }
+    
+    public String getStatusImg(){
+        if(isAvailable()){
+            return Prescription.AVAILABLE_IMG;
+        }else{
+            return Prescription.NOT_AVAILABLE_IMG;
+        }
+    }
+
+    public double getCoast() {
+        return coast;
+    }
+
+    public void setCoast(double coast) {
+        this.coast = coast;
+    }
     
     
     

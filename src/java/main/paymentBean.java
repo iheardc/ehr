@@ -13,6 +13,7 @@ import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -32,65 +33,13 @@ public class paymentBean extends patientBean implements Serializable {
     // View result table when click Search
     boolean isShowDynaTable;
 
-    boolean isShowMore;
-
     List<PayInfo> payList;
     PayInfo selectedPay;
 
-//    public void findDynaPatient() {
-//        DbDAO dao = new DbDAO();
-//        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate("ALL", null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
-//
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-//        FacesMessage message;
-//        if (dList.size() > 0) {
-//            message = new FacesMessage("Search ", "There are " + dList.size() + " results.");
-//        } else {
-//            message = new FacesMessage("Search ", "There are no matching results.");
-//        }
-//        FacesContext.getCurrentInstance().addMessage(null, message);
-//
-//        findDynaList = dList;
-//
-//        isShowDynaTable = true;
-//
-//        selectedD = null;
-//        resetMoreForm();
-//
-////        resetFindItem();
-//        RequestContext.getCurrentInstance().update("form");
-////        return "/userInfo/find_employee.xhtml?faces-redirect=true";
-//    }
-//    public void onDynaSelectRowSelect(SelectEvent event) {
-//        FacesMessage msg = new FacesMessage("Patient Selected", ((DynamicInfo) event.getObject()).p.getName());
-//        FacesContext.getCurrentInstance().addMessage(null, msg);
-//
-//        DbDAO dao = new DbDAO();
-//        payList = dao.getPayList(selectedD.p, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
-//
-//        selectDynaPatient();
-//    }
-//
-//    public void selectDynaPatient() {
-////        resetMoreForm();
-//        isShowMore = true;
-//        RequestContext context = RequestContext.getCurrentInstance();
-//        context.update("form");
-//    }
-//    public void submitPayment() {
-//
-//        DbDAO dao = new DbDAO();
-//        dao.checkOutPatient(selectedD);
-//
-//        if (selectedD.errormsg.length() > 0) {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed ", selectedD.errormsg));
-//        } else {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully ", "Successfully Check-Out"));
-//            menuBean.viewPatientBill();
-//            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
-//        }
-//
-//    }
+    // PAY
+    String payMethod, payMethodOther;
+    double payAmountDue;
+
     @Override
     public void onPatientSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
@@ -105,7 +54,7 @@ public class paymentBean extends patientBean implements Serializable {
     @Override
     public void selectPatient() {
 
-        isShowMore = true;
+        isShowMoreInfo = true;
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
 
@@ -113,10 +62,39 @@ public class paymentBean extends patientBean implements Serializable {
 
     public void onPaymentSelectRowSelect(SelectEvent event) {
 
+        resetPayForm();
         selectedPay.getPaymentDetailInfo();
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("form");
 
+    }
+
+    public void payAmountDueChangeListener() {
+        if(this.payAmountDue > this.selectedPay.balance){
+            this.payAmountDue = this.selectedPay.balance;
+        }else if(this.payAmountDue < 0.0){
+            this.payAmountDue = 0.0;
+        }
+    }
+    
+    public void pay(){
+        
+        if(payAmountDue <= 0.0){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error ", "Pay amount due is required."));
+        }else{
+            
+            ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+            signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+            DbDAO dao = new DbDAO();
+            if(dao.payAmountDue(selectedPay, sBean.em, payMethod, payAmountDue)){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully", "TODO"));
+                reset();
+                RequestContext.getCurrentInstance().update("form");
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed", "TODO"));
+            }
+        }
+        
     }
 
     public void reset() {
@@ -134,7 +112,14 @@ public class paymentBean extends patientBean implements Serializable {
     }
 
     public void resetMoreForm() {
-        isShowMore = false;
+        isShowMoreInfo = false;
+        resetPayForm();
+    }
+    
+    public void resetPayForm(){
+        payMethod = "Cash";
+        payMethodOther = null;
+        payAmountDue = 0.0;
     }
 
     public DynamicInfo getSelectedD() {
@@ -168,14 +153,6 @@ public class paymentBean extends patientBean implements Serializable {
         this.isShowDynaTable = isShowDynaTable;
     }
 
-    public boolean isIsShowMore() {
-        return isShowMore;
-    }
-
-    public void setIsShowMore(boolean isShowMore) {
-        this.isShowMore = isShowMore;
-    }
-
     public List<PayInfo> getPayList() {
         return payList;
     }
@@ -190,6 +167,30 @@ public class paymentBean extends patientBean implements Serializable {
 
     public void setSelectedPay(PayInfo selectedPay) {
         this.selectedPay = selectedPay;
+    }
+
+    public String getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(String payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public String getPayMethodOther() {
+        return payMethodOther;
+    }
+
+    public void setPayMethodOther(String payMethodOther) {
+        this.payMethodOther = payMethodOther;
+    }
+
+    public double getPayAmountDue() {
+        return payAmountDue;
+    }
+
+    public void setPayAmountDue(double payAmountDue) {
+        this.payAmountDue = payAmountDue;
     }
 
 }

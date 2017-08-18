@@ -19,6 +19,9 @@ import java.util.Random;
  * @author tw
  */
 public class Prescription {
+    
+    public static final String AVAILABLE_IMG = "/images/checked.png";
+    public static final String NOT_AVAILABLE_IMG = "/images/cancel.png";
 
     String id, comment, status;
     Double date, dateComplete;
@@ -247,6 +250,29 @@ public class Prescription {
         this.detail = detail;
     }
     
+    public boolean isAvailable(){
+        for(PrescriptionDetail pd : detail){
+            if(!pd.isAvailable()){
+                return false;
+            }
+        }
+        return true;
+    }
     
+    public String getStatusImg(){
+        if(isAvailable()){
+            return AVAILABLE_IMG;
+        }else{
+            return NOT_AVAILABLE_IMG;
+        }
+    }
+    
+    public double getTotal(){
+        double total = 0.0;
+        for(PrescriptionDetail pd : detail){
+            total += pd.coast;
+        }
+        return total;
+    }
 
 }

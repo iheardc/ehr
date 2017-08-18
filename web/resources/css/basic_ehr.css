@@ -211,6 +211,10 @@ tfoot .ui-state-default{
     color: gray;
 }
 
+.ui-paginator.ui-paginator-top{
+    display: none;
+}
+
 /* Button */
 .ui-button-text-only .ui-button-text{
     padding:0px;

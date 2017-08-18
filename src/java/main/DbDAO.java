@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.CallableStatement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
  * @author tw
  */
 public class DbDAO {
-    
+
     public static final int ONE_DAY_MS = 86400000;
 
 //    private static final String LOGIN_PATIENT = "SELECT * FROM patient WHERE email=? AND password=?";
@@ -146,7 +147,7 @@ public class DbDAO {
             = "SELECT  A.*, B.chief as chief , C.injection as injection, D.temperature, D.SPO2, D.weight, D.blood_pressure "
             + "FROM outpatient_dynamic as A "
             + "LEFT OUTER JOIN ( "
-            + "SELECT outpatient_dynamic_id, GROUP_CONCAT(CONCAT(SNOMED_CT_Code, ':', description) SEPARATOR ', ') AS chief "
+            + "SELECT outpatient_dynamic_id, GROUP_CONCAT(CONCAT(code, ':', description) SEPARATOR ', ') AS chief "
             + "FROM chief_complaint "
             + "GROUP BY outpatient_dynamic_id) as B on (B.outpatient_dynamic_id = A.id) "
             + "LEFT OUTER JOIN ( "
@@ -157,7 +158,7 @@ public class DbDAO {
             + "SELECT * FROM vital_sign "
             + "GROUP BY id) as D on (D.outpatient_dynamic_id = A.id) "
             + "WHERE A.patient_id like ? and A.id not like ? "
-            + "GROUP BY A.id;";
+            + "";
     private static final String GET_RXNORM_CODES
             = "select * from rxnorm_code WHERE code like ? or description like ?";
     private static final String GET_HCPCS_CODES
@@ -168,19 +169,6 @@ public class DbDAO {
             = "UPDATE outpatient_dynamic SET "
             + "date=?,status=? "
             + "WHERE id=?";
-    private static final String FIND_PATIENT_BILLING
-            = "SELECT  A.*, ifnull(B.total,0) as total, (ifnull(B.total, 0) - ifnull(C.paid, 0)) as bal "
-            + "FROM billing as A "
-            + "LEFT OUTER JOIN ( "
-            + "SELECT billing_SEQ, SUM(amount) as total "
-            + "FROM charge_detail "
-            + "GROUP BY billing_SEQ) as B on (B.billing_SEQ = A.SEQ) "
-            + "LEFT OUTER JOIN ( "
-            + "SELECT billing_SEQ, SUM(paid_amount) as paid "
-            + "FROM payment "
-            + "GROUP BY billing_SEQ) as C on (C.billing_SEQ = A.SEQ) "
-            + "WHERE billed_to like ? and PIF is null "
-            + "GROUP BY A.SEQ";
 
     // Additional
     public static String[] DYNAMIN_DATA = {
@@ -1411,6 +1399,20 @@ public class DbDAO {
         return result;
     }
 
+    private static final String FIND_PATIENT_BILLING
+            = "SELECT  A.*, ifnull(B.total,0) as total, (ifnull(B.total, 0) - ifnull(C.paid, 0)) as bal "
+            + "FROM billing as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT billing_SEQ, SUM(amount) as total "
+            + "FROM charge_detail "
+            + "GROUP BY billing_SEQ) as B on (B.billing_SEQ = A.SEQ) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT billing_SEQ, SUM(paid_amount) as paid "
+            + "FROM payment "
+            + "GROUP BY billing_SEQ) as C on (C.billing_SEQ = A.SEQ) "
+            + "WHERE billed_to like ? and PIF is null "
+            + "GROUP BY A.SEQ";
+
     public List<PayInfo> getChargesDueList(Patient p) {
         List<PayInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -1483,6 +1485,36 @@ public class DbDAO {
         }
     }
 
+    public static final String PAY_AMOUNT_DUE
+            = "INSERT INTO payment(billing_SEQ, patient_id, paid_amount, received_by, method, date) VALUES(?,?,?,?,?,?)";
+
+    public boolean payAmountDue(PayInfo pi, Employee em, String payMethod, double payAmountDue) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(PAY_AMOUNT_DUE);
+
+            pstmt.setString(1, pi.SEQ);
+            pstmt.setString(2, pi.billedTo);
+            pstmt.setDouble(3, payAmountDue);
+            pstmt.setString(4, em.id);
+            pstmt.setString(5, payMethod);
+            pstmt.setDouble(6, getTodayMillisecondsWithTime());
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
     public void checkOutPatient(DynamicInfo d) {
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1521,7 +1553,18 @@ public class DbDAO {
             + "WHERE status like ? and ifnull(pharmacist_id,'') like ? "
             + "GROUP BY A.id;";
     public static final String GET_PRESCRIPTION_DETAIL
-            = "select * from prescription_detail WHERE prescription_id = ?";
+            = "select A.*, ifnull(B.qty, 0) as current_qty, (ifnull(B.qty, 0) - (A.single_dose * A.num_of_daily_dose * A.total_dosing_days)) as remain_qty, (C.amount * (A.single_dose * A.num_of_daily_dose * A.total_dosing_days)) as coast "
+            + "from prescription_detail as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT RxNORM_code, (SUM(qty) - SUM(used_qty)) as qty "
+            + "FROM inventory_detail "
+            + "WHERE qty > used_qty "
+            + "GROUP BY RxNORM_code) as B on (B.RxNORM_code = A.RxNORM_code) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * "
+            + "FROM charge_code "
+            + "GROUP BY code) as C on (C.code = A.RxNORM_code) "
+            + "WHERE prescription_id = ?";
 
     public List<Prescription> getPrescriptionList(String status, String pharmacistId) {
         if (status == null || status.isEmpty()) {
@@ -1578,16 +1621,49 @@ public class DbDAO {
 
     public boolean acceptPrescription(Prescription pres, Employee pharmacist) {
         boolean result = false;
+        if (reduceClinicalInventory(pres)) {
+            PreparedStatement pstmt = null;
+            Connection connect = null;
+            try {
+                connect = DbConnectionPools.getPoolConnection();
+                pstmt = connect.prepareStatement(ACCEPT_PRESCRIPTION);
+
+                pstmt.setString(1, pharmacist.id);
+                pstmt.setString(2, pres.id);
+
+                pstmt.executeUpdate();
+
+                result = true;
+
+            } catch (Exception e) {
+                System.out.println("ERROR!!!!" + e.toString());
+            } finally {
+                DbConnectionPools.closeResources(connect, pstmt);
+            }
+        }
+        return result;
+    }
+
+    public static final String REDUCE_CLINICAL_INVEN
+            = "UPDATE inventory_detail SET used_qty = used_qty+1 "
+            + "WHERE id IN (SELECT * FROM (SELECT id FROM inventory_detail WHERE qty > used_qty AND RxNORM_code like ? LIMIT 0, 1) as temp)";
+
+    public boolean reduceClinicalInventory(Prescription pres) {
+        boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(ACCEPT_PRESCRIPTION);
+            for (PrescriptionDetail de : pres.detail) {
+                int totalDose = (int) (de.singleDose * de.numOfDailyDos * de.totalDosingDays);
 
-            pstmt.setString(1, pharmacist.id);
-            pstmt.setString(2, pres.id);
+                pstmt = connect.prepareStatement(REDUCE_CLINICAL_INVEN);
+                pstmt.setString(1, de.rx.code);
 
-            pstmt.executeUpdate();
+                for (int i = 0; i < totalDose; i++) {
+                    pstmt.executeUpdate();
+                }
+            }
 
             result = true;
 
@@ -1685,7 +1761,6 @@ public class DbDAO {
         return result;
     }
 
-
     public static final String GET_CLINICAL_ITEM
             = "SELECT  A.*, ifnull(B.qty,0) as current_qty, ifnull(C.expired_qty, 0) as expired_qty "
             + "FROM medicine_inventory as A "
@@ -1735,6 +1810,7 @@ public class DbDAO {
         }
         return list;
     }
+
     public List<ClinicalInven> getOrderRequiredClinicalItems(RxNORM rx) {
         String code = "";
         if (rx == null || rx.code == null) {

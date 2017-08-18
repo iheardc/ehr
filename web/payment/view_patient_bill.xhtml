@@ -77,7 +77,7 @@
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
                                 <b:column col-md="6" offset-md="2">
-                                    <p:commandButton class="btn btn-primary" value="Search" action="#{paymentBean.findPatientWithDate()}" update=":form:patientData"/>
+                                    <p:commandButton class="btn btn-primary" value="Search" action="#{paymentBean.findPatient()}" update=":form:patientData"/>
                                 </b:column>
                             </div>
                         </b:column>
@@ -165,7 +165,7 @@
                         <br></br>
 
                         <div>
-                            <b:column id="pay" rendered="#{paymentBean.isShowMore}">
+                            <b:column id="pay" rendered="#{paymentBean.isShowMoreInfo}">
 
                                 <b:column col-md="11" offset-md="1">
 
@@ -230,7 +230,7 @@
 
                         <br></br>
 
-                        <b:column col-md="12" rendered="#{paymentBean.isShowMore}">
+                        <b:column col-md="12" rendered="#{paymentBean.isShowMoreInfo}">
                             <hr></hr>
                             <!--<p:commandButton class="btn btn-primary" process="@parent" value="Check-Out" action="#{paymentBean.submitPayment()}" update="content"/>-->
                             <p:commandButton class="btn btn-danger" value="Reset" action="#{paymentBean.reset()}" update="form"/>
@@ -238,7 +238,7 @@
 
                     </b:column>
 
-                    <p:dialog header="Detail" widgetVar="dDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" >
+                    <p:dialog header="Detail" widgetVar="dDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" height="500px" >
                         <p:outputPanel id="dDetail">
                             <!--<p:scrollPanel id="wpDetail">-->
 
@@ -327,13 +327,55 @@
 
                                 <b:column col-md="12" style="margin-top: 2em;">
 
-                                    <h1><p:outputLabel value="Total Amount Due: $#{paymentBean.selectedPay.totalAmountDue}"/></h1>
+                                    <h1><p:outputLabel value="Total Amount Due: $ #{paymentBean.selectedPay.totalAmountDue}"/></h1>
 
                                 </b:column>
 
-                                <b:column col-md="12">
+                                <hr/>
+
+                                <b:column class="shadow-div" style="margin-bottom: 2em; padding: 0px">
+
+                                    <div style="padding: 2em;">
+                                        <b:column col-md="12" class="form-horizontal">
+                                            <div class="form-group">
+                                                <p:outputLabel for="method" value="Method" class="col-sm-2 control-label"></p:outputLabel>
+                                                <b:column col-sm="6">
+                                                    <p:selectOneMenu id="method" value="#{paymentBean.payMethod}" placeholder="Method">
+                                                        <f:selectItem itemValue="Cash" itemLabel="Cash"/>
+                                                        <f:selectItem itemValue="Credit Card" itemLabel="Credit Card"/>
+                                                        <f:selectItem itemValue="Debit Card" itemLabel="Debit Card"/>
+                                                        <f:selectItem itemValue="Other" itemLabel="Other"/>
+                                                    </p:selectOneMenu>
+                                                </b:column>
+                                            </div>
+                                        </b:column>
+
+                                        <b:column col-md="12" class="form-horizontal">
+                                            <div class="form-group">
+                                                <p:outputLabel for="payAmountDue" value="Pay Amount Due: " class="col-sm-2 control-label"></p:outputLabel>
+                                                <b:column col-sm="6">
+                                                    <p:inputNumber value="#{paymentBean.payAmountDue}" id="payAmountDue" autocomplete="off" placeholder="Pay Amount Due(Max: #{paymentBean.selectedPay.balance})" symbol="$ ">
+                                                        <p:ajax event="keyup" update="payAmountDue" listener="#{paymentBean.payAmountDueChangeListener}" />
+                                                    </p:inputNumber>
+                                                </b:column>
+                                            </div>
+                                        </b:column>
+                                    </div>
+
+                                    <b:column style="padding: 0px; margin: 0px; width: 100%">
+                                        <p:commandButton style="width: 100%; height: 40px; background-color: #547fdd; color: white; border: 0px; border-radius: 0px; background-image: none; text-shadow:none; " 
+                                                         value="Pay" title="Pay" oncomplete="PF('dDialog').hide()" update="form" action="#{paymentBean.pay()}"
+                                                         >
+                                            
+                                        </p:commandButton>
+                                    </b:column>
+
+                                </b:column>
+
+
+<!--                                <b:column col-md="12">
                                     <p:commandButton title="Pay" value="Pay" styleClass="btn btn-primary" oncomplete="PF('dDialog').hide()" update="form" ></p:commandButton>
-                                </b:column>
+                                </b:column>-->
 
                             </b:column>
                             <!--</p:scrollPanel>-->
@@ -345,6 +387,27 @@
             </b:column>
 
         </b:container>
+
+
+        <style type="text/css">
+            .shadow-div{
+                margin: auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                padding: 10px;
+                box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.4), 0 1px 4px 0 rgba(0, 0, 0, 0.19);
+            }
+            .shadow-div-header{
+                /*height: 70%;*/
+                padding: 2em;
+            }
+            .shadow-div-content{
+                /*height: 30%;*/
+                color: black;
+                background-color: #f6f6f6;
+                padding: 10px;
+            }
+        </style>
 
     </ui:composition>
 

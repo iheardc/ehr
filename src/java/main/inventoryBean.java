@@ -51,6 +51,8 @@ public class inventoryBean implements Serializable {
     List<ClinicalInven> closeExpDateClinicalItems;
 
     public void onRxNORMSelect(SelectEvent event) {
+        
+        addTempList = new ArrayList<>();
 
         DbDAO dao = new DbDAO();
         List<ClinicalInven> list = dao.getClinicalItems(cl.rx);
