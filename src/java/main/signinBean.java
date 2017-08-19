@@ -20,7 +20,7 @@ import org.primefaces.context.RequestContext;
 @SessionScoped
 public class signinBean implements Serializable {
 
-    String id;
+    String loginId;
 //    String email;
     String password;
     String msg;
@@ -82,7 +82,7 @@ public class signinBean implements Serializable {
 //        } 
 //        else {
             page = "homeEmployee";
-            em = new Employee(id, password);
+            em = new Employee(loginId, password);
             dao.loginEmployee(em);
             if (em.errormsg == null || em.errormsg.equals("")) {
                 msg = "Wrong password or user name";
@@ -123,13 +123,7 @@ public class signinBean implements Serializable {
         return "/welcome.xhtml?faces-redirect=true";
     }
     
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    
 //    public String getEmail() {
 //        return email;
 //    }
@@ -137,6 +131,14 @@ public class signinBean implements Serializable {
 //    public void setEmail(String email) {
 //        this.email = email;
 //    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
 
     public String getPassword() {
         return password;

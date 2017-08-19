@@ -34,7 +34,7 @@ public class signupBean implements Serializable {
     ServiceBean service;
     String msg = "NOT registered yet";
 
-    String id, email, password, rePassword, fn, ln, name, gender, phone, pic;
+    String id, loginId, email, password, rePassword, fn, ln, name, gender, phone, pic;
     String address, city, state, zip, country;
     String accessToken;
 
@@ -71,7 +71,7 @@ public class signupBean implements Serializable {
 //                role, license, location,
 //                address, city, state, zip, country,
 //                accessToken, authority, specialty);
-        em = new Employee(id, email, password, fn, ln, name, gender, phone,
+        em = new Employee(id, loginId, email, password, fn, ln, name, gender, phone,
                 role, license, location,
                 address, city, state, zip, country,
                 authority, arr, specialty);
@@ -158,6 +158,7 @@ public class signupBean implements Serializable {
     public void reset() {
         msg = null;
         id = null;
+        loginId = null;
         email = null;
         password = null;
         rePassword = null;
@@ -296,6 +297,14 @@ public class signupBean implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     public void setEmail(String email) {

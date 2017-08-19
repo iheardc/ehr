@@ -20,7 +20,7 @@ public class Employee {
     @Inject
     ServiceBean service; 
 
-    String id, email, password, fn, ln, name, gender, phone;
+    String id, loginId, email, password, fn, ln, name, gender, phone;
     String role, license, location;
     String address, city, state, zip, country;
     int authority;
@@ -33,13 +33,14 @@ public class Employee {
 
     }
 
-    public Employee(String id, String password) {
-        this.id = id;
+    public Employee(String loginId, String password) {
+        this.loginId = loginId;
         this.password = password;
     }
 
-    public Employee(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String role, String license, String location, String address, String city, String state, String zip, String country, int authority, byte[] arr, List<String> specialtyList) {
+    public Employee(String id, String loginId, String email, String password, String fn, String ln, String name, String gender, String phone, String role, String license, String location, String address, String city, String state, String zip, String country, int authority, byte[] arr, List<String> specialtyList) {
         this.id = id;
+        this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.fn = fn;
@@ -90,6 +91,10 @@ public class Employee {
                 String column = "id";
                 if (columnName.contains(column)) {
                     this.id = Integer.toString(rs.getInt(column));
+                }
+                column = "login_id";
+                if (columnName.contains(column)) {
+                    this.loginId = rs.getString(column);
                 }
                 column = "email";
                 if (columnName.contains(column)) {
@@ -208,6 +213,14 @@ public class Employee {
         realId = String.format("%011d", Integer.parseInt(id)) + middle + role;
 
         return realId;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     public void setEmail(String email) {

@@ -27,17 +27,17 @@ public class DbDAO {
     public static final int ONE_DAY_MS = 86400000;
 
 //    private static final String LOGIN_PATIENT = "SELECT * FROM patient WHERE email=? AND password=?";
-    private static final String LOGIN_EMPLOYEE = "SELECT * FROM employee WHERE id=? AND password=?";
+    private static final String LOGIN_EMPLOYEE = "SELECT * FROM employee WHERE login_id=? AND password=?";
     private static final String ADD_EMPLOYEE_STMT_NEW
             = "INSERT INTO employee("
-            + "email, password, first_name, last_name, gender, phone, "
+            + "login_id, email, password, first_name, last_name, gender, phone, "
             + "role, license, "
             + "address, city, state, zip, country, "
             + "pic) "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static final String CHECK_EMPLOYEE_EMAIL_DUPLICATE
-            = "SELECT COUNT(*) as count FROM employee "
-            + "WHERE email=?";
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String CHECK_EMPLOYEE_LOGIN_ID_DUPLICATE
+            = "SELECT COUNT(id) as count FROM employee "
+            + "WHERE login_id=?";
     private static final String ADD_EMPLOYEE_SPECIALTY
             = "INSERT INTO specialty("
             + "employee_id, specialty"
@@ -288,31 +288,24 @@ public class DbDAO {
     }
 
     // Query Function
-    private boolean checkEmployeeEmailDuplicate(Employee em) {
-        if (em.email != null || !"".equals(em.email)) {
-            return false;
+    private boolean checkEmployeeLoginIdDuplicate(Employee em) {
+        if (em.loginId == null || "".equals(em.loginId)) {
+            return true;
         }
-        boolean isDuplicate = false;
+        boolean isDuplicate = true;
 
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(CHECK_EMPLOYEE_EMAIL_DUPLICATE);
-            pstmt.setString(1, em.email);
+            pstmt = connect.prepareStatement(CHECK_EMPLOYEE_LOGIN_ID_DUPLICATE);
+            pstmt.setString(1, em.loginId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-//                p.email = rs.getString("email");
-//                p.password = rs.getString("password");
-                int count = Integer.parseInt(rs.getString("count"));
-                if (count > 0) {
-                    isDuplicate = true;
-                }
+                isDuplicate = !"0".equals(rs.getString("count"));
             }
-            em.errormsg = "";
         } catch (Exception e) {
             System.out.println("ERROR!!!!" + e.toString());
-            em.errormsg = "Email already exists! Please choose another email.";
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
@@ -320,9 +313,9 @@ public class DbDAO {
     }
 
     public void insertNewEmployee(Employee em) {
-        if (checkEmployeeEmailDuplicate(em)) {
-            System.out.println("ERROR!!!! Email already exists!");
-            em.errormsg = "Email already exists! Please choose another email.";
+        if (checkEmployeeLoginIdDuplicate(em)) {
+            System.out.println("ERROR!!!! Login ID already exists!");
+            em.errormsg = "Login ID already exists! Please choose another ID.";
             return;
         }
         PreparedStatement pstmt = null;
@@ -331,38 +324,39 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(ADD_EMPLOYEE_STMT_NEW, Statement.RETURN_GENERATED_KEYS);
 
-            pstmt.setString(1, em.email);
-            pstmt.setString(2, em.password);
-            pstmt.setString(3, em.fn);
-            pstmt.setString(4, em.ln);
-            pstmt.setString(5, em.gender);
-            pstmt.setString(6, em.phone);
+            pstmt.setString(1, em.loginId);
+            pstmt.setString(2, em.email);
+            pstmt.setString(3, em.password);
+            pstmt.setString(4, em.fn);
+            pstmt.setString(5, em.ln);
+            pstmt.setString(6, em.gender);
+            pstmt.setString(7, em.phone);
 
 //            pstmt.setString(7, em.location);
-            pstmt.setString(7, em.role);
-            pstmt.setString(8, em.license);
+            pstmt.setString(8, em.role);
+            pstmt.setString(9, em.license);
 
-            pstmt.setString(9, em.address);
-            pstmt.setString(10, em.city);
-            pstmt.setString(11, em.state);
-            pstmt.setString(12, em.zip);
-            pstmt.setString(13, em.country);
+            pstmt.setString(10, em.address);
+            pstmt.setString(11, em.city);
+            pstmt.setString(12, em.state);
+            pstmt.setString(13, em.zip);
+            pstmt.setString(14, em.country);
 
-            pstmt.setBytes(14, em.arr);
+            pstmt.setBytes(15, em.arr);
 
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
             String autoInsertedKey = (rs.next()) ? rs.getString(1) : null;
             rs.close();
 
-            if (em.getSpecialtyList().size() > 0) {
+            if (em.getSpecialtyList() != null && em.getSpecialtyList().size() > 0) {
                 insertNewEmployeeSpecialty(connect, em, autoInsertedKey);
             }
 
             em.errormsg = "";//"Thank you for registering with us!";
         } catch (Exception e) {
             System.out.println("ERROR!!!!" + e.toString());
-            em.errormsg = "Email already exists! Please choose another email.";
+            em.errormsg = "Registration is failed!";
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
@@ -709,7 +703,7 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(LOGIN_EMPLOYEE);
-            pstmt.setString(1, em.id);
+            pstmt.setString(1, em.loginId);
             pstmt.setString(2, em.password);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
