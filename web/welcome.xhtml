@@ -22,54 +22,137 @@
     <ui:define name="leftMenu">
     </ui:define>
     <ui:define name="content"> 
-        <h:form id="form">
+        <p:carousel  autoPlayInterval="2000" effect="easyInStrong" circular="true"  
+                     numVisible="1"
+                     responsive="true"
+                     style="width: 100%; height: 100%; position: absolute; border: 0px;"
+                     >
+            <p:graphicImage value="http://iheardc.org/img/ghana/001.jpg" class="custom_img"/>
+            <p:graphicImage value="https://i2.wp.com/von.gov.ng/wp-content/uploads/2017/06/HOSPITAL.jpeg" class="custom_img"/>
+            <p:graphicImage value="http://iheardc.org/img/ghana/003.jpg" class="custom_img"/>
+            <p:graphicImage value="http://iheardc.org/img/ghana/004.jpg" class="custom_img"/>
+        </p:carousel>
+        <div style="width: 100%; height: 100%; position: absolute; background-color: rgba(0,0,0,0.5)"></div>
+        <h:form id="form" style="width: 100%; height: 100%">
             <b:container>
-                <b:column col-md="6" offset-md="3">
-                    <div class="panel panel-login" style="padding:2em; background-color: white;">
-                        <div class="panel-heading" style="margin-bottom: 1em;">
-                            <b:row id="loginmessage" style="font-size:20px">
-                                Please Login
-                            </b:row>
-                            <hr></hr>
-                        </div>
-                        <div class="panel-body">
-                            <h:form id="login-form" role="form">
-                                <div class="form-group">
-                                    <p:inputText id="id" class="form-control" placeholder="ID" autocomplete="off" value="#{signinBean.loginId}" required="true"/>
-                                </div>
-                                <div class="form-group">
-                                    <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="row">
-                                        <b:column col-sm="6" offset-sm="3">
-                                            <p:commandButton value="Login" id="login-submit" action="#{signinBean.login()}" class="form-control btn btn-login" ajax="false"/>
-                                        </b:column>
+                <div class="outer">
+                    <div class="middle">
+                        <div style="text-align: center;">
+                            <b:column col-md="6" offset-md="3">
+                                <div class="panel panel-login" style="padding:2em; background-color: white; margin: 0 auto; position: relative;">
+                                    <div class="panel-heading" style="margin-bottom: 1em;">
+                                        <b:row id="loginmessage" style="font-size:20px">
+                                            Please Login
+                                        </b:row>
+                                        <hr></hr>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <b:column col-lg="12">
-                                            <div class="text-center">
-                                                <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
+                                    <div class="panel-body">
+                                        <h:form id="login-form" role="form">
+                                            <div class="form-group">
+                                                <p:inputText id="id" class="form-control" placeholder="ID" autocomplete="off" value="#{signinBean.loginId}" required="true"/>
                                             </div>
-                                        </b:column>
+                                            <div class="form-group">
+                                                <p:password id="password" class="form-control" placeholder="Password" autocomplete="off" value="#{signinBean.password}" required="true"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <b:column col-sm="6" offset-sm="3">
+                                                        <p:commandButton value="Login" id="login-submit" action="#{signinBean.login()}" class="form-control btn btn-login" ajax="false"/>
+                                                    </b:column>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <b:column col-lg="12">
+                                                        <div class="text-center">
+                                                            <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
+                                                        </div>
+                                                    </b:column>
+                                                </div>
+                                            </div>
+                                        </h:form>
                                     </div>
                                 </div>
-                            </h:form>
+                            </b:column>
                         </div>
                     </div>
-                </b:column>
+                </div>
             </b:container>
         </h:form>
 
         <style type="text/css"> 
             body{
-                background-image: url(/resources/images/bg-login.JPG);
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                /*background-image: url(http://iheardc.org/img/1493668068998.png);*/
             }
+            .container-fluid{
+                width: 100%;
+                height: 100%;
+                padding: 0px;
+            }
+
+            .row{
+                width: 100%;
+                height: 100%;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            .ui-carousel{
+                margin: 0px;
+            }
+
+            .ui-carousel-viewport{
+                height: 100%;
+                margin: 0px;
+                border: 0px;
+            }
+
+            .ui-carousel-items{
+                height: 100%;
+                margin: 0px;
+                border: 0px;
+            }
+
+            .ui-carousel-item{
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+                height: 100%;
+                margin: 0px;
+                border: 0px;
+            }
+
+            .custom_img{
+                min-width: 100%;
+                min-height: 100%;
+                background-size: cover;
+                background-repeat:no-repeat;
+                background-position:center center;
+                margin: 0px;
+                border: 0px;
+            }
+
+            .outer {
+                display: table;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+
+            .middle {
+                display: table-cell;
+                vertical-align: middle;
+                padding-bottom: 100px;
+            }
+
             .container{
-                padding-top : 150px;
+                /*padding-top : 150px;*/
+                padding: 0px;
+                margin: 0px;
             }
             .panel-login {
                 border-color: #ccc;
@@ -173,6 +256,14 @@
                 color: #fff;
                 background-color: #1CA347;
                 border-color: #1CA347;
+            }
+
+            .navbar-default{
+                background-color: transparent;
+                padding-left: 15px;
+            }
+            .navbar-default .navbar-text{
+                color: #DDD;
             }
         </style>
     </ui:define>
