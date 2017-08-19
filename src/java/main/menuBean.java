@@ -224,6 +224,10 @@ public class menuBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean bean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
 
+        if("admin".equals(bean.em.role.toLowerCase())){
+            return true;
+        }
+        
         if (bean.em.role == null || "".equals(bean.em.role)) {
             return false;
         }
