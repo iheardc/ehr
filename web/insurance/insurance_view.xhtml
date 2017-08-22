@@ -119,9 +119,9 @@
 
                                     <p:dataTable var="i" value="#{insuranceBean.findList}" id="insuranceData" paginator="true" rows="10"
                                                  resizableColumns="true" tableStyleClass="table table-striped"
-                                                 selectionMode="single" selection="#{insuranceBean.selectedIns}" rowKey="#{i.id}">
+                                                 selectionMode="single"  selection="#{insuranceBean.selectedIns}" rowKey="#{i.id}">
 
-                                        <p:ajax event="rowSelect" listener="#{insuranceBean.selectInsurance}" update="content" />
+                                        <p:ajax event="rowSelect" listener="#{insuranceBean.VselectInsurance}" update="content" />
 
                                         <p:column headerText="From No." style="width:30%">
                                             <h:outputText value="#{i.id}" />

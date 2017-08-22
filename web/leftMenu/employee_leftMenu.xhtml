@@ -130,7 +130,7 @@
                     </p:submenu>
                     <p:submenu label="Insurance" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/receptionist')}">
                         <p:menuitem value="View"  icon="fa fa-info" update="content" action="#{menuBean.viewInsurance()}" rendered="#{menuBean.isRendered('doctor/nurse/receptionist')}"/>
-                        <p:menuitem value="Write"  icon="fa fa-edit" update="content" action="#{menuBean.detailInsurance()}" rendered="#{menuBean.isRendered('doctor')}"/>
+                        <p:menuitem value="Write"  icon="fa fa-edit" update="content" action="#{menuBean.writeInsurance()}" rendered="#{menuBean.isRendered('doctor')}"/>
                     </p:submenu>
                     <p:submenu label="Admin"  expanded="false" >
                         <p:menuitem value="Create Employee"  icon="fa fa-info" action="#{menuBean.newEmployee()}" update="content"/>
@@ -259,7 +259,7 @@
                 </p:submenu>
                 <p:submenu label="Insurance" expanded="false" rendered="#{menuBean.isRendered('doctor/nurse/receptionist')}">
                     <p:menuitem value="View"  icon="fa fa-info" update="content" action="#{menuBean.viewInsurance()}" rendered="#{menuBean.isRendered('doctor/nurse/receptionist')}"/>
-                    <p:menuitem value="Write"  icon="fa fa-edit" update="content" action="#{menuBean.detailInsurance()}" rendered="#{menuBean.isRendered('doctor')}"/>
+                    <p:menuitem value="Write"  icon="fa fa-edit" update="content" action="#{menuBean.writeInsurance()}" rendered="#{menuBean.isRendered('doctor')}"/>
                 </p:submenu>
                 <p:submenu label="Admin"  expanded="false" >
                     <p:menuitem value="Create Employee"  icon="fa fa-info" action="#{menuBean.newEmployee()}" update="content"/>

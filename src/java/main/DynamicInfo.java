@@ -213,6 +213,18 @@ public class DynamicInfo {
         }
     }
     
+    public String getDatesString() {
+        return getDateString((long) ((double) date));
+    }
+
+    public static String getDateString(long time) {
+
+        Date currentDate = new Date(time);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        return df.format(currentDate);
+
+    }
+    
     public void getCheifComplaints(FinishListener listener){
         DbDAO dao = new DbDAO();
         cheifComplaintList = dao.getCheifComplaint(id);

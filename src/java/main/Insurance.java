@@ -19,6 +19,7 @@ import java.util.Date;
 public class Insurance {
 
     String id, patient_id, scheme;
+    String organization_name;
     double date_of_claim;
     String patient_type, patient_type2, patient_type3;
     String detail_type, detail_type2;
@@ -42,9 +43,10 @@ public class Insurance {
         
     }
 
-    public Insurance(String id, String patient_id, String scheme, double date_of_claim, String patient_type, String patient_type2, String patient_type3, String detail_type, String detail_type2, String member_no, String serial_no, String hosp_record_no, String g_drg, double third_visit, String spell, String cc_code, String physician, String specialty, String specialty_code, String date_received, String action1, String signed1, String signed2, String action2, String signed3, double date1, double date2, double admission_date, double discharge_date, String health_facility) {
+    public Insurance(String id, String patient_id, String organization_name, String scheme, double date_of_claim, String patient_type, String patient_type2, String patient_type3, String detail_type, String detail_type2, String member_no, String serial_no, String hosp_record_no, String g_drg, double third_visit, String spell, String cc_code, String physician, String specialty, String specialty_code, String date_received, String action1, String signed1, String signed2, String action2, String signed3, double date1, double date2, double admission_date, double discharge_date, String health_facility) {
         this.id = id;
         this.patient_id = patient_id;
+        this.organization_name=organization_name;
         this.scheme = scheme;
         this.date_of_claim = date_of_claim;
         this.patient_type = patient_type;
@@ -107,6 +109,10 @@ public class Insurance {
                 if (columnName.contains(column)) {
                     this.patient_id = Integer.toString(rs.getInt(column));
                 }
+                column = "organization_name";
+                if (columnName.contains(column)) {
+                    this.organization_name = rs.getString(column);
+                }
                 column = "Scheme";
                 if (columnName.contains(column)) {
                     this.scheme = rs.getString(column);
@@ -148,7 +154,7 @@ public class Insurance {
                 if (columnName.contains(column)) {
                     this.hosp_record_no = rs.getString(column);
                 }
-                column = "Ghana-DRG";
+                column = "Ghana_DRG";
                 if (columnName.contains(column)) {
                     this.g_drg = rs.getString(column);
                 }
@@ -248,6 +254,14 @@ public class Insurance {
         this.patient_id = patient_id;
     }
 
+    public void setOrganization_name(String organization_name) {
+        this.organization_name = organization_name;
+    }
+
+    public String getOrganization_name() {
+        return organization_name;
+    }
+    
     public String getScheme() {
         return scheme;
     }

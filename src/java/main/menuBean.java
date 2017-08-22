@@ -59,6 +59,11 @@ public class menuBean implements Serializable {
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
+    public static void writeInsurance() {
+        pathCont = "/insurance/insurance_write.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
+    
     public static void viewInsurance() {
         pathCont = "/insurance/insurance_view.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");

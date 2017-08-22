@@ -35,6 +35,10 @@ public class DbDAO {
             + "address, city, state, zip, country, "
             + "pic) "
             + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String ADD_INSURANCE_STMT_NEW
+            = "INSERT INTO insurance("
+            + "scheme, health_facility, Member_No, Serial_No, Hosp_Record_No, patient_type2, detail_type, specialty, specialty_code, patient_id, Ghana_DRG, date_of_claim, patient_type) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_EMPLOYEE_LOGIN_ID_DUPLICATE
             = "SELECT COUNT(id) as count FROM employee "
             + "WHERE login_id=?";
@@ -81,6 +85,8 @@ public class DbDAO {
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
             + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
+    private static final String SEARCH_DYNAMIC_TABLE_WITH_PATIENTID_AND_STATUS_CKO_ADM
+            = "SELECT * FROM outpatient_dynamic WHERE (patient_id=? AND status='CKO') OR (patient_id=? AND status='ADM')";
     private static final String FIND_INSURMEDICINE
             = "SELECT * FROM insurance_medicine WHERE insurance_id = ?";
     private static final String FIND_INSURINVESTIGATIONS
@@ -594,6 +600,38 @@ public class DbDAO {
         return list;
     }
 
+    public void insertNewInsurance(Insurance ins) {
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ADD_INSURANCE_STMT_NEW);
+
+            pstmt.setString(1, ins.scheme);
+            pstmt.setString(2, ins.health_facility);
+            pstmt.setString(3, ins.member_no);
+            pstmt.setString(4, ins.serial_no);
+            pstmt.setString(5, ins.hosp_record_no);
+            pstmt.setString(6, ins.patient_type2);
+            pstmt.setString(7, ins.detail_type);
+            pstmt.setString(8, ins.specialty);
+            pstmt.setString(9, ins.specialty_code);
+            pstmt.setString(10, ins.patient_id);
+            pstmt.setString(11, ins.specialty_code);
+            pstmt.setDouble(12, getTodayMillisecondsWithoutTime());
+            pstmt.setString(13, ins.patient_type);
+
+            pstmt.executeUpdate();
+
+            ins.errormsg = "";//"Thank you for registering with us!";
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            ins.errormsg = "Email already exists! Please choose another email.";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
+
     public List<Insur_diagnosis> findInsDiagnosis(String findId) {
         List<Insur_diagnosis> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -669,7 +707,33 @@ public class DbDAO {
         return list;
     }
 
-    public List<Insurance> findInsuracne(String findId) {
+    public List<DynamicInfo> finddate(String findId) {
+        List<DynamicInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_PATIENTID_AND_STATUS_CKO_ADM);
+            pstmt.setString(1, findId);
+            pstmt.setString(2, findId);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                DynamicInfo dyn = new DynamicInfo();
+                dyn.buildDynamicInfo(rs);
+                list.add(dyn);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! finddate : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public List<Insurance> findInsurance(String findId) {
         List<Insurance> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;

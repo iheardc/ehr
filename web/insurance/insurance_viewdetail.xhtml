@@ -12,22 +12,47 @@
 
         <!--    <ui:define name="content"> -->
 
+        <p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+            <p:printer target="form" />
+        </p:commandButton>
 
-        <h:form style="padding-top:2em">
-            <b:container fluid="true">
-                <b:column col-md="12">
-                    <b:column col-md="1"><br></br><p:graphicImage value="/images/nhis-logo-new.jpg" style="width:80px"/>
-                    </b:column>
-                    <b:column col-md="2"><br></br><h6>&nbsp;&nbsp;&nbsp;<b><u>Claim Form</u></b><br></br>&nbsp;&nbsp;&nbsp;(Regulation 62)</h6>
-
-                    </b:column>
-                    <b:column col-md="7">
-                        <p:outputLabel value="NATIONAL HEALTH INSURANCE SCHEME VALLEY VIEW ADVENTIST HOSPITAL"  style="font-size:24px; text-align:center;"></p:outputLabel>
-                    </b:column>
-                    <b:column col-md="2"><p:graphicImage value="/images/images.jpg" style="width:80px"/>
-                    </b:column>
-                </b:column>
-            </b:container>
+        <h:form id="form" style="padding-top:2em">
+            <!--            <b:container fluid="true">
+                            <b:column col-md="12">
+                                <b:column col-md="1"><br></br><p:graphicImage value="/images/nhis-logo-new.jpg" style="width:80px"/>
+                                </b:column>
+                                <b:column col-md="2"><br></br><h6>&nbsp;&nbsp;&nbsp;<b><u>Claim Form</u></b><br></br>&nbsp;&nbsp;&nbsp;(Regulation 62)</h6>
+            
+                                </b:column>
+                                <b:column col-md="7">
+                                    <p:outputLabel value="NATIONAL HEALTH INSURANCE SCHEME VALLEY VIEW ADVENTIST HOSPITAL"  style="font-size:24px; text-align:center;"></p:outputLabel>
+                                </b:column>
+                                <b:column col-md="2"><p:graphicImage value="/images/images.jpg" style="width:80px"/>
+                                </b:column>
+                            </b:column>
+                        </b:container>-->
+            <div style="float:left; width:100%; padding:5px;">
+                <table>
+                    <tr>
+                        <td colspan="2" style="width:25%"></td>
+                        <td rowspan="2" style="width:60%; font-size:24px; text-align:center;">
+                            <b>NATIONAL HEALTH INSURANCE SCHEME</b>
+                            <p:outputLabel value="#{insuranceBean.selectedIns.organization_name}"  style="font-size:24px; text-align:center;"></p:outputLabel> 
+                        </td>
+                        <td rowspan="2" style="width:15%">
+                            <p:graphicImage value="/images/images.jpg" style="width:80px"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:10%">
+                            <p:graphicImage value="/images/nhis-logo-new.jpg" style="width:80px"/>
+                        </td>
+                        <td style="width:15%">
+                         <h6><b><u>Claim Form</u></b><br></br>(Regulation 62)</h6>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
             <div style="float:left; width:50%; padding:5px;">
                 <!--            <p:dataTable resizableColumns="true" tableStyle="width:50%;"  tableStyleClass="table table-striped" emptyMessage="">
@@ -359,7 +384,7 @@
                     <tr>
                         <th colspan="2" style="text-align: right; padding:0 20px 0 0; border-top:0;">TOTAL</th>
                         <td width="70px">
-                             <p:inputText value="#{insuranceBean.total()}" disabled="true" style="width:100%"></p:inputText>
+                            <p:inputText value="#{insuranceBean.total()}" disabled="true" style="width:100%"></p:inputText>
                         </td>
                     </tr>
                 </table>
