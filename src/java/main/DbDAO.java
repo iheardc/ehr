@@ -33,8 +33,8 @@ public class DbDAO {
             + "login_id, email, password, first_name, last_name, gender, phone, "
             + "role, license, "
             + "address, city, state, zip, country, "
-            + "pic) "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "pic, location_id) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String ADD_INSURANCE_STMT_NEW
             = "INSERT INTO insurance("
             + "scheme, health_facility, Member_No, Serial_No, Hosp_Record_No, patient_type2, detail_type, specialty, specialty_code, patient_id, Ghana_DRG, date_of_claim, patient_type) "
@@ -54,8 +54,8 @@ public class DbDAO {
             + "address, city, state, zip, country, "
             + "emFN, emLN, emAddress, emCity, emState, emZip, emRelationship, emPhone, emEmail, "
             + "postalAddress, postalCity, postalState, postalZip, "
-            + "pic) "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "pic, location_id) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 //    private static final String FIND_EMPLOYEE
 //            = "SELECT * FROM employee WHERE id like ? and first_name like ? and last_name like ? and email like ? and role like ?";
     private static final String FIND_EMPLOYEE_OR
@@ -64,7 +64,7 @@ public class DbDAO {
             + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) or A.id like ? or (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) or A.email like ? or A.role like ? "
+            + "WHERE location_id=? and (A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) or A.id like ? or (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) or A.email like ? or A.role like ?) "
             + "GROUP BY A.id;";
     private static final String FIND_EMPLOYEE_AND
             = "SELECT  A.*, B.specialty as specialty "
@@ -72,7 +72,7 @@ public class DbDAO {
             + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) and (concat_ws(' ',first_name,last_name) like ?) and A.email like ? and A.role like ? "
+            + "WHERE location_id=? and (A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) and (concat_ws(' ',first_name,last_name) like ?) and A.email like ? and A.role like ?) "
             + "GROUP BY A.id;";
     private static final String FIND_PATIENT_WITH_DATE
             = "select * from patient as P "
@@ -81,10 +81,10 @@ public class DbDAO {
             + "FROM outpatient_dynamic "
             + "WHERE ? <= date and date <= ? "
             + "GROUP BY patient_id) as B on (B.patient_id = P.id) "
-            + "where id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ? and IFNULL(B.cot,0) <= 0";
+            + "where location_id=? and (id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ? and IFNULL(B.cot,0) <= 0)";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
-            + "WHERE id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?";
+            + "WHERE location_id=? and (id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_PATIENTID_AND_STATUS_CKO_ADM
             = "SELECT * FROM outpatient_dynamic WHERE (patient_id=? AND status='CKO') OR (patient_id=? AND status='ADM')";
     private static final String FIND_INSURMEDICINE
@@ -99,13 +99,13 @@ public class DbDAO {
             = "SELECT * FROM insurance "
             + "WHERE patient_id=?";
     private static final String CHECK_IN_PATIENT
-            = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status) VALUES(?, ?, ?, ?, ?, ?, ?);";
+            = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status, location_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String CHECK_OUT_PATIENT
             = "UPDATE outpatient_dynamic SET "
             + "status=?,date=? "
             + "WHERE id=?";
     private static final String MAKE_NEW_BILLING
-            = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
+            = "INSERT INTO billing(billed_to, date, location_id) VALUES(?, ?, ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
             = "SELECT A.*, B.pic as patient_pic, ifnull((C.count + D.count),0) > 0 as testing, (ifnull((C.count + D.count),0) = 0 and ifnull((E.count + F.count),0) > 0) as needCheck "
             + "FROM outpatient_dynamic as A "
@@ -128,7 +128,7 @@ public class DbDAO {
             + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
             + "WHERE status = 'NFC' "
             + "GROUP BY outpatient_dynamic_id) as F on (F.outpatient_dynamic_id = A.id) "
-            + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ? "
+            + "WHERE location_id=? and (A.status like ? and IFNULL(A.doctor_id,'') like ?) "
             + "GROUP BY A.id";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS_AND_DATE
             = "SELECT A.*, B.pic as patient_pic, ifnull((C.count + D.count),0) > 0 as testing, (ifnull((C.count + D.count),0) = 0 and ifnull((E.count + F.count),0) > 0) as needCheck "
@@ -152,22 +152,22 @@ public class DbDAO {
             + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
             + "WHERE status = 'NFC' "
             + "GROUP BY outpatient_dynamic_id) as F on (F.outpatient_dynamic_id = A.id) "
-            + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ? and ? <= date and date <= ? "
+            + "WHERE location_id=? and (A.status like ? and IFNULL(A.doctor_id,'') like ? and ? <= date and date <= ?) "
             + "GROUP BY A.id";
     private static final String FIND_DOCTOR
-            = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
+            = "SELECT * FROM employee WHERE location_id=? and (role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?))";
     private static final String FIND_DOCTOR_WITH_SPECIALTY
             = "SELECT  A.*, B.specialty as specialty "
             + "FROM employee as A LEFT OUTER JOIN ( "
             + "SELECT employee_id, GROUP_CONCAT(specialty SEPARATOR ', ') AS specialty "
             + "FROM specialty "
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
-            + "WHERE A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and role='doctor' and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) "
+            + "WHERE location_id=? and (A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and role='doctor' and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?)) "
             + "GROUP BY A.id;";
     private static final String GET_PATIENT_NAMES
-            = "SELECT id, first_name, last_name FROM patient WHERE first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?";
+            = "SELECT id, first_name, last_name FROM patient WHERE location_id=? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
     private static final String GET_EMPLOYEE_NAMES_WITH_ROLE
-            = "SELECT id, first_name, last_name, role FROM employee WHERE role like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
+            = "SELECT id, first_name, last_name, role FROM employee WHERE location_id=? and (role like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?))";
     private static final String ASSIGN_DOCTOR
             = "UPDATE outpatient_dynamic SET "
             + "doctor_id=?,doctor_fn=?,doctor_ln=?,nurse_id=?,nurse_fn=?,nurse_ln=?,status=?,date=? "
@@ -182,8 +182,6 @@ public class DbDAO {
             = "SELECT * FROM chief_complaint WHERE outpatient_dynamic_id=?";
     private static final String GET_VITAL_SIGN_FROM_DYNAMIC
             = "SELECT * FROM vital_sign WHERE outpatient_dynamic_id=?";
-    private static final String FIND_ALL_STATUS//Michelle
-            = "SELECT * FROM outpatient_dynamic";
     private static final String GET_PATIENT_VISIT_HISTORY
             = "SELECT  A.*, B.chief as chief , C.injection as injection, D.temperature, D.SPO2, D.weight, D.blood_pressure "
             + "FROM outpatient_dynamic as A "
@@ -353,6 +351,44 @@ public class DbDAO {
         }
         return isDuplicate;
     }
+    
+    public static final String CREATE_LOCATION
+            = "INSERT INTO location(name, registered_date, pic) VALUES(?,?,?)";
+    
+    public boolean createLocation(String locationName, byte[] logo, Employee em){
+        boolean result = false;
+        if (checkEmployeeLoginIdDuplicate(em)) {
+            System.out.println("ERROR!!!! Login ID already exists!");
+            em.errormsg = "Login ID already exists! Please choose another ID.";
+            return false;
+        }
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(CREATE_LOCATION, Statement.RETURN_GENERATED_KEYS);
+
+            pstmt.setString(1, locationName);
+            pstmt.setDouble(2, getTodayMillisecondsWithTime());
+            pstmt.setBytes(3, logo);
+
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            String autoInsertedKey = (rs.next()) ? rs.getString(1) : null;
+            rs.close();
+
+            em.locationId = autoInsertedKey;
+            
+            insertNewEmployee(em);
+            
+            result = true;
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
 
     public void insertNewEmployee(Employee em) {
         if (checkEmployeeLoginIdDuplicate(em)) {
@@ -385,6 +421,8 @@ public class DbDAO {
             pstmt.setString(14, em.country);
 
             pstmt.setBytes(15, em.arr);
+            
+            pstmt.setString(16, em.locationId);
 
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -512,6 +550,8 @@ public class DbDAO {
             pstmt.setString(27, p.posZip);
 
             pstmt.setBytes(28, p.arr);
+            
+            pstmt.setString(29, p.locationId);
 
             pstmt.executeUpdate();
 
@@ -524,7 +564,7 @@ public class DbDAO {
         }
     }
 
-    public List<Employee> findEmployee(String findType, String findId, String findName, String findEmail, String findRole, String findSpecialty) {
+    public List<Employee> findEmployee(String locationId, String findType, String findId, String findName, String findEmail, String findRole, String findSpecialty) {
         if (findId == null || "".equals(findId)) {
             findId = "%";
         }
@@ -552,13 +592,14 @@ public class DbDAO {
             } else {
                 pstmt = connect.prepareStatement(FIND_EMPLOYEE_AND);
             }
-            pstmt.setString(1, findSpecialty);
-            pstmt.setString(2, findId);
-            pstmt.setString(3, findName);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, findSpecialty);
+            pstmt.setString(3, findId);
             pstmt.setString(4, findName);
             pstmt.setString(5, findName);
-            pstmt.setString(6, findEmail);
-            pstmt.setString(7, findRole);
+            pstmt.setString(6, findName);
+            pstmt.setString(7, findEmail);
+            pstmt.setString(8, findRole);
 //            pstmt.setString(6, findSpecialty);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -761,7 +802,7 @@ public class DbDAO {
 //            = "SELECT * FROM patient "
 //            + "WHERE first_name like ? or last_name like ? and date_of_birth like ?";
 
-    public List<Patient> findPatient(String findId, String findName, String findDoB) {
+    public List<Patient> findPatient(String locationId, String findId, String findName, String findDoB) {
         if (findId == null || "".equals(findId)) {
             findId = "%";
         }
@@ -779,11 +820,12 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT);
-            pstmt.setString(1, findId);
-            pstmt.setString(2, findName);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, findId);
             pstmt.setString(3, findName);
             pstmt.setString(4, findName);
-            pstmt.setString(5, findDoB);
+            pstmt.setString(5, findName);
+            pstmt.setString(6, findDoB);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
@@ -801,7 +843,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Patient> findPatientWithDate(Double date, String findId, String findName, String findDoB) {
+    public List<Patient> findPatientWithDate(String locationId, Double date, String findId, String findName, String findDoB) {
         if (findId == null || "".equals(findId)) {
             findId = "%";
         }
@@ -821,11 +863,12 @@ public class DbDAO {
             pstmt = connect.prepareStatement(FIND_PATIENT_WITH_DATE);
             pstmt.setDouble(1, date - 86400000);
             pstmt.setDouble(2, date);
-            pstmt.setString(3, findId);
-            pstmt.setString(4, findName);
+            pstmt.setString(3, locationId);
+            pstmt.setString(4, findId);
             pstmt.setString(5, findName);
             pstmt.setString(6, findName);
-            pstmt.setString(7, findDoB);
+            pstmt.setString(7, findName);
+            pstmt.setString(8, findDoB);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
@@ -863,7 +906,7 @@ public class DbDAO {
         }
     }
 
-    public void checkInPatient(Patient p) {
+    public void checkInPatient(Patient p, String locationId) {
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
@@ -877,6 +920,7 @@ public class DbDAO {
             pstmt.setDouble(5, p.getDob());
             pstmt.setDouble(6, getTodayMillisecondsWithTime());
             pstmt.setString(7, DYNAMIN_DATA[0]);
+            pstmt.setString(8, locationId);
 
             pstmt.executeUpdate();
 
@@ -887,10 +931,10 @@ public class DbDAO {
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
-        makeNewBillingInfo(p); // When patient Check-In, billing information is created automatically.
+        makeNewBillingInfo(p, locationId); // When patient Check-In, billing information is created automatically.
     }
 
-    public void makeNewBillingInfo(Patient p) {
+    public void makeNewBillingInfo(Patient p, String locationId) {
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
@@ -899,6 +943,7 @@ public class DbDAO {
 
             pstmt.setInt(1, Integer.parseInt(p.id));
             pstmt.setDouble(2, getTodayMillisecondsWithTime());
+            pstmt.setString(3, locationId);
 
             pstmt.executeUpdate();
 
@@ -911,7 +956,7 @@ public class DbDAO {
         }
     }
 
-    public List<DynamicInfo> searchPatientInDynamic(String status, String doctor_id) {
+    public List<DynamicInfo> searchPatientInDynamic(String status, String doctor_id, String locationId) {
         if (status == null || "".equals(status) || "All".equals(status)) {
             status = "%";
         }
@@ -925,8 +970,9 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
 
             pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS);
-            pstmt.setString(1, status);
-            pstmt.setString(2, doctor_id);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, status);
+            pstmt.setString(3, doctor_id);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -943,7 +989,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<DynamicInfo> searchPatientInDynamicWithDate(String status, String doctor_id, Double start, Double finish) {
+    public List<DynamicInfo> searchPatientInDynamicWithDate(String status, String doctor_id, Double start, Double finish, String locationId) {
         if (status == null || "".equals(status) || "ALL".equals(status)) {
             status = "%";
         }
@@ -957,10 +1003,11 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
 
             pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_STATUS_AND_DATE);
-            pstmt.setString(1, status);
-            pstmt.setString(2, doctor_id);
-            pstmt.setDouble(3, start);
-            pstmt.setDouble(4, finish);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, status);
+            pstmt.setString(3, doctor_id);
+            pstmt.setDouble(4, start);
+            pstmt.setDouble(5, finish);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -977,7 +1024,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Employee> findDoctor(String findDocName) {
+    public List<Employee> findDoctor(String locationId, String findDocName) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
         } else {
@@ -989,9 +1036,10 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_DOCTOR);
-            pstmt.setString(1, findDocName);
+            pstmt.setString(1, locationId);
             pstmt.setString(2, findDocName);
             pstmt.setString(3, findDocName);
+            pstmt.setString(4, findDocName);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1008,7 +1056,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Employee> findDoctor(String findDocName, String findDocSpecialty) {
+    public List<Employee> findDoctor(String locationId, String findDocName, String findDocSpecialty) {
         if (findDocName == null || "".equals(findDocName)) {
             findDocName = "%";
         } else {
@@ -1025,10 +1073,11 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_DOCTOR_WITH_SPECIALTY);
-            pstmt.setString(1, findDocSpecialty);
-            pstmt.setString(2, findDocName);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, findDocSpecialty);
             pstmt.setString(3, findDocName);
             pstmt.setString(4, findDocName);
+            pstmt.setString(5, findDocName);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1045,7 +1094,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Patient> getPatientNames(String query) {
+    public List<Patient> getPatientNames(String locationId, String query) {
         if (query == null || "".equals(query)) {
             query = "%";
         } else {
@@ -1058,9 +1107,10 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_PATIENT_NAMES);
 
-            pstmt.setString(1, query);
+            pstmt.setString(1, locationId);
             pstmt.setString(2, query);
             pstmt.setString(3, query);
+            pstmt.setString(4, query);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1077,7 +1127,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<Employee> getEmployeeNames(String role, String query) {
+    public List<Employee> getEmployeeNames(String locationId, String role, String query) {
         if (role == null || "".equals(role)) {
             role = "%";
         }
@@ -1093,10 +1143,11 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_EMPLOYEE_NAMES_WITH_ROLE);
 
-            pstmt.setString(1, role);
-            pstmt.setString(2, query);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, role);
             pstmt.setString(3, query);
             pstmt.setString(4, query);
+            pstmt.setString(5, query);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1290,30 +1341,6 @@ public class DbDAO {
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }
-    }
-
-    // Michelle added. Find ALL patient status
-    public List<DynamicInfo> findPatientStatus() {
-
-        List<DynamicInfo> list = new ArrayList<>();
-        PreparedStatement pstmt = null;
-        Connection connect = null;
-        try {
-            connect = DbConnectionPools.getPoolConnection();
-            pstmt = connect.prepareStatement(FIND_ALL_STATUS);
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                DynamicInfo d = new DynamicInfo();
-                d.buildDynamicInfo(rs);
-                list.add(d);
-            }
-        } catch (Exception e) {
-            System.out.println("ERROR! " + e.toString());
-        } finally {
-            DbConnectionPools.closeResources(connect, pstmt);
-        }
-        return list;
     }
 
     public void patientVisitHistory(DynamicInfo d) {
@@ -1528,9 +1555,9 @@ public class DbDAO {
     }
 
     public static final String INSERT_NEW_CHARGE_CODE
-            = "INSERT INTO charge_code(code, name, description, amount, registered_date) VALUES(?,?,?,?,?)";
+            = "INSERT INTO charge_code(code, name, description, amount, registered_date, location_id) VALUES(?,?,?,?,?,?)";
 
-    public boolean insertNewChargeCode(ChargeCode c) {
+    public boolean insertNewChargeCode(ChargeCode c, String locationId) {
         boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1542,6 +1569,7 @@ public class DbDAO {
             pstmt.setString(3, c.description);
             pstmt.setDouble(4, c.amount);
             pstmt.setDouble(5, getTodayMillisecondsWithTime());
+            pstmt.setString(6, locationId);
 
             pstmt.executeUpdate();
 
@@ -1595,9 +1623,9 @@ public class DbDAO {
 
     // ORDER
     public static final String INSERT_NEW_LAB_ORDER
-            = "INSERT INTO lab_order_management(doctor_id, patient_id, LOINC_CODE, order_description, status, date) VALUES (?,?,?,?,?,?)";
+            = "INSERT INTO lab_order_management(doctor_id, patient_id, LOINC_CODE, order_description, status, date, location_id) VALUES (?,?,?,?,?,?,?)";
 
-    public boolean insertNewLabOrder(Patient p, Employee doc, List<LOINC> orderList, String orderDescription) {
+    public boolean insertNewLabOrder(Patient p, Employee doc, List<LOINC> orderList, String orderDescription, String locationId) {
         boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1611,6 +1639,7 @@ public class DbDAO {
                 pstmt.setString(4, orderDescription);
                 pstmt.setString(5, "WFT");
                 pstmt.setDouble(6, getTodayMillisecondsWithTime());
+                pstmt.setString(7, locationId);
 
                 pstmt.executeUpdate();
             }
@@ -1625,9 +1654,9 @@ public class DbDAO {
         return result;
     }
     public static final String INSERT_NEW_IMAGING_ORDER
-            = "INSERT INTO radiology_order_management(doctor_id, patient_id, LOINC_CODE, order_description, status, date) VALUES (?,?,?,?,?,?)";
+            = "INSERT INTO radiology_order_management(doctor_id, patient_id, LOINC_CODE, order_description, status, date, location_id) VALUES (?,?,?,?,?,?,?)";
 
-    public boolean insertNewImagingOrder(Patient p, Employee doc, List<LOINC> orderList, String orderDescription) {
+    public boolean insertNewImagingOrder(Patient p, Employee doc, List<LOINC> orderList, String orderDescription, String locationId) {
         boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1641,6 +1670,7 @@ public class DbDAO {
                 pstmt.setString(4, orderDescription);
                 pstmt.setString(5, "WFT");
                 pstmt.setDouble(6, getTodayMillisecondsWithTime());
+                pstmt.setString(7, locationId);
 
                 pstmt.executeUpdate();
             }
@@ -1670,10 +1700,10 @@ public class DbDAO {
             + "LEFT OUTER JOIN ( "
             + "SELECT * FROM loinc_code "
             + "GROUP BY LOINC_CODE) as E on(E.LOINC_CODE = A.LOINC_CODE) "
-            + "WHERE status like ? and ifnull(technician_id,'') like ? "
+            + "WHERE location_id=? and (status like ? and ifnull(technician_id,'') like ?) "
             + "GROUP BY A.id";
 
-    public List<OrderInfo> getLabOrderList(String status, String techId) {
+    public List<OrderInfo> getLabOrderList(String locationId, String status, String techId) {
         if (status == null || status.isEmpty()) {
             status = "%";
         }
@@ -1686,8 +1716,9 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_LAB_ORDERS);
-            pstmt.setString(1, status);
-            pstmt.setString(2, techId);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, status);
+            pstmt.setString(3, techId);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1718,10 +1749,10 @@ public class DbDAO {
             + "LEFT OUTER JOIN ( "
             + "SELECT * FROM loinc_code "
             + "GROUP BY LOINC_CODE) as E on(E.LOINC_CODE = A.LOINC_CODE) "
-            + "WHERE status like ? and ifnull(radiologist_id,'') like ? "
+            + "WHERE location_id=? and (status like ? and ifnull(radiologist_id,'') like ?) "
             + "GROUP BY A.id";
 
-    public List<OrderInfo> getImagingOrderList(String status, String techId) {
+    public List<OrderInfo> getImagingOrderList(String locationId, String status, String techId) {
         if (status == null || status.isEmpty()) {
             status = "%";
         }
@@ -1734,8 +1765,9 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_IMAGING_ORDERS);
-            pstmt.setString(1, status);
-            pstmt.setString(2, techId);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, status);
+            pstmt.setString(3, techId);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1805,10 +1837,10 @@ public class DbDAO {
 
     public static final String INSERT_PRESCRIPTION
             = "INSERT INTO prescription("
-            + "doctor_id, patient_id, comment, status, date) "
-            + "VALUES(?,?,?,?,?)";
+            + "doctor_id, patient_id, comment, status, date, location_id) "
+            + "VALUES(?,?,?,?,?,?)";
 
-    public boolean insertNewPrescription(Patient p, Employee doc, Prescription pres) {
+    public boolean insertNewPrescription(Patient p, Employee doc, Prescription pres, String locationId) {
         boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -1821,6 +1853,7 @@ public class DbDAO {
             pstmt.setString(3, pres.comment);
             pstmt.setString(4, "WFP");
             pstmt.setDouble(5, getTodayMillisecondsWithTime());
+            pstmt.setString(6, locationId);
 
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -1929,17 +1962,18 @@ public class DbDAO {
             + "SELECT billing_SEQ, SUM(paid_amount) as paid "
             + "FROM payment "
             + "GROUP BY billing_SEQ) as C on (C.billing_SEQ = A.SEQ) "
-            + "WHERE billed_to like ? and PIF is null and ifnull(B.total,0) > 0 "
+            + "WHERE location_id=? and (billed_to like ? and PIF is null and ifnull(B.total,0) > 0) "
             + "GROUP BY A.SEQ";
 
-    public List<PayInfo> getChargesDueList(Patient p) {
+    public List<PayInfo> getChargesDueList(Patient p, String locationId) {
         List<PayInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT_BILLING);
-            pstmt.setString(1, p.id);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, p.id);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1981,15 +2015,16 @@ public class DbDAO {
     }
 
     public static final String GET_PAYMENT_HISTORY
-            = "SELECT * FROM payment WHERE billing_SEQ=?";
+            = "SELECT * FROM payment WHERE location_id=? and (billing_SEQ=?)";
 
-    public void getPaymentHistory(PayInfo pi) {
+    public void getPaymentHistory(PayInfo pi, String locationId) {
         PreparedStatement pstmt = null;
         Connection connect = null;
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_PAYMENT_HISTORY);
-            pstmt.setString(1, pi.SEQ);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, pi.SEQ);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -2005,7 +2040,7 @@ public class DbDAO {
     }
 
     public static final String PAY_AMOUNT_DUE
-            = "INSERT INTO payment(billing_SEQ, patient_id, paid_amount, received_by, method, date) VALUES(?,?,?,?,?,?)";
+            = "INSERT INTO payment(billing_SEQ, patient_id, paid_amount, received_by, method, date, location_id) VALUES(?,?,?,?,?,?,?)";
 
     public boolean payAmountDue(PayInfo pi, Employee em, String payMethod, double payAmountDue) {
         boolean result = false;
@@ -2021,6 +2056,7 @@ public class DbDAO {
             pstmt.setString(4, em.id);
             pstmt.setString(5, payMethod);
             pstmt.setDouble(6, getTodayMillisecondsWithTime());
+            pstmt.setString(7, em.locationId);
 
             pstmt.executeUpdate();
 
@@ -2069,7 +2105,7 @@ public class DbDAO {
             + "LEFT OUTER JOIN ( "
             + "SELECT * FROM employee "
             + "GROUP BY id) as D on(D.id = A.pharmacist_id) "
-            + "WHERE status like ? and ifnull(pharmacist_id,'') like ? "
+            + "WHERE location_id=? and (status like ? and ifnull(pharmacist_id,'') like ?) "
             + "GROUP BY A.id;";
     public static final String GET_PRESCRIPTION_DETAIL
             = "select A.*, ifnull(B.qty, 0) as current_qty, (ifnull(B.qty, 0) - (A.single_dose * A.num_of_daily_dose * A.total_dosing_days)) as remain_qty, (C.amount * (A.single_dose * A.num_of_daily_dose * A.total_dosing_days)) as coast "
@@ -2085,7 +2121,7 @@ public class DbDAO {
             + "GROUP BY code) as C on (C.code = A.RxNORM_code) "
             + "WHERE prescription_id = ?";
 
-    public List<Prescription> getPrescriptionList(String status, String pharmacistId) {
+    public List<Prescription> getPrescriptionList(String status, String pharmacistId, String locationId) {
         if (status == null || status.isEmpty()) {
             status = "%";
         }
@@ -2098,8 +2134,9 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_PRESCRIPTION);
-            pstmt.setString(1, status);
-            pstmt.setString(2, pharmacistId);
+            pstmt.setString(1, locationId);
+            pstmt.setString(2, status);
+            pstmt.setString(3, pharmacistId);
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -2196,9 +2233,9 @@ public class DbDAO {
 
 // INVENTORY ----------------------------------------------------------------------
     public static final String ADD_NEW_CLINICAL_ITEM
-            = "INSERT INTO medicine_inventory(RxNORM_code, name, threshold, purchase_price, sell_price) VALUES(?,?,?,?,?)";
+            = "INSERT INTO medicine_inventory(RxNORM_code, name, threshold, purchase_price, sell_price, location_id) VALUES(?,?,?,?,?,?)";
 
-    public boolean insertNewClinical(ClinicalInven cl) {
+    public boolean insertNewClinical(ClinicalInven cl, String locationId) {
         boolean result = false;
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -2211,6 +2248,7 @@ public class DbDAO {
             pstmt.setDouble(3, cl.threshold);
             pstmt.setDouble(4, cl.purchasePrice);
             pstmt.setDouble(5, cl.sellPrice);
+            pstmt.setString(6, locationId);
 
             pstmt.executeUpdate();
 
@@ -2294,10 +2332,10 @@ public class DbDAO {
             + "WHERE qty > used_qty and expire_date < ? "
             + "group by RxNORM_code "
             + ") as C on (C.RXNORM_code = A.RxNORM_code) "
-            + "WHERE A.RxNORM_code like ? and (A.threshold > ifnull(B.qty,0) or ?) and (ifnull(C.expired_qty, 0) > 0 or ?) "
+            + "WHERE location_id=? and (A.RxNORM_code like ? and (A.threshold > ifnull(B.qty,0) or ?) and (ifnull(C.expired_qty, 0) > 0 or ?)) "
             + "GROUP BY A.RxNORM_code";
 
-    public List<ClinicalInven> getClinicalItems(RxNORM rx) {
+    public List<ClinicalInven> getClinicalItems(RxNORM rx, String locationId) {
         String code = "";
         if (rx == null || rx.code == null) {
             code = "%";
@@ -2311,9 +2349,10 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
             pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
-            pstmt.setString(2, code);
-            pstmt.setString(3, "1");
+            pstmt.setString(2, locationId);
+            pstmt.setString(3, code);
             pstmt.setString(4, "1");
+            pstmt.setString(5, "1");
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -2330,7 +2369,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<ClinicalInven> getOrderRequiredClinicalItems(RxNORM rx) {
+    public List<ClinicalInven> getOrderRequiredClinicalItems(RxNORM rx, String locationId) {
         String code = "";
         if (rx == null || rx.code == null) {
             code = "%";
@@ -2344,9 +2383,10 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
             pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
-            pstmt.setString(2, code);
-            pstmt.setString(3, "0");
-            pstmt.setString(4, "1");
+            pstmt.setString(2, locationId);
+            pstmt.setString(3, code);
+            pstmt.setString(4, "0");
+            pstmt.setString(5, "1");
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -2363,7 +2403,7 @@ public class DbDAO {
         return list;
     }
 
-    public List<ClinicalInven> getCloseExpiredClinicalItems(RxNORM rx) {
+    public List<ClinicalInven> getCloseExpiredClinicalItems(RxNORM rx, String locationId) {
         String code = "";
         if (rx == null || rx.code == null) {
             code = "%";
@@ -2377,9 +2417,10 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(GET_CLINICAL_ITEM);
             pstmt.setDouble(1, getTodayMillisecondsWithoutTime());
-            pstmt.setString(2, code);
-            pstmt.setString(3, "1");
-            pstmt.setString(4, "0");
+            pstmt.setString(2, locationId);
+            pstmt.setString(3, code);
+            pstmt.setString(4, "1");
+            pstmt.setString(5, "0");
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {

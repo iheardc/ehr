@@ -51,7 +51,7 @@ public class patientBean implements Serializable {
 
     public void findPatient() {
         DbDAO dao = new DbDAO();
-        findList = dao.findPatient(findId, findName, dateToDoubleString(findDoB));
+        findList = dao.findPatient(signinBean.locationId, findId, findName, dateToDoubleString(findDoB));
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -71,7 +71,7 @@ public class patientBean implements Serializable {
     
     public void findPatientWithDate(){ // for check-in
         DbDAO dao = new DbDAO();
-        findList = dao.findPatientWithDate(DbDAO.getTodayMillisecondsWithoutTime()+86400000, findId, findName, dateToDoubleString(findDoB));
+        findList = dao.findPatientWithDate(signinBean.locationId, DbDAO.getTodayMillisecondsWithoutTime()+86400000, findId, findName, dateToDoubleString(findDoB));
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -125,7 +125,7 @@ public class patientBean implements Serializable {
     public void checkIn() {
 
         DbDAO dao = new DbDAO();
-        dao.checkInPatient(selectedP);
+        dao.checkInPatient(selectedP, signinBean.locationId);
 
         if (selectedP.errormsg.length() > 0) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);

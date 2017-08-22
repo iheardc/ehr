@@ -40,7 +40,7 @@ public class signupBean implements Serializable {
     String accessToken;
 
     // Employee Only
-    String role, license, location;
+    String role, license, locationId;
     int authority;
     // The items currently available for selection
     private List<String> specItems = new ArrayList<String>();
@@ -58,8 +58,11 @@ public class signupBean implements Serializable {
 
     Employee em = new Employee();
     Patient p = new Patient();
-    
+
     boolean isUpdateMode = false;
+
+    // Create Location
+    String locationName, locationAdminId, locationAdminPassword, locationAdminRePassword, locationAdminFn, locationAdminLn;
 
     public signupBean() {
         setAllSpecialty();
@@ -75,7 +78,7 @@ public class signupBean implements Serializable {
 //                address, city, state, zip, country,
 //                accessToken, authority, specialty);
         em = new Employee(id, loginId, email, password, fn, ln, name, gender, phone,
-                role, license, location,
+                role, license, locationId,
                 address, city, state, zip, country,
                 authority, arr, specialty);
 
@@ -102,8 +105,8 @@ public class signupBean implements Serializable {
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 
     }
-    
-    public void updateEmployee() throws IOException{
+
+    public void updateEmployee() throws IOException {
         // TODO
 //        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfylly updated ", "Your information has been successfully updated!"));
     }
@@ -113,7 +116,7 @@ public class signupBean implements Serializable {
         DbDAO dao = new DbDAO();
 
         byte[] arr = service.getData();
-        p = new Patient(id, email, password, fn, ln, name, gender, phone, address, city, state, zip, country, dateToDouble(dob2), occupation, religion, emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip, posAddress, posCity, posState, posZip, arr);
+        p = new Patient(id, email, password, fn, ln, name, gender, phone, address, city, state, zip, country, dateToDouble(dob2), occupation, religion, emFN, emLN, emEmail, emPhone, emRelationship, emAddress, emCity, emState, emZip, posAddress, posCity, posState, posZip, arr, signinBean.locationId);
 
         dao.insertNewPatient(p);
 
@@ -134,8 +137,37 @@ public class signupBean implements Serializable {
 //            return "/checkin/create_patient.xhtml?faces-redirect=true";
             menuBean.newPatient();
         }
-        
+
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+
+    }
+
+    public void registrationLocation() throws IOException {
+
+        DbDAO dao = new DbDAO();
+
+        byte[] logo = service.getData();
+
+        Employee em = new Employee();
+        em.fn = locationAdminFn;
+        em.ln = locationAdminLn;
+        em.loginId = locationAdminId;
+        em.password = locationAdminPassword;
+        em.role = "admin";
+        em.authority = 10;
+        em.errormsg = "";
+
+        if (dao.createLocation(locationName, logo, em)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfylly registered ", "Your registration has been successfully completed!"));
+            reset();
+            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+        } else {
+            if (em.errormsg.isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed ", "TODO"));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed ", em.errormsg));
+            }
+        }
 
     }
 
@@ -178,7 +210,7 @@ public class signupBean implements Serializable {
         pic = null;
         role = null;
         license = null;
-        location = null;
+        locationId = null;
         address = null;
         city = null;
         state = null;
@@ -207,6 +239,13 @@ public class signupBean implements Serializable {
         isUpdateMode = false;
 
         setAllSpecialty();
+
+        locationName = null;
+        locationAdminId = null;
+        locationAdminPassword = null;
+        locationAdminRePassword = null;
+        locationAdminFn = null;
+        locationAdminLn = null;
 
         System.out.println("Reset all form.");
     }
@@ -276,16 +315,16 @@ public class signupBean implements Serializable {
         specAllItems.add("Vascular surgery");
         specItems.addAll(specAllItems);
     }
-    
-    public void setUpdateValue(){
+
+    public void setUpdateValue() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
         isUpdateMode = true;
-        
+
         setAllSpecialty();
-        
+
         Employee em = sBean.em;
-        
+
         id = em.id;
         loginId = em.loginId;
         email = em.email;
@@ -299,7 +338,7 @@ public class signupBean implements Serializable {
 //        pic = em.pic;
         role = em.role;
         license = em.license;
-        location = em.location;
+        locationId = em.locationId;
         address = em.address;
         city = em.city;
         state = em.state;
@@ -454,12 +493,12 @@ public class signupBean implements Serializable {
         return license;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationId() {
+        return locationId;
     }
 
     public void setAddress(String address) {
@@ -677,6 +716,53 @@ public class signupBean implements Serializable {
     public void setP(Patient p) {
         this.p = p;
     }
-    
-    
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationAdminId() {
+        return locationAdminId;
+    }
+
+    public void setLocationAdminId(String locationAdminId) {
+        this.locationAdminId = locationAdminId;
+    }
+
+    public String getLocationAdminPassword() {
+        return locationAdminPassword;
+    }
+
+    public void setLocationAdminPassword(String locationAdminPassword) {
+        this.locationAdminPassword = locationAdminPassword;
+    }
+
+    public String getLocationAdminRePassword() {
+        return locationAdminRePassword;
+    }
+
+    public void setLocationAdminRePassword(String locationAdminRePassword) {
+        this.locationAdminRePassword = locationAdminRePassword;
+    }
+
+    public String getLocationAdminFn() {
+        return locationAdminFn;
+    }
+
+    public void setLocationAdminFn(String locationAdminFn) {
+        this.locationAdminFn = locationAdminFn;
+    }
+
+    public String getLocationAdminLn() {
+        return locationAdminLn;
+    }
+
+    public void setLocationAdminLn(String locationAdminLn) {
+        this.locationAdminLn = locationAdminLn;
+    }
+
 }

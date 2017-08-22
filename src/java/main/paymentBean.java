@@ -58,7 +58,7 @@ public class paymentBean implements Serializable {
 
     public void findPatient() {
         DbDAO dao = new DbDAO();
-        findList = dao.findPatient(findId, findName, dateToDoubleString(findDoB));
+        findList = dao.findPatient(signinBean.locationId, findId, findName, dateToDoubleString(findDoB));
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -82,7 +82,7 @@ public class paymentBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
 
         DbDAO dao = new DbDAO();
-        payList = dao.getChargesDueList(selectedP);
+        payList = dao.getChargesDueList(selectedP, signinBean.locationId);
 
         selectPatient();
     }

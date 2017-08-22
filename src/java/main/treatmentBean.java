@@ -81,7 +81,7 @@ public class treatmentBean implements Serializable {
     public void findDynaPatient() {
 
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, findDocId, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000);
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, findDocId, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000, signinBean.locationId);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -173,7 +173,7 @@ public class treatmentBean implements Serializable {
 
     public void findPatient() {
         DbDAO dao = new DbDAO();
-        findPatientList = dao.findPatient("", findPatientName, dateToDoubleString(findPatientDoB));
+        findPatientList = dao.findPatient(signinBean.locationId, "", findPatientName, dateToDoubleString(findPatientDoB));
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -228,7 +228,7 @@ public class treatmentBean implements Serializable {
         List<FacesMessage> msgs = addTempChargeCode.checkInsertValidate();
         if (msgs.size() <= 0) {
             DbDAO dao = new DbDAO();
-            if (dao.insertNewChargeCode(addTempChargeCode)) {
+            if (dao.insertNewChargeCode(addTempChargeCode, signinBean.locationId)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully", "TODO"));
                 chargeCodeList.add(addTempChargeCode);
                 resetNewChargeCode();
@@ -354,7 +354,7 @@ public class treatmentBean implements Serializable {
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
         Employee doc = sBean.em;
         if (prescription.detail.size() > 0) {
-            boolean result = dao.insertNewPrescription(selectedD.p, doc, prescription);
+            boolean result = dao.insertNewPrescription(selectedD.p, doc, prescription, signinBean.locationId);
             if (result) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Prescription was successfully registered."));
             } else {
@@ -400,7 +400,7 @@ public class treatmentBean implements Serializable {
         }
         
         if(loincLabList.size() > 0){
-            if(dao.insertNewLabOrder(selectedD.p, doc, loincLabList, ccTempDesc)){
+            if(dao.insertNewLabOrder(selectedD.p, doc, loincLabList, ccTempDesc, signinBean.locationId)){
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Lab test order was successfully registered."));
             }else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "TODO / lab order"));
@@ -409,7 +409,7 @@ public class treatmentBean implements Serializable {
         }
         
         if(loincImagingList.size() > 0){
-            if(dao.insertNewImagingOrder(selectedD.p, doc, loincImagingList, ccTempDesc)){
+            if(dao.insertNewImagingOrder(selectedD.p, doc, loincImagingList, ccTempDesc, signinBean.locationId)){
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Imaging order was successfully registered."));
             }else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "TODO / imaging order"));

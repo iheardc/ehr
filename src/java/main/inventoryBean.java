@@ -55,7 +55,7 @@ public class inventoryBean implements Serializable {
         addTempList = new ArrayList<>();
 
         DbDAO dao = new DbDAO();
-        List<ClinicalInven> list = dao.getClinicalItems(cl.rx);
+        List<ClinicalInven> list = dao.getClinicalItems(cl.rx, signinBean.locationId);
 
         isShowBasicField = list.size() <= 0;
         isShowBasicFieldEdit = !isShowBasicField;
@@ -98,7 +98,7 @@ public class inventoryBean implements Serializable {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failed ", "TODO");
             }
         } else {
-            if (dao.insertNewClinical(cl)) {
+            if (dao.insertNewClinical(cl, signinBean.locationId)) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully ", "TODO");
                 isShowMore = true;
                 isEditBasicField = false;
@@ -176,15 +176,15 @@ public class inventoryBean implements Serializable {
     }
     public void searchClinicalItems(){
         DbDAO dao = new DbDAO();
-        this.clinicalItems = dao.getClinicalItems(cl.rx);
+        this.clinicalItems = dao.getClinicalItems(cl.rx, signinBean.locationId);
     }
     public void searchOrderRequiredItems(){
         DbDAO dao = new DbDAO();
-        this.orderRequiredClinicalItems = dao.getOrderRequiredClinicalItems(null);
+        this.orderRequiredClinicalItems = dao.getOrderRequiredClinicalItems(null, signinBean.locationId);
     }
     public void searchCloseExpDateItems(){
         DbDAO dao = new DbDAO();
-        this.closeExpDateClinicalItems = dao.getCloseExpiredClinicalItems(null);
+        this.closeExpDateClinicalItems = dao.getCloseExpiredClinicalItems(null, signinBean.locationId);
     }
 
     public void reset() {

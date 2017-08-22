@@ -32,6 +32,7 @@ public class Patient {
     String errormsg;
     String DBaccnt = "";
     byte[] arr;
+    String locationId;
 
     public Patient() {
 
@@ -42,7 +43,7 @@ public class Patient {
         this.password = password;
     }
 
-    public Patient(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String address, String city, String state, String zip, String country, Double dob, String occupation, String religion, String emFN, String emLN, String emEmail, String emPhone, String emRelationship, String emAddress, String emCity, String emState, String emZip, String posAddress, String posCity, String posState, String posZip, byte[] arr) {
+    public Patient(String id, String email, String password, String fn, String ln, String name, String gender, String phone, String address, String city, String state, String zip, String country, Double dob, String occupation, String religion, String emFN, String emLN, String emEmail, String emPhone, String emRelationship, String emAddress, String emCity, String emState, String emZip, String posAddress, String posCity, String posState, String posZip, byte[] arr, String locationId) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -73,6 +74,7 @@ public class Patient {
         this.posState = posState;
         this.posZip = posZip;
         this.arr = arr;
+        this.locationId = locationId;
     }
 
     public ArrayList<String> getKeySet(ResultSet rs) {
@@ -217,6 +219,10 @@ public class Patient {
                 column = "postalZip";
                 if (columnName.contains(column)) {
                     this.posZip = rs.getString(column);
+                }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -513,6 +519,14 @@ public class Patient {
 
     public String getErrormsg() {
         return errormsg;
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
     public String getDBaccnt() {

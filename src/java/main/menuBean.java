@@ -210,6 +210,13 @@ public class menuBean implements Serializable {
         pathCont = "/admin/create_employee.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+    public static void newLocation() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
+        bean.reset();
+        pathCont = "/admin/create_location.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
     
     //Inventory
     public static void addClinicalInventory(){
@@ -257,7 +264,7 @@ public class menuBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean bean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
 
-        if("admin".equals(bean.em.role.toLowerCase())){
+        if(!"superadmin".equals(strs) && ("admin".equals(bean.em.role.toLowerCase()) || "superadmin".equals(bean.em.role.toLowerCase()))){
             return true;
         }
         

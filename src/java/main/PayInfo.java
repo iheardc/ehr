@@ -25,6 +25,8 @@ public class PayInfo {
 
     List<PayDetail> detail;
     List<Payment> history;
+    
+    String locationId;
 
     public PayInfo() {
 
@@ -96,6 +98,10 @@ public class PayInfo {
                 if (columnName.contains(column)) {
                     this.total = rs.getDouble(column);
                 }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -117,7 +123,7 @@ public class PayInfo {
 
         if (this.history == null) {
             history = new ArrayList<>();
-            new DbDAO().getPaymentHistory(this);
+            new DbDAO().getPaymentHistory(this, signinBean.locationId);
         }
 
     }
@@ -218,6 +224,14 @@ public class PayInfo {
 
     public void setHistory(List<Payment> history) {
         this.history = history;
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
     public Double getAllAmount() {

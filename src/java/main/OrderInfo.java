@@ -24,6 +24,7 @@ public class OrderInfo {
     LOINC loinc;
     Employee doc, tech;
     Patient p;
+    String locationId;
 
     public OrderInfo() {
         p = new Patient();
@@ -140,6 +141,10 @@ public class OrderInfo {
                 if (columnName.contains(column)) {
                     this.isEmergency = "1".equals(rs.getString(column));
                 }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -255,6 +260,14 @@ public class OrderInfo {
 
     public void setP(Patient p) {
         this.p = p;
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
     
     

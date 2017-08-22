@@ -53,7 +53,7 @@ public class triageBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date)+86400000);
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date)+86400000, signinBean.locationId);
         
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -122,7 +122,7 @@ public class triageBean implements Serializable {
     public void findDoctor() {
 
         DbDAO dao = new DbDAO();
-        findDocList = dao.findDoctor(findDocName, findDocSpecialty);
+        findDocList = dao.findDoctor(signinBean.locationId, findDocName, findDocSpecialty);
 
         FacesMessage message;
         if (findDocList.size() > 0) {

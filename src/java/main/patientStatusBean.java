@@ -52,7 +52,7 @@ public class patientStatusBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(startDate), DbDAO.dateToDouble(finishDate)+86400000);
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(startDate), DbDAO.dateToDouble(finishDate)+86400000, signinBean.locationId);
         
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

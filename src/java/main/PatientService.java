@@ -27,11 +27,11 @@ public class PatientService {
     }
     
     public static List<Patient> getAllList(){
-        return new DbDAO().getPatientNames(null);
+        return new DbDAO().getPatientNames(signinBean.locationId, null);
     }
     
     public static List<Patient> getFilteredList(String query){
-        return new DbDAO().getPatientNames(query);
+        return new DbDAO().getPatientNames(signinBean.locationId, query);
     }
 
     public static List<Patient> getList() {

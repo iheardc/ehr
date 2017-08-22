@@ -27,16 +27,16 @@ public class EmployeeService {
     }
     
     public static List<Employee> getAllList(){
-        return new DbDAO().getEmployeeNames(null, null);
+        return new DbDAO().getEmployeeNames(signinBean.locationId, null, null);
     }
     
     
     public static List<Employee> getFilteredList(String role){
-        return new DbDAO().getEmployeeNames(role, null);
+        return new DbDAO().getEmployeeNames(signinBean.locationId, role, null);
     }
     
     public static List<Employee> getFilteredList(String role, String query){
-        return new DbDAO().getEmployeeNames(role, query);
+        return new DbDAO().getEmployeeNames(signinBean.locationId, role, query);
     }
 
     public static List<Employee> getList() {

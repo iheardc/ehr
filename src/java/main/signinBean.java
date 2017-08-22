@@ -30,6 +30,7 @@ public class signinBean implements Serializable {
     Employee em;
         boolean loggedIn = false;
     boolean isPatientLogin = false;
+    public static String locationId = "";
 //    boolean ispatientlogin=true;
 //    boolean isclinicianlogin=false;
 
@@ -95,6 +96,7 @@ public class signinBean implements Serializable {
                 return "";
             } else {
                 loggedIn = true;
+                locationId = em.locationId;
 
                 context.addCallbackParam("loggedIn", loggedIn);
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);

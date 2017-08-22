@@ -27,6 +27,7 @@ public class Prescription {
     Double date, dateComplete;
     Patient p;
     Employee doc, n, pharmacist;
+    String locationId;
     
     List<PrescriptionDetail> detail;
 
@@ -148,6 +149,10 @@ public class Prescription {
                 if (columnName.contains(column)) {
                     this.pharmacist.ln = rs.getString(column);
                 }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -248,6 +253,14 @@ public class Prescription {
 
     public void setDetail(List<PrescriptionDetail> detail) {
         this.detail = detail;
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
     
     public boolean isAvailable(){

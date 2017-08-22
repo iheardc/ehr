@@ -50,7 +50,7 @@ public class orderBean implements Serializable {
 
     public void findAllLabOrder() {
         DbDAO dao = new DbDAO();
-        allLabOrders = dao.getLabOrderList("WFT", null);
+        allLabOrders = dao.getLabOrderList(signinBean.locationId, "WFT", null);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -68,7 +68,7 @@ public class orderBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
         DbDAO dao = new DbDAO();
-        myLabOrders = dao.getLabOrderList("ING", sBean.em.id);
+        myLabOrders = dao.getLabOrderList(signinBean.locationId, "ING", sBean.em.id);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -90,7 +90,7 @@ public class orderBean implements Serializable {
 
     public void findAllImagingOrder() {
         DbDAO dao = new DbDAO();
-        allImagingOrders = dao.getImagingOrderList("WFT", null);
+        allImagingOrders = dao.getImagingOrderList(signinBean.locationId, "WFT", null);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -108,7 +108,7 @@ public class orderBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
         DbDAO dao = new DbDAO();
-        myImagingOrders = dao.getImagingOrderList("ING", sBean.em.id);
+        myImagingOrders = dao.getImagingOrderList(signinBean.locationId, "ING", sBean.em.id);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

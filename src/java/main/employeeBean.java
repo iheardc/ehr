@@ -41,7 +41,7 @@ public class employeeBean implements Serializable {
 
     public void findEmployee() {
         DbDAO dao = new DbDAO();
-        findList = dao.findEmployee(findType, findId, findName, findEmail, findRole, findSpecialty);
+        findList = dao.findEmployee(signinBean.locationId, findType, findId, findName, findEmail, findRole, findSpecialty);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

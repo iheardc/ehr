@@ -44,7 +44,7 @@ public class prescriptionBean implements Serializable {
 
     public void findAllPrescription() {
         DbDAO dao = new DbDAO();
-        allPrescription = dao.getPrescriptionList("WFP", null);
+        allPrescription = dao.getPrescriptionList("WFP", null, signinBean.locationId);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -62,7 +62,7 @@ public class prescriptionBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
         DbDAO dao = new DbDAO();
-        myPrescription = dao.getPrescriptionList("ING", sBean.em.id);
+        myPrescription = dao.getPrescriptionList("ING", sBean.em.id, signinBean.locationId);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

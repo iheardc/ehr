@@ -20,6 +20,7 @@ public class ClinicalInven {
     String location;
     Double threshold, purchasePrice, sellPrice;
     Double currentQty, expiredQty;
+    String locationId;
     
     List<ClinicalInvenDetail> detail;
 
@@ -91,6 +92,10 @@ public class ClinicalInven {
                 column = "current_qty";
                 if (columnName.contains(column)) {
                     this.currentQty = rs.getDouble(column);
+                }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -179,5 +184,15 @@ public class ClinicalInven {
         }
         return a;
     }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
+    
+    
     
 }

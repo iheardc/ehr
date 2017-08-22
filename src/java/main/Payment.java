@@ -21,6 +21,7 @@ public class Payment {
     
     String id, billingSEQ, receivedBy, method;
     Double paidAmount, date;
+    String locationId;
     
     public Payment(){
         
@@ -81,6 +82,10 @@ public class Payment {
                 column = "date";
                 if (columnName.contains(column)) {
                     this.date = rs.getDouble(column);
+                }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -146,6 +151,14 @@ public class Payment {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return df.format(currentDate);
 
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
     

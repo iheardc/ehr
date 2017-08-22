@@ -21,7 +21,7 @@ public class Employee {
     ServiceBean service; 
 
     String id, loginId, email, password, fn, ln, name, gender, phone;
-    String role, license, location;
+    String role, license, locationId;
     String address, city, state, zip, country;
     int authority;
     byte[] arr;
@@ -38,7 +38,7 @@ public class Employee {
         this.password = password;
     }
 
-    public Employee(String id, String loginId, String email, String password, String fn, String ln, String name, String gender, String phone, String role, String license, String location, String address, String city, String state, String zip, String country, int authority, byte[] arr, List<String> specialtyList) {
+    public Employee(String id, String loginId, String email, String password, String fn, String ln, String name, String gender, String phone, String role, String license, String locationId, String address, String city, String state, String zip, String country, int authority, byte[] arr, List<String> specialtyList) {
         this.id = id;
         this.loginId = loginId;
         this.email = email;
@@ -50,7 +50,7 @@ public class Employee {
         this.phone = phone;
         this.role = role;
         this.license = license;
-        this.location = location;
+        this.locationId = locationId;
         this.address = address;
         this.city = city;
         this.state = state;
@@ -144,9 +144,9 @@ public class Employee {
                 if (columnName.contains(column)) {
                     this.country = rs.getString(column);
                 }
-                column = "location ID";
+                column = "location_id";
                 if (columnName.contains(column)) {
-                    this.location = Integer.toString(rs.getInt(column));
+                    this.locationId = Integer.toString(rs.getInt(column));
                 }
                 column = "phone";
                 if (columnName.contains(column)) {
@@ -296,12 +296,12 @@ public class Employee {
         return license;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public String getLocationId() {
+        return locationId;
     }
 
-    public String getLocation() {
-        return location;
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
     public void setAddress(String address) {

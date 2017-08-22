@@ -22,6 +22,7 @@ public class ChargeCode {
     
     String code, name, description ;
     double amount, registeredDate;
+    String locationId;
 
     public ChargeCode() {
     }
@@ -77,6 +78,10 @@ public class ChargeCode {
                 column = "registered_date";
                 if (columnName.contains(column)) {
                     this.registeredDate = rs.getDouble(column);
+                }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -159,5 +164,15 @@ public class ChargeCode {
     public String getRegisteredDateString(){
         return getDateStringWithTime((long)registeredDate);
     }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
+    
+    
     
 }

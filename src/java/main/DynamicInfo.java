@@ -41,6 +41,8 @@ public class DynamicInfo {
     String errormsg;
     
     List<DynamicInfo> previousHistory;
+    
+    String locationId;
 
     public DynamicInfo() {
         p = new Patient();
@@ -175,6 +177,10 @@ public class DynamicInfo {
                 column = "testing";
                 if (columnName.contains(column)) {
                     this.isTesting = !"0".equals(rs.getString(column));
+                }
+                column = "location_id";
+                if (columnName.contains(column)) {
+                    this.locationId = Integer.toString(rs.getInt(column));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -422,6 +428,16 @@ public class DynamicInfo {
     public void setIsTesting(boolean isTesting) {
         this.isTesting = isTesting;
     }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
+    
+    
     
     
 }
