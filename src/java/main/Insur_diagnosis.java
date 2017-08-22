@@ -65,11 +65,11 @@ public class Insur_diagnosis {
                 if (columnName.contains(column)) {
                     this.diagnosis = rs.getString(column);
                 }
-                column = "G-DRG";
+                column = "G_DRG";
                 if (columnName.contains(column)) {
                     this.g_drg = rs.getString(column);
                 }
-                 column = "ICD-10";
+                 column = "ICD_10";
                 if (columnName.contains(column)) {
                     this.icd_10 = rs.getString(column);
                 }

@@ -77,7 +77,7 @@ public class Insur_investigations {
                     this.date = rs.getDouble(column);
                 }
                
-                column = "G-DRG";
+                column = "G_DRG";
                 if (columnName.contains(column)) {
                     this.g_drg = rs.getString(column);
                 }

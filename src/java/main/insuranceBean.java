@@ -47,7 +47,7 @@ public class insuranceBean implements Serializable {
 
     //insurance
     String id, patient_id, scheme;
-    String organization_name;
+    String location_id;
     double date_of_claim;
     String patient_type, patient_type2, patient_type3;
     String detail_type, detail_type2;
@@ -70,6 +70,12 @@ public class insuranceBean implements Serializable {
         }
     }
 
+    public String locationinfo(){
+        DbDAO dao = new DbDAO();
+        String location=dao.findlocation(selectedIns.location_id);
+        return location;
+    }
+    
     public void registrationInsurance() {
 
         if (selectedP == null) {
@@ -79,7 +85,7 @@ public class insuranceBean implements Serializable {
 
         what_patient_type();
         DbDAO dao = new DbDAO();
-        saveIns = new Insurance(id, selectedP.id, scheme, organization_name, date_of_claim, patient_type, patient_type2, patient_type3, detail_type, detail_type2, member_no, serial_no, hosp_record_no, G_DRG, third_visit, spell, cc_code, physician, specialty, specialty_code, date_received, action1, signed1, signed2, action2, signed3, date1, date2, admission_date, discharge_date, health_facility);
+        saveIns = new Insurance(id, selectedP.id, location_id, scheme, date_of_claim, patient_type, patient_type2, patient_type3, detail_type, detail_type2, member_no, serial_no, hosp_record_no, G_DRG, third_visit, spell, cc_code, physician, specialty, specialty_code, date_received, action1, signed1, signed2, action2, signed3, date1, date2, admission_date, discharge_date, health_facility);
 
         dao.insertNewInsurance(saveIns);
 
@@ -110,7 +116,7 @@ public class insuranceBean implements Serializable {
         scheme = null;
 //        date_of_claim=0;
 //        patient_type=null;
-//        organization_name = null;
+//        location_id = null;
         patient_type2 = null;
 //        patient_type3=null;
         detail_type = null;
@@ -324,7 +330,7 @@ public class insuranceBean implements Serializable {
         for (int i = 0; i < findMlist.size(); i++) {
             totals = totals + findMlist.get(i).total_amt;
         }
-        return totals;
+        return Math.floor(totals*100d)/100d;
     }
 
     public void onDateSelect(SelectEvent event) {
@@ -565,14 +571,15 @@ public class insuranceBean implements Serializable {
         return serial_no;
     }
 
-    public String getOrganization_name() {
-        return organization_name;
+    public String getLocation_id() {
+        return location_id;
     }
 
-    public void setOrganization_name(String organization_name) {
-        this.organization_name = organization_name;
+    public void setLocation_id(String location_id) {
+        this.location_id = location_id;
     }
 
+    
     public void setSerial_no(String serial_no) {
         this.serial_no = serial_no;
     }

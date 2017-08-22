@@ -69,7 +69,7 @@ public class Insur_procedure {
                 if (columnName.contains(column)) {
                     this.procedure = rs.getString(column);
                 }
-                column = "G-DRG";
+                column = "G_DRG";
                 if (columnName.contains(column)) {
                     this.g_drg = rs.getString(column);
                 }

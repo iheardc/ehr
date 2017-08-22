@@ -27,7 +27,7 @@ public class Insur_medicine {
 
     }
 
-    public Insur_medicine(String id, String insurance_id, String charge_code, String medicine_name, double unit_price, double qt, double total_amt, double date, String dose, String status) {
+    public Insur_medicine(String id, String insurance_id, String charge_code, String medicine_name, double unit_price, double qt, double total_amt, double date, String dose) {
         this.id = id;
         this.insurance_id = insurance_id;
         this.charge_code = charge_code;
@@ -37,7 +37,6 @@ public class Insur_medicine {
         this.total_amt = total_amt;
         this.date = date;
         this.dose = dose;
-        this.status = status;
     }
     
      public ArrayList<String> getKeySet(ResultSet rs) {
@@ -99,10 +98,6 @@ public class Insur_medicine {
                 column = "Dose";
                 if (columnName.contains(column)) {
                     this.dose = rs.getString(column);
-                }
-                column = "status";
-                if (columnName.contains(column)) {
-                    this.status = rs.getString(column);
                 }
                 
             } catch (Exception e) {

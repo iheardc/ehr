@@ -43,8 +43,8 @@ public class DbDAO {
             + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String ADD_INSURANCE_STMT_NEW
             = "INSERT INTO insurance("
-            + "scheme, health_facility, Member_No, Serial_No, Hosp_Record_No, patient_type2, detail_type, specialty, specialty_code, patient_id, Ghana_DRG, date_of_claim, patient_type) "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "scheme, health_facility, Member_No, Serial_No, Hosp_Record_No, patient_type2, detail_type, specialty, specialty_code, patient_id, Ghana_DRG, date_of_claim, patient_type, location_id) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_EMPLOYEE_LOGIN_ID_DUPLICATE
             = "SELECT COUNT(id) as count FROM employee "
             + "WHERE login_id=?";
@@ -80,6 +80,8 @@ public class DbDAO {
             + "GROUP BY employee_id) as B on (B.employee_id = A.id) "
             + "WHERE location_id=? and (A.id in (SELECT employee_id FROM specialty WHERE specialty like ?) and A.id like ? and (A.first_name like ? or A.last_name like ? or concat_ws(' ',first_name,last_name) like ?) and (concat_ws(' ',first_name,last_name) like ?) and A.email like ? and A.role like ?) "
             + "GROUP BY A.id;";
+    private static final String FIND_LOCATION_NAME
+            = "SELECT * FROM location WHERE id=?";
     private static final String FIND_PATIENT_WITH_DATE
             = "select * from patient as P "
             + "LEFT OUTER JOIN( "
@@ -727,6 +729,7 @@ public class DbDAO {
             pstmt.setString(11, ins.specialty_code);
             pstmt.setDouble(12, getTodayMillisecondsWithoutTime());
             pstmt.setString(13, ins.patient_type);
+            pstmt.setInt(14, Integer.parseInt(ins.location_id));
 
             pstmt.executeUpdate();
 
@@ -838,6 +841,31 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
         return list;
+    }
+
+    public String findlocation(String location_id) {
+        String location_name = null;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(FIND_LOCATION_NAME);
+            pstmt.setString(1, location_id);
+            System.out.println(pstmt.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                location_name=rs.getString("name");
+            }
+            
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! location_name : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return location_name;
     }
 
     public List<Insurance> findInsurance(String findId) {
