@@ -74,6 +74,15 @@ public class menuBean implements Serializable {
         pathCont = "/userInfo/view_employee.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+    
+    public static void editEmployee() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
+        bean.reset();
+        bean.setUpdateValue();
+        pathCont = "/admin/create_employee.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
 
     public static void findEmployee() {
         pathCont = "/userInfo/find_employee.xhtml";
@@ -121,6 +130,7 @@ public class menuBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         patientStatusBean bean = (patientStatusBean) elContext.getELResolver().getValue(elContext, null, "patientStatusBean");
         bean.reset();
+        bean.findDynaPatient();
         pathCont = "/nursing_station/patient_status.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
@@ -157,6 +167,24 @@ public class menuBean implements Serializable {
         bean.reset();
         bean.findPrescription();
         pathCont = "/prescription/fulfill_prescription.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
+    
+    // Order
+    public static void viewLabOrder(){
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        orderBean bean = (orderBean) elContext.getELResolver().getValue(elContext, null, "orderBean");
+        bean.reset();
+        bean.findLabOrder();
+        pathCont = "/order/view_lab_order.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
+    public static void viewImagingOrder(){
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        orderBean bean = (orderBean) elContext.getELResolver().getValue(elContext, null, "orderBean");
+        bean.reset();
+        bean.findImagingOrder();
+        pathCont = "/order/view_imaging_order.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 

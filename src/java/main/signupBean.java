@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
+import javax.el.ELContext;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
@@ -57,6 +58,8 @@ public class signupBean implements Serializable {
 
     Employee em = new Employee();
     Patient p = new Patient();
+    
+    boolean isUpdateMode = false;
 
     public signupBean() {
         setAllSpecialty();
@@ -98,6 +101,11 @@ public class signupBean implements Serializable {
         }
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 
+    }
+    
+    public void updateEmployee() throws IOException{
+        // TODO
+//        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfylly updated ", "Your information has been successfully updated!"));
     }
 
     public void registrationPatient() throws IOException {
@@ -196,6 +204,7 @@ public class signupBean implements Serializable {
         posCity = null;
         posState = null;
         posZip = null;
+        isUpdateMode = false;
 
         setAllSpecialty();
 
@@ -266,6 +275,56 @@ public class signupBean implements Serializable {
         specAllItems.add("Urology");
         specAllItems.add("Vascular surgery");
         specItems.addAll(specAllItems);
+    }
+    
+    public void setUpdateValue(){
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+        isUpdateMode = true;
+        
+        setAllSpecialty();
+        
+        Employee em = sBean.em;
+        
+        id = em.id;
+        loginId = em.loginId;
+        email = em.email;
+        password = null;
+        rePassword = null;
+        fn = em.fn;
+        ln = em.ln;
+        name = em.name;
+        gender = em.gender;
+        phone = em.phone;
+//        pic = em.pic;
+        role = em.role;
+        license = em.license;
+        location = em.location;
+        address = em.address;
+        city = em.city;
+        state = em.state;
+        zip = em.zip;
+        country = em.country;
+//        accessToken = null;
+        authority = em.authority;
+        specialty = em.specialtyList;
+//        dob = em.;
+//        dob2 = null;
+//        occupation = em.o;
+//        religion = null;
+//        emFN = null;
+//        emLN = null;
+//        emEmail = null;
+//        emPhone = null;
+//        emRelationship = null;
+//        emAddress = null;
+//        emCity = null;
+//        emState = null;
+//        emZip = null;
+//        posAddress = null;
+//        posCity = null;
+//        posState = null;
+//        posZip = null;
     }
 
     public List<String> specCompleteItem(String query) {
@@ -594,4 +653,30 @@ public class signupBean implements Serializable {
     public String getPosZip() {
         return posZip;
     }
+
+    public boolean isIsUpdateMode() {
+        return isUpdateMode;
+    }
+
+    public void setIsUpdateMode(boolean isUpdateMode) {
+        this.isUpdateMode = isUpdateMode;
+    }
+
+    public Employee getEm() {
+        return em;
+    }
+
+    public void setEm(Employee em) {
+        this.em = em;
+    }
+
+    public Patient getP() {
+        return p;
+    }
+
+    public void setP(Patient p) {
+        this.p = p;
+    }
+    
+    
 }

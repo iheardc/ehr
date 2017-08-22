@@ -10,12 +10,13 @@
       xmlns:b="http://bootsfaces.net/ui">
 
     <ui:composition>
-        
+
         <p:growl autoUpdate="true" showDetail="true" life="1500"/>
 
         <f:metadata>
             <f:viewAction action="#{patientStatusBean.reset()}"/>
         </f:metadata>
+
 
 
         <b:container fluid="true" class="customContainer">
@@ -24,9 +25,12 @@
 
                 <h1>Patient Status</h1>
                 <hr></hr>
-
+                <p:outputLabel value="This page is automatically updated."/>
+                <br/><br/>
 
                 <h:form enctype="multipart/form-data" id="form">
+
+                    <p:poll interval="30" listener="#{patientStatusBean.findDynaPatient}" update="form" />
 
                     <b:column col-md="12" class="form-horizontal">
                         <div class="form-group">
@@ -86,7 +90,7 @@
                                 <f:facet name="header">
                                     All Patients
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -104,7 +108,7 @@
                                 </p:column>
 
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR NURSE -->
@@ -115,7 +119,7 @@
                                 <f:facet name="header">
                                     Waiting for Nurse
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -131,9 +135,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR NURSE (INJECTION) -->
@@ -144,7 +148,7 @@
                                 <f:facet name="header">
                                     Waiting for Nurse(Injection)
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -160,9 +164,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR DOCTOR (WITHOUT RESULT) -->
@@ -173,7 +177,7 @@
                                 <f:facet name="header">
                                     Waiting for Doctor
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -189,9 +193,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR RESULT -->
@@ -202,7 +206,7 @@
                                 <f:facet name="header">
                                     Waiting for Result
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -218,9 +222,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR DOCTOR WITH RESULT -->
@@ -231,7 +235,7 @@
                                 <f:facet name="header">
                                     Waiting for Doctor With Result
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -247,9 +251,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR PRESCRIPTION -->
@@ -260,7 +264,7 @@
                                 <f:facet name="header">
                                     Waiting for Prescription
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -276,9 +280,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- WAITING FOR BILL -->
@@ -289,7 +293,7 @@
                                 <f:facet name="header">
                                     Waiting for Bill
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -305,9 +309,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                         <!-- CHECK OUT -->
@@ -318,7 +322,7 @@
                                 <f:facet name="header">
                                     Check Out
                                 </f:facet>
-                                
+
                                 <p:column headerText="Patient ID" style="width: 10%" sortBy="#{d.p.id}">
                                     <h:outputText value="#{d.p.id}" />
                                 </p:column>
@@ -334,9 +338,9 @@
                                 <p:column headerText="Date" style="width: 25%" sortBy="#{d.date}">
                                     <h:outputText value="#{d.dateString}" />
                                 </p:column>
-                                
+
                             </p:dataTable>
-                            <p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>
+                            <!--<p:commandButton class="btn btn-primary" value="Refresh" action="#{patientStatusBean.findDynaPatient()}" update=":form:searchTables"/>-->
                         </b:column>
 
                     </b:column>

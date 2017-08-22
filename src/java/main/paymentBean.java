@@ -24,7 +24,14 @@ import org.primefaces.event.SelectEvent;
  */
 @Named(value = "paymentBean")
 @SessionScoped
-public class paymentBean extends patientBean implements Serializable {
+public class paymentBean implements Serializable {
+
+    // Find Patient
+    List<Patient> findList;
+    Patient selectedP;
+    boolean isShowMoreInfo;
+    String findId, findName;
+    Date findDoB;
 
 //    Date date;
     private List<DynamicInfo> findDynaList;
@@ -39,8 +46,37 @@ public class paymentBean extends patientBean implements Serializable {
     // PAY
     String payMethod, payMethodOther;
     double payAmountDue;
+    
 
-    @Override
+    private String dateToDoubleString(Date date) {
+        if (date == null) {
+            return "";
+        } else {
+            return date.getTime() + "";
+        }
+    }
+
+    public void findPatient() {
+        DbDAO dao = new DbDAO();
+        findList = dao.findPatient(findId, findName, dateToDoubleString(findDoB));
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesMessage message;
+        if (findList.size() > 0) {
+            message = new FacesMessage("Search ", "There are " + findList.size() + " results.");
+        } else {
+            message = new FacesMessage("Search ", "There are no matching results.");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        selectedP = null;
+        isShowMoreInfo = false;
+        resetFindItem();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form");
+//        return "/userInfo/find_employee.xhtml?faces-redirect=true";
+    }
+
+//    @Override
     public void onPatientSelectRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Patient Selected", ((Patient) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -51,7 +87,7 @@ public class paymentBean extends patientBean implements Serializable {
         selectPatient();
     }
 
-    @Override
+//    @Override
     public void selectPatient() {
 
         isShowMoreInfo = true;
@@ -70,37 +106,51 @@ public class paymentBean extends patientBean implements Serializable {
     }
 
     public void payAmountDueChangeListener() {
-        if(this.payAmountDue > this.selectedPay.balance){
+        if (this.payAmountDue > this.selectedPay.balance) {
             this.payAmountDue = this.selectedPay.balance;
-        }else if(this.payAmountDue < 0.0){
+        } else if (this.payAmountDue < 0.0) {
             this.payAmountDue = 0.0;
         }
     }
-    
-    public void pay(){
-        
-        if(payAmountDue <= 0.0){
+
+    public void pay() {
+
+        if (payAmountDue <= 0.0) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error ", "Pay amount due is required."));
-        }else{
-            
+        } else {
+
             ELContext elContext = FacesContext.getCurrentInstance().getELContext();
             signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
             DbDAO dao = new DbDAO();
-            if(dao.payAmountDue(selectedPay, sBean.em, payMethod, payAmountDue)){
+            if (dao.payAmountDue(selectedPay, sBean.em, payMethod, payAmountDue)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully", "TODO"));
                 reset();
                 RequestContext.getCurrentInstance().update("form");
-            }else{
+            } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed", "TODO"));
             }
         }
-        
+
     }
 
     public void reset() {
-        super.reset();
+//        super.reset();
+        resetFindPatient();
         resetPatientFindItem();
         resetMoreForm();
+    }
+
+    public void resetFindPatient() {
+        findList = null;
+        selectedP = null;
+        isShowMoreInfo = false;
+        resetFindItem();
+    }
+
+    public void resetFindItem() {
+        findId = null;
+        findName = null;
+        findDoB = null;
     }
 
     public void resetPatientFindItem() {
@@ -115,12 +165,62 @@ public class paymentBean extends patientBean implements Serializable {
         isShowMoreInfo = false;
         resetPayForm();
     }
-    
-    public void resetPayForm(){
+
+    public void resetPayForm() {
         payMethod = "Cash";
         payMethodOther = null;
         payAmountDue = 0.0;
     }
+
+    public List<Patient> getFindList() {
+        return findList;
+    }
+
+    public void setFindList(List<Patient> findList) {
+        this.findList = findList;
+    }
+
+    public Patient getSelectedP() {
+        return selectedP;
+    }
+
+    public void setSelectedP(Patient selectedP) {
+        this.selectedP = selectedP;
+    }
+
+    public boolean isIsShowMoreInfo() {
+        return isShowMoreInfo;
+    }
+
+    public void setIsShowMoreInfo(boolean isShowMoreInfo) {
+        this.isShowMoreInfo = isShowMoreInfo;
+    }
+
+    public String getFindId() {
+        return findId;
+    }
+
+    public void setFindId(String findId) {
+        this.findId = findId;
+    }
+
+    public String getFindName() {
+        return findName;
+    }
+
+    public void setFindName(String findName) {
+        this.findName = findName;
+    }
+
+    public Date getFindDoB() {
+        return findDoB;
+    }
+
+    public void setFindDoB(Date findDoB) {
+        this.findDoB = findDoB;
+    }
+    
+    
 
     public DynamicInfo getSelectedD() {
         return selectedD;

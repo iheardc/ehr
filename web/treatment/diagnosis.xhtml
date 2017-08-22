@@ -356,6 +356,53 @@
 
                                     <h3>Lab Test Order</h3>
                                     <hr></hr>
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="lab_order" value="LOINC" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:autoComplete multiple="true" id="lab_order" placeholder="Enter LOINC code or description"
+                                                                value="#{treatmentBean.loincLabTempList}" converter="loincConverter"
+                                                                completeMethod="#{treatmentBean.loincCompleteItem}" var="it"
+                                                                itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                                style="display:block; width: 100%;" inputStyle="width:100%:" styleClass="p-autocomplete">
+                                                    <p:ajax event="itemSelect" listener="#{treatmentBean.onLOINCLabItemSelect}"/>
+                                                    <p:ajax event="itemUnselect" />
+                                                    <p:column style="width: 20%;">
+                                                        <h:outputText value="#{it.code}" />
+                                                    </p:column>
+                                                    <p:column style="width: 80%;">
+                                                        <h:outputText value="#{it.descriptionShort}" />
+                                                    </p:column>
+                                                </p:autoComplete>
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+                                    <b:column col-md="12" rendered="#{treatmentBean.loincLabList.size() > 0}">
+                                        <br/>
+                                        <b:column col-md="11" offset-md="1">
+                                            <h4>Lab Order</h4>
+                                            <hr></hr>
+                                            <p:dataTable var="in" value="#{treatmentBean.loincLabList}" id="labTable" 
+                                                         resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                                <p:column headerText="#" style="width: 5%">
+                                                    <h:outputText value="#{index + 1}" />
+                                                </p:column>
+                                                <p:column headerText="LOINC" style="width: 10%">
+                                                    <h:outputText value="#{in.code}" />
+                                                </p:column>
+                                                <p:column headerText="Description" style="width: 75%">
+                                                    <h:outputText value="#{in.descriptionShort}" />
+                                                </p:column>
+                                                <p:column style="width:10%;text-align: center">
+                                                    <p:commandButton update="form" icon="fa fa-remove" title="Delete" action="#{treatmentBean.removeLOINCLab(index)}">
+                                                    </p:commandButton>
+                                                </p:column>
+
+                                            </p:dataTable>
+
+                                        </b:column>
+                                    </b:column>
 
                                 </b:column>
 
@@ -363,6 +410,53 @@
 
                                     <h3>Imaging Order</h3>
                                     <hr></hr>
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="imaging_order" value="LOINC" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:autoComplete multiple="true" id="imaging_order" placeholder="Enter LOINC code or description"
+                                                                value="#{treatmentBean.loincImagingTempList}" converter="loincConverter"
+                                                                completeMethod="#{treatmentBean.loincCompleteItem}" var="it"
+                                                                itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                                style="display:block; width: 100%;" inputStyle="width:100%:" styleClass="p-autocomplete">
+                                                    <p:ajax event="itemSelect" listener="#{treatmentBean.onLOINCImagingItemSelect}"/>
+                                                    <p:ajax event="itemUnselect" />
+                                                    <p:column style="width: 20%;">
+                                                        <h:outputText value="#{it.code}" />
+                                                    </p:column>
+                                                    <p:column style="width: 80%;">
+                                                        <h:outputText value="#{it.descriptionShort}" />
+                                                    </p:column>
+                                                </p:autoComplete>
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+                                    <b:column col-md="12" rendered="#{treatmentBean.loincImagingList.size() > 0}">
+                                        <br/>
+                                        <b:column col-md="11" offset-md="1">
+                                            <h4>Imaging Order</h4>
+                                            <hr></hr>
+                                            <p:dataTable var="in" value="#{treatmentBean.loincImagingList}" id="imagingTable" 
+                                                         resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
+
+                                                <p:column headerText="#" style="width: 5%">
+                                                    <h:outputText value="#{index + 1}" />
+                                                </p:column>
+                                                <p:column headerText="LOINC" style="width: 10%">
+                                                    <h:outputText value="#{in.code}" />
+                                                </p:column>
+                                                <p:column headerText="Description" style="width: 75%">
+                                                    <h:outputText value="#{in.descriptionShort}" />
+                                                </p:column>
+                                                <p:column style="width:10%;text-align: center">
+                                                    <p:commandButton update="form" icon="fa fa-remove" title="Delete" action="#{treatmentBean.removeLOINCImaging(index)}">
+                                                    </p:commandButton>
+                                                </p:column>
+
+                                            </p:dataTable>
+
+                                        </b:column>
+                                    </b:column>
 
                                 </b:column>
 
@@ -592,7 +686,7 @@
                         </p:outputPanel>
                     </p:dialog>
 
-                    <p:dialog header="Write Prescription" widgetVar="wpDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" >
+                    <p:dialog header="Write Prescription" widgetVar="wpDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="true" position="center" height="500px">
                         <p:outputPanel id="wpDetail">
                             <!--<p:scrollPanel id="wpDetail">-->
 

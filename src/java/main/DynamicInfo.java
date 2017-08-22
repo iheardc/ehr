@@ -25,6 +25,8 @@ public class DynamicInfo {
     Employee n;
     Double date;
     
+    boolean isTesting;
+    
     // Cheif Complaint
     List<SnomedCT> cheifComplaintList;
     String cheifComplaintStr;
@@ -170,6 +172,10 @@ public class DynamicInfo {
                 if (columnName.contains(column)) {
                     this.injectionStr = rs.getString(column);
                 }
+                column = "testing";
+                if (columnName.contains(column)) {
+                    this.isTesting = !"0".equals(rs.getString(column));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -239,6 +245,9 @@ public class DynamicInfo {
     }
 
     public String getStatus() {
+        if(isTesting){
+            return "WFR";
+        }
         return status;
     }
     
@@ -393,8 +402,14 @@ public class DynamicInfo {
     public void setPreviousHistory(List<DynamicInfo> previousHistory) {
         this.previousHistory = previousHistory;
     }
-    
-    
+
+    public boolean isIsTesting() {
+        return isTesting;
+    }
+
+    public void setIsTesting(boolean isTesting) {
+        this.isTesting = isTesting;
+    }
     
     
 }

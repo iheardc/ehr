@@ -66,6 +66,12 @@ public class treatmentBean implements Serializable {
 
     // Injection Order
     private List<HCPCS> injectionList, injectionTempList;
+    
+    // Lab Order
+    List<LOINC> loincLabList, loincLabTempList;
+    
+    // Imaging Order
+    List<LOINC> loincImagingList, loincImagingTempList;
 
     // Write Charge Code
     List<ChargeCode> chargeCodeList, chargeCodeTempList;
@@ -89,9 +95,10 @@ public class treatmentBean implements Serializable {
         findWFDList = new ArrayList<DynamicInfo>();
         findWFDRList = new ArrayList<DynamicInfo>();
         for (DynamicInfo dy : dList) {
-            if (DbDAO.DYNAMIN_DATA[2].equals(dy.status)) {
+            String status = dy.getStatus();
+            if (DbDAO.DYNAMIN_DATA[2].equals(status)) {
                 findWFDList.add(dy);
-            } else if (DbDAO.DYNAMIN_DATA[3].equals(dy.status)) {
+            } else if (DbDAO.DYNAMIN_DATA[4].equals(status)) {
                 findWFDRList.add(dy);
             }
         }
@@ -313,6 +320,10 @@ public class treatmentBean implements Serializable {
         visitSummary = null;
         injectionList = new ArrayList<>();
         injectionTempList = new ArrayList<>();
+        loincLabList = new ArrayList<>();
+        loincLabTempList = new ArrayList<>();
+        loincImagingList = new ArrayList<>();
+        loincImagingTempList = new ArrayList<>();
         chargeCodeList = new ArrayList<>();
         chargeCodeTempList = new ArrayList<>();
         resetNewChargeCode();
@@ -388,6 +399,24 @@ public class treatmentBean implements Serializable {
             }
         }
         
+        if(loincLabList.size() > 0){
+            if(dao.insertNewLabOrder(selectedD.p, doc, loincLabList, ccTempDesc)){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Lab test order was successfully registered."));
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "TODO / lab order"));
+                return;
+            }
+        }
+        
+        if(loincImagingList.size() > 0){
+            if(dao.insertNewImagingOrder(selectedD.p, doc, loincImagingList, ccTempDesc)){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Imaging order was successfully registered."));
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Failed", "TODO / imaging order"));
+                return;
+            }
+        }
+        
         if(chargeCodeList.size()>0){
             if(dao.addChargeCodeToPatient(selectedD.p, chargeCodeList)){
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successfully", "Charge code was successfully reflected."));
@@ -426,6 +455,17 @@ public class treatmentBean implements Serializable {
         return HCPCSService.getFilteredList(query);
     }
 
+    public List<LOINC> loincCompleteItem(String query) {
+        if (loincLabList == null) {
+            loincLabList = new ArrayList<>();
+        }
+        if (loincImagingList == null) {
+            loincImagingList = new ArrayList<>();
+        }
+        query = query.toLowerCase();
+        return LOINCService.getFilteredList(query);
+    }
+
     public List<ChargeCode> chargeCodeCompleteItem(String query) {
         if (chargeCodeList == null) {
             chargeCodeList = new ArrayList<>();
@@ -440,6 +480,18 @@ public class treatmentBean implements Serializable {
         RequestContext.getCurrentInstance().update("form");
     }
 
+    public void onLOINCLabItemSelect(SelectEvent event) {
+        loincLabList.addAll(loincLabTempList);
+        loincLabTempList.clear();
+        RequestContext.getCurrentInstance().update("form");
+    }
+
+    public void onLOINCImagingItemSelect(SelectEvent event) {
+        loincImagingList.addAll(loincImagingTempList);
+        loincImagingTempList.clear();
+        RequestContext.getCurrentInstance().update("form");
+    }
+
     public void onChargeCodeItemSelect(SelectEvent event) {
         chargeCodeList.addAll(chargeCodeTempList);
         chargeCodeTempList.clear();
@@ -449,6 +501,18 @@ public class treatmentBean implements Serializable {
     public void removeInjection(int index) {
         if (index < injectionList.size()) {
             injectionList.remove(index);
+        }
+    }
+
+    public void removeLOINCLab(int index) {
+        if (index < loincLabList.size()) {
+            loincLabList.remove(index);
+        }
+    }
+
+    public void removeLOINCImaging(int index) {
+        if (index < loincImagingList.size()) {
+            loincImagingList.remove(index);
         }
     }
 
@@ -662,6 +726,38 @@ public class treatmentBean implements Serializable {
 
     public void setInjectionTempList(List<HCPCS> injectionTempList) {
         this.injectionTempList = injectionTempList;
+    }
+
+    public List<LOINC> getLoincLabList() {
+        return loincLabList;
+    }
+
+    public void setLoincLabList(List<LOINC> loincLabList) {
+        this.loincLabList = loincLabList;
+    }
+
+    public List<LOINC> getLoincLabTempList() {
+        return loincLabTempList;
+    }
+
+    public void setLoincLabTempList(List<LOINC> loincLabTempList) {
+        this.loincLabTempList = loincLabTempList;
+    }
+
+    public List<LOINC> getLoincImagingList() {
+        return loincImagingList;
+    }
+
+    public void setLoincImagingList(List<LOINC> loincImagingList) {
+        this.loincImagingList = loincImagingList;
+    }
+
+    public List<LOINC> getLoincImagingTempList() {
+        return loincImagingTempList;
+    }
+
+    public void setLoincImagingTempList(List<LOINC> loincImagingTempList) {
+        this.loincImagingTempList = loincImagingTempList;
     }
 
     public List<ChargeCode> getChargeCodeList() {

@@ -31,7 +31,8 @@
                             <div class="form-group">
                                 <p:outputLabel for="login_id" value="Login ID" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:inputText value="#{signupBean.loginId}" id="login_id" autocomplete="off" class="form-control" placeholder="Login ID" required="true"></p:inputText>
+                                    <p:inputText value="#{signupBean.loginId}" id="login_id" autocomplete="off" class="form-control" placeholder="Login ID" required="true" disabled="#{signupBean.isUpdateMode}"></p:inputText>
+                                    <!--<p:outputLabel value="#{signupBean.loginId}" id="login_id" class="form-control" rendered="#{signupBean.isUpdateMode}"/>-->
                                 </b:column>
                             </div>
                         </b:column>
@@ -64,7 +65,7 @@
                             </div>
                         </b:column>
 
-                        <b:column col-md="12" class="form-horizontal">
+                        <b:column col-md="12" class="form-horizontal" rendered="#{not signupBean.isUpdateMode}">
                             <div class="form-group">
                                 <p:outputLabel for="password" value="Password" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
@@ -75,7 +76,7 @@
                             </div>
                         </b:column>
 
-                        <b:column col-md="12" class="form-horizontal">
+                        <b:column col-md="12" class="form-horizontal" rendered="#{not signupBean.isUpdateMode}">
                             <div class="form-group">
                                 <p:outputLabel for="confirm" value="Confirm Password" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
@@ -165,6 +166,7 @@
                                                 value="#{signupBean.specialty}"
                                                 completeMethod="#{signupBean.specCompleteItem}" var="it"
                                                 itemLabel="#{it}" itemValue="#{it}" forceSelection="true"
+                                                disabled="#{signupBean.isUpdateMode}"
                                                 >
                                     <p:ajax event="itemSelect" />
                                     <p:ajax event="itemUnselect" />
@@ -232,7 +234,8 @@
 
                     <b:column col-md="12">
                         <hr></hr>
-                        <p:commandButton class="btn btn-primary" action="#{signupBean.registrationEmployee()}" value="Submit" ajax="false" update="content"/>
+                        <p:commandButton class="btn btn-primary" action="#{signupBean.registrationEmployee()}" value="Submit" ajax="false" update="content" rendered="#{not signupBean.isUpdateMode}"/>
+                        <p:commandButton class="btn btn-primary" action="#{signupBean.updateEmployee()}" value="Update" ajax="false" update="content" rendered="#{signupBean.isUpdateMode}"/>
                         <p:commandButton class="btn btn-danger" action="#{signupBean.cancelEmployee()}" value="Cancel" ajax="false" immediate="true" update="form"/>
                     </b:column>
 

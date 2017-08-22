@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+
+        <f:metadata>
+            <f:viewAction action="#{orderBean.reset()}" immediate="true"/>
+        </f:metadata>
+
+        <p:growl autoUpdate="true" showDetail="true" life="1500"/>
+
+        <b:container fluid="true" class="customContainer">
+
+            <h:form enctype="multipart/form-data" id="form">
+
+                <b:column col-md="12">
+
+                    <h1>View Order</h1>
+                    <hr></hr>
+                    <!--<p:outputLabel value="This page is updated every 5 seconds."/>-->
+                    <p:commandButton class="btn btn-default" value="Refresh" action="#{orderBean.findLabOrder()}" update="form"/>
+                    <!--<p:poll interval="5" listener="#{orderBean.findLabOrder}" update="form" />-->
+
+
+                    <b:column col-md="11" offset-md="1">
+                        <h2>Waiting for Test</h2>
+                        <hr></hr>
+
+                        <b:column col-md="12" class="form-horizontal">
+
+                            <div class="form-group">
+
+                                <p:dataTable var="l" value="#{orderBean.allLabOrders}" id="pendingTable" paginator="true" rows="10"
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{orderBean.selectedOrder}" rowKey="#{l.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{orderBean.onAllOrderRowSelect}" oncomplete="PF('dDialog').show()" />
+
+                                    <p:column headerText="Patient Name" style="width:20%" sortBy="#{l.p.name}">
+                                        <h:outputText value="#{l.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="LOINC" style="width:10%" sortBy="#{l.loinc.code}">
+                                        <h:outputText value="#{l.loinc.code}" />
+                                    </p:column>
+                                    <p:column headerText="Description" style="width:30%" sortBy="#{l.loinc.descriptionShort}">
+                                        <h:outputText value="#{l.loinc.descriptionShort}" />
+                                    </p:column>
+                                    <p:column headerText="Date" style="width:30%" sortBy="#{l.date}">
+                                        <h:outputText value="#{l.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Detail" style="width:10%">
+                                        <h:outputText value="Detail" />
+                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+                                </p:dataTable>
+
+                            </div>
+                        </b:column>
+
+                        <br/>
+                        <br/>
+
+                        <h2>Testing In Progress</h2>
+                        <hr></hr>
+                        <b:column col-md="12" class="form-horizontal">
+
+                            <div class="form-group">
+
+                                <p:dataTable var="l" value="#{orderBean.myLabOrders}" id="completeTable" paginator="true" rows="10"
+                                             resizableColumns="true" tableStyleClass="table table-striped"
+                                             selectionMode="single" selection="#{orderBean.selectedOrder}" rowKey="#{l.id}">
+
+                                    <p:ajax event="rowSelect" listener="#{orderBean.onMyOrderRowSelect}" oncomplete="PF('pdDialog').show()" />
+
+                                    <p:column headerText="Patient Name" style="width:20%" sortBy="#{l.p.name}">
+                                        <h:outputText value="#{l.p.name}" />
+                                    </p:column>
+                                    <p:column headerText="LOINC" style="width:10%" sortBy="#{l.loinc.code}">
+                                        <h:outputText value="#{l.loinc.code}" />
+                                    </p:column>
+                                    <p:column headerText="Description" style="width:30%" sortBy="#{l.loinc.descriptionShort}">
+                                        <h:outputText value="#{l.loinc.descriptionShort}" />
+                                    </p:column>
+                                    <p:column headerText="Date" style="width:30%" sortBy="#{l.date}">
+                                        <h:outputText value="#{l.dateString}" />
+                                    </p:column>
+                                    <p:column headerText="Detail" style="width:10%">
+                                        <h:outputText value="Detail" />
+                                    </p:column>
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column colspan="5" style="text-align:left" footerText="Please select the row." />
+                                        </p:row>
+                                    </p:columnGroup>
+                                </p:dataTable>
+
+                            </div>
+                        </b:column>
+
+                    </b:column>
+
+
+                    <p:dialog header="Detail" widgetVar="dDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="dDetail">
+
+                            <!--<p:panelGrid>-->
+
+                            <b:column col-md="12">
+
+                                <b:column col-md="2">
+                                    <b:column col-md="12">
+                                        <p:graphicImage value="#{orderBean.selectedOrder.p.image}" style="width:100%; margin-bottom: 10px;" cache="false"/> 
+                                    </b:column>
+                                </b:column>
+                                <b:column col-md="10">
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Patient ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.p.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Patient Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.p.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Doctor ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.doc.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Doctor Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.doc.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Date: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.dateString}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Comment: " class="col-sm-3"/>
+                                        <p:outputLabel value="None" class="col-sm-3" rendered="#{empty orderBean.selectedOrder.orderDescription}"/>
+                                    </b:column>
+                                    <b:column col-md="12" rendered="#{not empty orderBean.selectedOrder.orderDescription}">
+                                        <p:inputTextarea disabled="true" value="#{orderBean.selectedOrder.orderDescription}" style="width:100%;"/>
+                                    </b:column>
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="loinc_code" value="LOINC" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:outputLabel value="#{orderBean.selectedOrder.loinc.code}" id="loinc_code" />
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="loinc_desc" value="Description" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:outputLabel value="#{orderBean.selectedOrder.loinc.descriptionShort}" id="loinc_desc" />
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+
+                                    <b:column col-md="12" class="form-horizontal">
+                                        <div class="form-group">
+                                            <p:outputLabel for="loinc_desc_short" value="Description" class="col-sm-2 control-label"></p:outputLabel>
+                                            <b:column col-sm="10">
+                                                <p:outputLabel value="#{orderBean.selectedOrder.loinc.description}" id="loinc_desc_short" />
+                                            </b:column>
+                                        </div>
+                                    </b:column>
+
+                                </b:column>
+
+                                <br/><br/>
+
+
+                                <b:column col-md="12">
+                                    <center>
+                                        <p:commandButton styleClass="btn btn-primary" value="Start Test" action="#{orderBean.acceptLab()}" oncomplete="PF('dDialog').hide()" update="form"/>
+                                    </center>
+                                </b:column>
+
+                            </b:column>
+
+                            <!--</p:panelGrid>-->
+                        </p:outputPanel>
+                    </p:dialog>
+
+                    <p:dialog header="Order Detail" widgetVar="pdDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="pdDetail">
+
+                            <!--<p:panelGrid>-->
+
+                            <b:column col-md="12">
+<!--                                <b:column col-md="2">
+                                    <b:column col-md="12">
+                                        <p:graphicImage value="#{orderBean.selectedOrder.p.image}" style="width:100%; margin-bottom: 10px;" cache="false"/> 
+                                    </b:column>
+                                </b:column>
+                                <b:column col-md="10">
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Patient ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.p.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Patient Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.p.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Pharmacist ID: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.pharmacist.id}" class="col-sm-3"/>
+                                        <p:outputLabel value="Pharmacist Name: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.pharmacist.name}" class="col-sm-3"/>
+                                    </b:column>
+                                    <b:column col-md="12">
+                                        <p:outputLabel value="Date: " class="col-sm-3"/>
+                                        <p:outputLabel value="#{orderBean.selectedOrder.dateString}" class="col-sm-3"/>
+                                    </b:column>
+
+                                </b:column>
+                                <br/><br/>
+
+                                <b:column col-md="12">
+                                    <p:dataTable var="p" value="#{orderBean.selectedOrder.detail}" id="dpDetailTable" 
+                                                 resizableColumns="true" tableStyleClass="table table-striped" rowIndexVar="index"
+                                                 >
+
+                                        <p:column headerText="#" style="width:5%">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+                                        <p:column headerText="RxNORM" style="width:10%" sortBy="#{p.rx.code}">
+                                            <h:outputText value="#{p.rx.code}" />
+                                        </p:column>
+                                        <p:column headerText="Description" style="width:30%" sortBy="#{p.rx.description}">
+                                            <h:outputText value="#{p.rx.description}" />
+                                        </p:column>
+                                        <p:column headerText="SD" style="width:5%" sortBy="#{p.singleDose}">
+                                            <h:outputText value="#{p.singleDose}" />
+                                        </p:column>
+                                        <p:column headerText="NDD" style="width:5%" sortBy="#{p.numOfDailyDos}">
+                                            <h:outputText value="#{p.numOfDailyDos}" />
+                                        </p:column>
+                                        <p:column headerText="TDD" style="width:5%" sortBy="#{p.totalDosingDays}">
+                                            <h:outputText value="#{p.totalDosingDays}" />
+                                        </p:column>
+                                        <p:column headerText="Usage" style="width:30%" sortBy="#{p.usage}">
+                                            <h:outputText value="#{p.usage}" />
+                                        </p:column>
+                                        <p:column headerText="Coast" style="width:10%" sortBy="#{p.coast}">
+                                            <h:outputText value="$ #{p.coast}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </b:column>
+
+                                <b:column col-md="12">
+                                    <h2><p:outputLabel value="Total: $ #{orderBean.selectedOrder.total}"/></h2>
+                                </b:column>
+
+                                <b:column col-md="12">
+                                    <center>
+                                        <p:commandButton styleClass="btn btn-primary" value="Complete" action="#{orderBean.complete()}" oncomplete="PF('pdDialog').hide()" update="form"/>
+                                    </center>
+                                </b:column>-->
+
+                            </b:column>
+
+                            <!--</p:panelGrid>-->
+                        </p:outputPanel>
+                    </p:dialog>
+
+                </b:column>
+
+            </h:form>
+
+        </b:container>
+
+    </ui:composition>
+
+</html>

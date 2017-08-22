@@ -101,19 +101,53 @@ public class DbDAO {
     private static final String MAKE_NEW_BILLING
             = "INSERT INTO billing(billed_to, date) VALUES(?, ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS
-            = "SELECT A.*, B.pic as patient_pic "
-            + "FROM outpatient_dynamic as A LEFT OUTER JOIN ( "
+            = "SELECT A.*, B.pic as patient_pic, ifnull((C.count + D.count),0) > 0 as testing, (ifnull((C.count + D.count),0) = 0 and ifnull((E.count + F.count),0) > 0) as needCheck "
+            + "FROM outpatient_dynamic as A "
+            + "LEFT OUTER JOIN ( "
             + "SELECT id,pic FROM patient "
             + "GROUP BY id) as B on(B.id = A.patient_id) "
-            + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ?"
-            + "GROUP BY A.id;";
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM lab_order_management "
+            + "WHERE status = 'ING' or status = 'WFT' "
+            + "GROUP BY outpatient_dynamic_id) as C on (C.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
+            + "WHERE status = 'ING' or status = 'WFT' "
+            + "GROUP BY outpatient_dynamic_id) as D on (D.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM lab_order_management "
+            + "WHERE status = 'NFC' "
+            + "GROUP BY outpatient_dynamic_id) as E on (E.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
+            + "WHERE status = 'NFC' "
+            + "GROUP BY outpatient_dynamic_id) as F on (F.outpatient_dynamic_id = A.id) "
+            + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ? "
+            + "GROUP BY A.id";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_STATUS_AND_DATE
-            = "SELECT A.*, B.pic as patient_pic "
-            + "FROM outpatient_dynamic as A LEFT OUTER JOIN ( "
+            = "SELECT A.*, B.pic as patient_pic, ifnull((C.count + D.count),0) > 0 as testing, (ifnull((C.count + D.count),0) = 0 and ifnull((E.count + F.count),0) > 0) as needCheck "
+            + "FROM outpatient_dynamic as A "
+            + "LEFT OUTER JOIN ( "
             + "SELECT id,pic FROM patient "
             + "GROUP BY id) as B on(B.id = A.patient_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM lab_order_management "
+            + "WHERE status = 'ING' or status = 'WFT' "
+            + "GROUP BY outpatient_dynamic_id) as C on (C.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
+            + "WHERE status = 'ING' or status = 'WFT' "
+            + "GROUP BY outpatient_dynamic_id) as D on (D.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM lab_order_management "
+            + "WHERE status = 'NFC' "
+            + "GROUP BY outpatient_dynamic_id) as E on (E.outpatient_dynamic_id = A.id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
+            + "WHERE status = 'NFC' "
+            + "GROUP BY outpatient_dynamic_id) as F on (F.outpatient_dynamic_id = A.id) "
             + "WHERE A.status like ? and IFNULL(A.doctor_id,'') like ? and ? <= date and date <= ? "
-            + "GROUP BY A.id;";
+            + "GROUP BY A.id";
     private static final String FIND_DOCTOR
             = "SELECT * FROM employee WHERE role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?)";
     private static final String FIND_DOCTOR_WITH_SPECIALTY
@@ -166,6 +200,8 @@ public class DbDAO {
             = "select * from hcpcs_code WHERE code like ? or description like ?";
     private static final String GET_SNOMEDCT_CODES
             = "select * from snomed_ct_code WHERE code like ? or description like ?";
+    private static final String GET_LOINC_CODES
+            = "select * from loinc_code WHERE LOINC_CODE like ? or test_name like ? or test_name_short like ?";
     private static final String GET_CHARGE_CODES
             = "select * from charge_code WHERE code like ? or description like ? or name like ?";
     private static final String UPDATE_PATIENT_DAYNAMIC_STATUS
@@ -353,6 +389,52 @@ public class DbDAO {
                 insertNewEmployeeSpecialty(connect, em, autoInsertedKey);
             }
 
+            em.errormsg = "";//"Thank you for registering with us!";
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+            em.errormsg = "Registration is failed!";
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+    }
+
+    public static final String UPDATE_EMPLOYEE_INFO
+            = "UPDATE employee SET email=?,first_name=?,last_name=?,gender=?,phone=?,role=?,license=?,address=?,city=?,state=?,zip=?,country=?,pic=? WHERE id=?";
+
+    public void updateEmployee(Employee em) {
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(UPDATE_EMPLOYEE_INFO);
+
+//            pstmt.setString(1, em.loginId);
+            pstmt.setString(1, em.email);
+//            pstmt.setString(3, em.password);
+            pstmt.setString(2, em.fn);
+            pstmt.setString(3, em.ln);
+            pstmt.setString(4, em.gender);
+            pstmt.setString(5, em.phone);
+
+//            pstmt.setString(7, em.location);
+            pstmt.setString(6, em.role);
+            pstmt.setString(7, em.license);
+
+            pstmt.setString(8, em.address);
+            pstmt.setString(9, em.city);
+            pstmt.setString(10, em.state);
+            pstmt.setString(11, em.zip);
+            pstmt.setString(12, em.country);
+
+            pstmt.setBytes(13, em.arr);
+
+            pstmt.setString(14, em.id);
+
+            pstmt.executeUpdate();
+
+//            if (em.getSpecialtyList() != null && em.getSpecialtyList().size() > 0) {
+//                insertNewEmployeeSpecialty(connect, em, autoInsertedKey);
+//            }
             em.errormsg = "";//"Thank you for registering with us!";
         } catch (Exception e) {
             System.out.println("ERROR!!!!" + e.toString());
@@ -1281,6 +1363,36 @@ public class DbDAO {
         return list;
     }
 
+    public List<LOINC> getLOINCCodes(String query) {
+        if (query == null || "".equals(query)) {
+            query = "%";
+        } else {
+            query = "%" + query + "%";
+        }
+        List<LOINC> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_LOINC_CODES);
+            pstmt.setString(1, query);
+            pstmt.setString(2, query);
+            pstmt.setString(3, query);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                LOINC l = new LOINC();
+                l.build(rs);
+                list.add(l);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
     public List<ChargeCode> getChargeCodes(String query) {
         if (query == null || "".equals(query)) {
             query = "%";
@@ -1417,7 +1529,217 @@ public class DbDAO {
         return result;
     }
 
-    private static final String INSERT_PRESCRIPTION
+    // ORDER
+    public static final String INSERT_NEW_LAB_ORDER
+            = "INSERT INTO lab_order_management(doctor_id, patient_id, LOINC_CODE, order_description, status, date) VALUES (?,?,?,?,?,?)";
+
+    public boolean insertNewLabOrder(Patient p, Employee doc, List<LOINC> orderList, String orderDescription) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            for (LOINC loinc : orderList) {
+                pstmt = connect.prepareStatement(INSERT_NEW_LAB_ORDER);
+                pstmt.setString(1, doc.id);
+                pstmt.setString(2, p.id);
+                pstmt.setString(3, loinc.code);
+                pstmt.setString(4, orderDescription);
+                pstmt.setString(5, "WFT");
+                pstmt.setDouble(6, getTodayMillisecondsWithTime());
+
+                pstmt.executeUpdate();
+            }
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+    public static final String INSERT_NEW_IMAGING_ORDER
+            = "INSERT INTO radiology_order_management(doctor_id, patient_id, LOINC_CODE, order_description, status, date) VALUES (?,?,?,?,?,?)";
+
+    public boolean insertNewImagingOrder(Patient p, Employee doc, List<LOINC> orderList, String orderDescription) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            for (LOINC loinc : orderList) {
+                pstmt = connect.prepareStatement(INSERT_NEW_IMAGING_ORDER);
+                pstmt.setString(1, doc.id);
+                pstmt.setString(2, p.id);
+                pstmt.setString(3, loinc.code);
+                pstmt.setString(4, orderDescription);
+                pstmt.setString(5, "WFT");
+                pstmt.setDouble(6, getTodayMillisecondsWithTime());
+
+                pstmt.executeUpdate();
+            }
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    public static final String GET_LAB_ORDERS
+            = "SELECT A.*, B.first_name as patient_fn, B.last_name as patient_ln, B.pic as patient_pic, C.first_name as doctor_fn, C.last_name as doctor_ln, D.first_name as tech_fn, D.last_name as tech_ln, E.* "
+            + "FROM lab_order_management as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM patient "
+            + "GROUP BY id) as B on(B.id = A.patient_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM employee "
+            + "GROUP BY id) as C on(C.id = A.doctor_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM employee "
+            + "GROUP BY id) as D on(D.id = A.technician_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM loinc_code "
+            + "GROUP BY LOINC_CODE) as E on(E.LOINC_CODE = A.LOINC_CODE) "
+            + "WHERE status like ? and ifnull(technician_id,'') like ? "
+            + "GROUP BY A.id";
+
+    public List<OrderInfo> getLabOrderList(String status, String techId) {
+        if (status == null || status.isEmpty()) {
+            status = "%";
+        }
+        if (techId == null || techId.isEmpty()) {
+            techId = "%";
+        }
+        List<OrderInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_LAB_ORDERS);
+            pstmt.setString(1, status);
+            pstmt.setString(2, techId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                OrderInfo or = new OrderInfo();
+                or.build(rs);
+                list.add(or);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! getLabOrderList" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public static final String GET_IMAGING_ORDERS
+            = "SELECT A.*, B.first_name as patient_fn, B.last_name as patient_ln, B.pic as patient_pic, C.first_name as doctor_fn, C.last_name as doctor_ln, D.first_name as tech_fn, D.last_name as tech_ln, E.* "
+            + "FROM radiology_order_management as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM patient "
+            + "GROUP BY id) as B on(B.id = A.patient_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM employee "
+            + "GROUP BY id) as C on(C.id = A.doctor_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM employee "
+            + "GROUP BY id) as D on(D.id = A.radiologist_id) "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM loinc_code "
+            + "GROUP BY LOINC_CODE) as E on(E.LOINC_CODE = A.LOINC_CODE) "
+            + "WHERE status like ? and ifnull(radiologist_id,'') like ? "
+            + "GROUP BY A.id";
+
+    public List<OrderInfo> getImagingOrderList(String status, String techId) {
+        if (status == null || status.isEmpty()) {
+            status = "%";
+        }
+        if (techId == null || techId.isEmpty()) {
+            techId = "%";
+        }
+        List<OrderInfo> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_IMAGING_ORDERS);
+            pstmt.setString(1, status);
+            pstmt.setString(2, techId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                OrderInfo or = new OrderInfo();
+                or.build(rs);
+                list.add(or);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR! getImagingOrderList" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
+    public static final String ACCEPT_LAB_ORDER
+            = "UPDATE lab_order_management SET technician_id=?, status='ING' WHERE id=?";
+
+    public boolean acceptLabOrder(OrderInfo or, Employee tech) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ACCEPT_LAB_ORDER);
+
+            pstmt.setString(1, tech.id);
+            pstmt.setString(2, or.id);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    public static final String ACCEPT_IMAGING_ORDER
+            = "UPDATE radiology_order_management SET radiologist_id=?, status='ING' WHERE id=?";
+
+    public boolean acceptImagingOrder(OrderInfo or, Employee tech) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(ACCEPT_IMAGING_ORDER);
+
+            pstmt.setString(1, tech.id);
+            pstmt.setString(2, or.id);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR!!!!" + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    public static final String INSERT_PRESCRIPTION
             = "INSERT INTO prescription("
             + "doctor_id, patient_id, comment, status, date) "
             + "VALUES(?,?,?,?,?)";

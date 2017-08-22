@@ -20,6 +20,8 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.el.ELContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +34,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author degla
  */
-@WebServlet(description = "TestServlet Description", urlPatterns = { "/ehr/viewFileContent" })
+@WebServlet(description = "TestServlet Description", urlPatterns = { "/../viewFileContent" })
 public class viewFileContent extends HttpServlet {
     
     @Inject
@@ -48,6 +50,7 @@ public class viewFileContent extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         System.out.println("OUTPUT CONTENT META pat  !!! innnnn " );
         //BufferedInputStream input = null;
 //        DbxClient client = userBean.getDb().client;

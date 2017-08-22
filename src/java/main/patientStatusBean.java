@@ -78,27 +78,28 @@ public class patientStatusBean implements Serializable {
 //        }
 //        else {
             for (DynamicInfo dy : dList) {
-                if (DbDAO.DYNAMIN_DATA[0].equals(dy.status)) {
+                String status = dy.getStatus();
+                if (DbDAO.DYNAMIN_DATA[0].equals(status)) {
                     findWNFList.add(dy);
-                } else if (DbDAO.DYNAMIN_DATA[1].equals(dy.status)) {
+                } else if (DbDAO.DYNAMIN_DATA[1].equals(status)) {
                     findWNFIList.add(dy);
                 }
-                else if (DbDAO.DYNAMIN_DATA[2].equals(dy.status)) {
+                else if (DbDAO.DYNAMIN_DATA[2].equals(status)) {
                     findWFDList.add(dy);
                 }
-                else if (DbDAO.DYNAMIN_DATA[3].equals(dy.status)) {
+                else if (DbDAO.DYNAMIN_DATA[3].equals(status)) {
                     findWFRList.add(dy);
                 }
-                else if (DbDAO.DYNAMIN_DATA[4].equals(dy.status)) {
+                else if (DbDAO.DYNAMIN_DATA[4].equals(status)) {
                     findWFDRList.add(dy);
                 }
-                else if (DbDAO.DYNAMIN_DATA[5].equals(dy.status)) {
+                else if (DbDAO.DYNAMIN_DATA[5].equals(status)) {
                     findWFPList.add(dy);
                 }
-                else if (DbDAO.DYNAMIN_DATA[6].equals(dy.status)) {
+                else if (DbDAO.DYNAMIN_DATA[6].equals(status)) {
                     findWFBList.add(dy);
                 }
-                else if (DbDAO.DYNAMIN_DATA[7].equals(dy.status)) {
+                else if (DbDAO.DYNAMIN_DATA[7].equals(status)) {
                     findCKOList.add(dy);
                 }
             }
