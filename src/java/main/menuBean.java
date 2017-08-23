@@ -23,6 +23,7 @@ public class menuBean implements Serializable {
 
     public static String pathCont = "/home.xhtml";
     public static String pathLeft = "/leftMenu/employee_leftMenu.xhtml";
+    boolean isShowMobileMenu = false;
 
     public menuBean() {
 
@@ -31,6 +32,10 @@ public class menuBean implements Serializable {
     public void reset() {
         pathCont = "/home.xhtml";
         pathLeft = "/leftMenu/employee_leftMenu.xhtml";
+    }
+    
+    public void showMobileMenu(boolean isShow){
+        isShowMobileMenu = isShow;
     }
 
     public static void redirectHome() {
@@ -257,6 +262,14 @@ public class menuBean implements Serializable {
 
     public void setPathLeft(String pathLeft) {
         menuBean.pathLeft = pathLeft;
+    }
+
+    public boolean isIsShowMobileMenu() {
+        return isShowMobileMenu;
+    }
+
+    public void setIsShowMobileMenu(boolean isShowMobileMenu) {
+        this.isShowMobileMenu = isShowMobileMenu;
     }
 
     public boolean isRendered(String strs) {

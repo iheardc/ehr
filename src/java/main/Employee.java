@@ -5,11 +5,15 @@
  */
 package main;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -21,13 +25,16 @@ public class Employee {
     ServiceBean service; 
 
     String id, loginId, email, password, fn, ln, name, gender, phone;
-    String role, license, locationId;
+    String role, license;
     String address, city, state, zip, country;
     int authority;
     byte[] arr;
     List<String> specialtyList;
     String specialty;
     String errormsg;
+    
+    String locationId, locationName;
+    byte[] locationLogo;
 
     public Employee() {
 
@@ -147,6 +154,14 @@ public class Employee {
                 column = "location_id";
                 if (columnName.contains(column)) {
                     this.locationId = Integer.toString(rs.getInt(column));
+                }
+                column = "location_name";
+                if (columnName.contains(column)) {
+                    this.locationName = rs.getString(column);
+                }
+                column = "location_pic";
+                if (columnName.contains(column)) {
+                    this.locationLogo = rs.getBytes(column);
                 }
                 column = "phone";
                 if (columnName.contains(column)) {
@@ -397,7 +412,29 @@ public class Employee {
     public void setArr(byte[] arr) {
         this.arr = arr;
     }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public byte[] getLocationLogo() {
+        return locationLogo;
+    }
+
+    public void setLocationLogo(byte[] locationLogo) {
+        this.locationLogo = locationLogo;
+    }
     
-    
+    public StreamedContent getLocationLogoImage() throws IOException {   
+        if (locationLogo == null || locationLogo.length <= 0) {
+            return new DefaultStreamedContent();
+        } else {
+            return new DefaultStreamedContent(new ByteArrayInputStream(locationLogo));
+        }
+    }
 
 }

@@ -8,11 +8,14 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pm="http://primefaces.org/mobile" 
       xmlns:b="http://bootsfaces.net/ui">
-    
+
     <ui:composition>
         <h:form id="header-form">
             <b:navBar brand="Electronic Health Record" brandHref="#" sticky="true" fluid="true"  style="margin: 0px;">
-                <b:navbarLinks pull="left">                    
+                <b:navbarLinks pull="left">
+                    <b:navCommandLink class="logo" content-style="padding-top: 5px; padding-bottom: 5px;" rendered="#{signinBean.loggedIn}" action="#{menuBean.redirectHome()}" update="content">
+                        <p:graphicImage value="#{signinBean.em.locationLogoImage}" style="height: 40px" cache="false"/> 
+                    </b:navCommandLink>  
                     <b:navCommandLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHome()}" rendered="#{signinBean.loggedIn}" update="content"/>
                     <b:navCommandLink href="#" value="About" iconAwesome="fa-comment" />
                     <b:navCommandLink href="#" value="Help" iconAwesome="fa-question" />
@@ -24,21 +27,48 @@
             </b:navBar>
         </h:form>
 
-<!--        <p:dialog header="Get an access token to the Dropbox"  responsive="true" widgetVar="dlg1"  >
-            <p:panelGrid columns="1" style="margin: 0 auto">
-                <div class="ui-grid-col-12" style=" align-content: center">
-                    <h2>Get an access token for your Dropbox</h2>
-                    <ol class="list-group" >
-                        <li class="list-group-item">Register to the Dropbox. <a href="https://www.dropbox.com/developers-v1/apps">Link</a></li>
-                        <li class="list-group-item">Create a new app on the Dropbox if you do not have one.</li>
-                        <li class="list-group-item">Click on the app. On this page under Outh 2, look for Generated access token.</li>
-                        <li class="list-group-item">Click on Generate.</li>
-                        <li class="list-group-item">This is your access token.</li>
-                        <li class="list-group-item">Copy and paste it into the Personal Health Record's access token field.</li>            
-                    </ol>
-                </div>
-            </p:panelGrid>
-        </p:dialog> -->
-        
+        <!--        <p:dialog header="Get an access token to the Dropbox"  responsive="true" widgetVar="dlg1"  >
+                    <p:panelGrid columns="1" style="margin: 0 auto">
+                        <div class="ui-grid-col-12" style=" align-content: center">
+                            <h2>Get an access token for your Dropbox</h2>
+                            <ol class="list-group" >
+                                <li class="list-group-item">Register to the Dropbox. <a href="https://www.dropbox.com/developers-v1/apps">Link</a></li>
+                                <li class="list-group-item">Create a new app on the Dropbox if you do not have one.</li>
+                                <li class="list-group-item">Click on the app. On this page under Outh 2, look for Generated access token.</li>
+                                <li class="list-group-item">Click on Generate.</li>
+                                <li class="list-group-item">This is your access token.</li>
+                                <li class="list-group-item">Copy and paste it into the Personal Health Record's access token field.</li>            
+                            </ol>
+                        </div>
+                    </p:panelGrid>
+                </p:dialog> -->
+
+        <style>
+            .logo > li > a {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            .logo a {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            .logo > a {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            logo > a {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            logo.a {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            logo a {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+        </style>
+
     </ui:composition>
 </html>

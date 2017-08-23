@@ -27,7 +27,13 @@ public class DbDAO {
     public static final int ONE_DAY_MS = 86400000;
 
 //    private static final String LOGIN_PATIENT = "SELECT * FROM patient WHERE email=? AND password=?";
-    private static final String LOGIN_EMPLOYEE = "SELECT * FROM employee WHERE login_id=? AND password=?";
+    private static final String LOGIN_EMPLOYEE
+            = "SELECT A.*, B.name as location_name, B.pic as location_pic "
+            + "FROM employee as A "
+            + "LEFT OUTER JOIN ( "
+            + "SELECT * FROM location "
+            + "GROUP BY id) as B on(B.id = A.location_id) "
+            + "WHERE login_id=? AND password=?";
     private static final String ADD_EMPLOYEE_STMT_NEW
             = "INSERT INTO employee("
             + "login_id, email, password, first_name, last_name, gender, phone, "
@@ -351,11 +357,11 @@ public class DbDAO {
         }
         return isDuplicate;
     }
-    
+
     public static final String CREATE_LOCATION
             = "INSERT INTO location(name, registered_date, pic) VALUES(?,?,?)";
-    
-    public boolean createLocation(String locationName, byte[] logo, Employee em){
+
+    public boolean createLocation(String locationName, byte[] logo, Employee em) {
         boolean result = false;
         if (checkEmployeeLoginIdDuplicate(em)) {
             System.out.println("ERROR!!!! Login ID already exists!");
@@ -378,9 +384,9 @@ public class DbDAO {
             rs.close();
 
             em.locationId = autoInsertedKey;
-            
+
             insertNewEmployee(em);
-            
+
             result = true;
         } catch (Exception e) {
             System.out.println("ERROR! " + e.toString());
@@ -421,7 +427,7 @@ public class DbDAO {
             pstmt.setString(14, em.country);
 
             pstmt.setBytes(15, em.arr);
-            
+
             pstmt.setString(16, em.locationId);
 
             pstmt.executeUpdate();
@@ -550,7 +556,7 @@ public class DbDAO {
             pstmt.setString(27, p.posZip);
 
             pstmt.setBytes(28, p.arr);
-            
+
             pstmt.setString(29, p.locationId);
 
             pstmt.executeUpdate();
