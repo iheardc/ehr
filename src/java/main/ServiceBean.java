@@ -74,6 +74,13 @@ public class ServiceBean implements Serializable {
         return data;
     }
 
+    public byte[] getLogoData() throws IOException {
+        if (data == null){
+            return null;
+        }
+        return data;
+    }
+
     public void setData(byte[] data) {
         this.data = data;
     }

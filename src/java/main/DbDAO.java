@@ -396,6 +396,66 @@ public class DbDAO {
         return result;
     }
 
+    public static final String UPDATE_LOCATION
+            = "UPDATE location SET name=? WHERE id=?";
+    public static final String UPDATE_LOCATION_WITH_LOGO
+            = "UPDATE location SET name=?, pic=? WHERE id=?";
+
+    public boolean updateLocation(String locationId, String locationName, byte[] logo) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            if (logo == null || logo.length <= 0) {
+                pstmt = connect.prepareStatement(UPDATE_LOCATION);
+                pstmt.setString(1, locationName);
+                pstmt.setString(2, locationId);
+            } else {
+                pstmt = connect.prepareStatement(UPDATE_LOCATION_WITH_LOGO);
+                pstmt.setString(1, locationName);
+                pstmt.setBytes(2, logo);
+                pstmt.setString(3, locationId);
+            }
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR! updateLocation " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
+
+    public static final String GET_LOCATION_LIST
+            = "select id as location_id, name as location_name, pic as location_pic from location WHERE id > 0";
+
+    public List<Employee> getAllLocationList() {
+        List<Employee> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(GET_LOCATION_LIST);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Employee em = new Employee();
+                em.buildEmployee(rs);
+                list.add(em);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR!!!! getAllLocationList : " + e.toString());
+            e.printStackTrace();
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return list;
+    }
+
     public void insertNewEmployee(Employee em) {
         if (checkEmployeeLoginIdDuplicate(em)) {
             System.out.println("ERROR!!!! Login ID already exists!");

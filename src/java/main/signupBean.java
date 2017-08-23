@@ -63,6 +63,10 @@ public class signupBean implements Serializable {
 
     // Create Location
     String locationName, locationAdminId, locationAdminPassword, locationAdminRePassword, locationAdminFn, locationAdminLn;
+    
+    // Manage Location
+    List<Employee> locationList;
+    Employee selectedLocation;
 
     public signupBean() {
         setAllSpecialty();
@@ -146,7 +150,7 @@ public class signupBean implements Serializable {
 
         DbDAO dao = new DbDAO();
 
-        byte[] logo = service.getData();
+        byte[] logo = service.getLogoData();
 
         Employee em = new Employee();
         em.fn = locationAdminFn;
@@ -169,6 +173,44 @@ public class signupBean implements Serializable {
             }
         }
 
+    }
+    
+    public void findLocationList(){
+        
+        DbDAO dao = new DbDAO();
+        locationList = dao.getAllLocationList();
+        
+        RequestContext.getCurrentInstance().update("form");
+        
+    }
+
+    public void onLocationRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Location Selected", selectedLocation.locationName);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        
+        isUpdateMode = true;
+        
+        locationName = selectedLocation.locationName;
+        
+        RequestContext.getCurrentInstance().update("form");
+    }
+    
+    public void updateLocation() throws IOException{
+        
+        DbDAO dao = new DbDAO();
+        
+        byte[] logo = service.getLogoData();
+        
+        if(dao.updateLocation(selectedLocation.locationId, locationName, logo)){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfylly Updated ", "TODO"));
+            reset();
+            findLocationList();
+            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+            RequestContext.getCurrentInstance().update("form");
+        }else{
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed ", "TODO"));
+        }
+        
     }
 
     private Double dateToDouble(Date date) {
@@ -246,6 +288,9 @@ public class signupBean implements Serializable {
         locationAdminRePassword = null;
         locationAdminFn = null;
         locationAdminLn = null;
+        
+        locationList = new ArrayList<>();
+        selectedLocation = null;
 
         System.out.println("Reset all form.");
     }
@@ -764,5 +809,23 @@ public class signupBean implements Serializable {
     public void setLocationAdminLn(String locationAdminLn) {
         this.locationAdminLn = locationAdminLn;
     }
+
+    public List<Employee> getLocationList() {
+        return locationList;
+    }
+
+    public void setLocationList(List<Employee> locationList) {
+        this.locationList = locationList;
+    }
+
+    public Employee getSelectedLocation() {
+        return selectedLocation;
+    }
+
+    public void setSelectedLocation(Employee selectedLocation) {
+        this.selectedLocation = selectedLocation;
+    }
+    
+    
 
 }

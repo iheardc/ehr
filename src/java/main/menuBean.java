@@ -222,6 +222,14 @@ public class menuBean implements Serializable {
         pathCont = "/admin/create_location.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+    public static void manageLocation() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
+        bean.reset();
+        bean.findLocationList();
+        pathCont = "/admin/manage_location.xhtml";
+        RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
     
     //Inventory
     public static void addClinicalInventory(){

@@ -134,6 +134,7 @@
                     </p:submenu>
                     <p:submenu label="Admin"  expanded="false" rendered="#{menuBean.isRendered('admin/superadmin')}" >
                         <p:menuitem value="Create Location"  icon="fa fa-info" action="#{menuBean.newLocation()}" update="content" rendered="#{menuBean.isRendered('superadmin')}"/>
+                        <p:menuitem value="Manage Location"  icon="fa fa-info" action="#{menuBean.manageLocation()}" update="content" rendered="#{menuBean.isRendered('superadmin')}"/>
                         <p:menuitem value="Create Employee"  icon="fa fa-info" action="#{menuBean.newEmployee()}" update="content"/>
                         <p:menuitem value="Modify Employee"  icon="fa fa-edit" update="content" disabled="true"/>
                         <p:menuitem value="Delete Employee"  icon="fa fa-edit" update="content" disabled="true"/>

@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+
+        <p:growl autoUpdate="true" showDetail="true" life="2000"/>
+
+        <b:container fluid="true" class="customContainer">
+
+            <b:column col-md="12">
+
+                <h1>Create Location</h1>
+                <hr></hr>
+
+
+                <h:form enctype="multipart/form-data" id="form">
+
+                    <b:column col-md="11" offset-md="1">
+
+                        <h2>Location List</h2>
+                        <hr/>
+                        <p:dataTable var="em" value="#{signupBean.locationList}" id="locationTable"
+                                     resizableColumns="true" tableStyleClass="table table-striped"
+                                     selectionMode="single" selection="#{signupBean.selectedLocation}" rowKey="#{em.locationId}">
+
+                            <p:ajax event="rowSelect" listener="#{signupBean.onLocationRowSelect}" />
+
+                            <p:column headerText="Location Id" style="width:20%;" sortBy="#{em.id}">
+                                <h:outputText value="#{em.locationId}" />
+                            </p:column>
+                            <p:column headerText="Location Name" style="width:70%;"  sortBy="#{em.name}">
+                                <h:outputText value="#{em.locationName}"/>
+                            </p:column>
+<!--                            <p:column headerText="Logo" style="width:10%;" sortBy="#{em.email}">
+                                <p:graphicImage value="#{em.locationLogoImage}" style="height: 80%;"></p:graphicImage>
+                            </p:column>-->
+                            <p:column style="width:10%; text-align: center" headerText="Manage">
+                                <h:outputText value="Manage"/>
+                            </p:column>
+                            
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="3" style="text-align:left" footerText="Please select the row." />
+                                </p:row>
+                            </p:columnGroup>
+                        </p:dataTable>
+
+                    </b:column>
+
+                    <b:column col-md="12" rendered="#{signupBean.isUpdateMode}">
+
+                        <b:column col-md="11" offset-md="1">
+
+
+                            <b:column col-md="12" class="form-horizontal">
+                                <div class="form-group">
+                                    <p:outputLabel for="location_name" value="Location Name" class="col-sm-2 control-label"></p:outputLabel>
+                                    <b:column col-sm="10">
+                                        <p:inputText value="#{signupBean.locationName}" id="location_name" autocomplete="off" class="form-control" placeholder="Location Name" required="true"></p:inputText>
+                                    </b:column>
+                                </div>
+                            </b:column>
+
+                            <b:column col-md="12" class="form-horizontal">
+                                <div class="form-group">
+                                    <p:outputLabel for="location_logo" value="Location Logo" class="col-sm-2 control-label"></p:outputLabel>
+                                    <b:column col-sm="4">
+                                        <p:graphicImage id="location_logo" value="#{signupBean.selectedLocation.locationLogoImage}" cache="false" style="width: 100%;"/>
+                                    </b:column>
+                                </div>
+                            </b:column>
+
+                            <b:column col-md="12" class="form-horizontal">
+                                <div class="form-group">
+                                    <p:outputLabel for="upload" value="Logo" class="col-sm-2 control-label"></p:outputLabel>
+                                    <b:column col-sm="10">
+                                        <p:fileUpload id="upload" fileUploadListener="#{serviceBean.fileUpload}" auto="true" 
+                                                      allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
+                                    </b:column>
+                                </div>
+                            </b:column>
+
+
+                            <b:column col-md="12">
+                                <hr></hr>
+                                <p:commandButton class="btn btn-primary" action="#{signupBean.updateLocation()}" value="Update" ajax="false"/>
+                            </b:column>
+
+                        </b:column>
+
+                    </b:column>
+
+
+                </h:form>
+
+            </b:column>
+
+        </b:container>
+
+
+    </ui:composition>
+
+</html>
