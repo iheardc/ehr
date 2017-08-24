@@ -82,7 +82,7 @@ public class signupBean implements Serializable {
 //                address, city, state, zip, country,
 //                accessToken, authority, specialty);
         em = new Employee(id, loginId, email, password, fn, ln, name, gender, phone,
-                role, license, locationId,
+                role, license, signinBean.locationId,
                 address, city, state, zip, country,
                 authority, arr, specialty);
 
