@@ -121,7 +121,7 @@
                                                  resizableColumns="true" tableStyleClass="table table-striped"
                                                  selectionMode="single"  selection="#{insuranceBean.dynamicInfos}" rowKey="#{i.id}">
 
-                                        <!--<p:ajax event="rowSelect" listener="#{insuranceBean.VselectInsurance}" update="content" />-->
+                                        <p:ajax event="rowSelect" listener="#{insuranceBean.selectthird_visit()}" update="content" />
 
                                         <p:column headerText="Date" style="width:30%">
                                             <h:outputText value="#{i.datesString}" />
@@ -219,6 +219,18 @@
                                 </b:column>
                             </div>
                         </b:column>
+                        
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="patient_type" value="patient_type" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <p:selectOneRadio id="patient_type" value="#{insuranceBean.detail_type2}">
+                                        <f:selectItem itemLabel="Chronic Follow-up" itemValue="Chronic Follow-up" />
+                                        <f:selectItem itemLabel="Emergency/Acute Episode" itemValue="Emergency/Acute Episode" />
+                                    </p:selectOneRadio>
+                                </b:column>
+                            </div>
+                        </b:column>
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
@@ -248,6 +260,19 @@
 
                         <!--</b:column>-->
 
+                        <p:column rendered="#{insuranceBean.isShowMore3}">
+                        <b:column col-md="12" class="form-horizontal">
+                            <div class="form-group">
+                                <p:outputLabel for="third_visit" value="3rd visit" class="col-sm-2 control-label"></p:outputLabel>
+                                <b:column col-sm="10">
+                                    <!--<p:inputText value="#{signupBean.dob}" id="dob" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
+                                    <p:calendar id="third_visit" value="#{insuranceBean.date}" navigator="true" pattern="dd-MM-yyyy" mask="true">
+                                        <p:ajax event="dateSelect" listener="#{insuranceBean.onDateSelect}" />
+                                    </p:calendar>
+                                </b:column>
+                            </div>
+                        </b:column>
+                        </p:column>
 
 
 
@@ -256,7 +281,7 @@
                         <b:column col-md="12">
                             <hr></hr>
                             <p:commandButton class="btn btn-primary" action="#{insuranceBean.registrationInsurance()}" value="Create Insurance" ajax="false" update="content"/>
-                            <p:commandButton class="btn btn-danger" action="#{insuranceBean.cancelInsurance()}" value="Cancel" ajax="false" immediate="true" update="form"/>
+                            <p:commandButton class="btn btn-danger" action="#{insuranceBean.reset()}" value="Cancel" ajax="false" immediate="true" update="form"/>
                         </b:column>
 
 

@@ -532,14 +532,26 @@ public class Insurance {
     
     }
     public String getAdmission_dateString() {
+        if("01-01-1970".equals(getDateString((long) ((double) admission_date))))
+        {
+            return "";
+        }
         return getDateString((long) ((double) admission_date));
     }
     
     public String getDischarge_dateString() {
+        if("01-01-1970".equals(getDateString((long) ((double) admission_date))))
+        {
+            return "";
+        }
         return getDateString((long) ((double) discharge_date));
     }
     
     public String getThird_visitString() {
+        if("01-01-1970".equals(getDateString((long) ((double) admission_date))))
+        {
+            return "";
+        }
         return getDateString((long) ((double) third_visit));
     }
 

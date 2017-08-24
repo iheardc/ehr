@@ -43,8 +43,8 @@ public class DbDAO {
             + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String ADD_INSURANCE_STMT_NEW
             = "INSERT INTO insurance("
-            + "scheme, health_facility, Member_No, Serial_No, Hosp_Record_No, patient_type2, detail_type, specialty, specialty_code, patient_id, Ghana_DRG, date_of_claim, patient_type, location_id) "
-            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "scheme, health_facility, Member_No, Serial_No, Hosp_Record_No, patient_type2, detail_type, specialty, specialty_code, patient_id, G_DRG, date_of_claim, patient_type, location_id, detail_type2, 3rd_visit) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_EMPLOYEE_LOGIN_ID_DUPLICATE
             = "SELECT COUNT(id) as count FROM employee "
             + "WHERE login_id=?";
@@ -729,14 +729,16 @@ public class DbDAO {
             pstmt.setString(11, ins.specialty_code);
             pstmt.setDouble(12, getTodayMillisecondsWithoutTime());
             pstmt.setString(13, ins.patient_type);
-            pstmt.setInt(14, Integer.parseInt(ins.location_id));
+            pstmt.setString(14, ins.location_id);
+            pstmt.setString(15, ins.detail_type2);
+            pstmt.setDouble(16, ins.third_visit);
 
             pstmt.executeUpdate();
 
             ins.errormsg = "";//"Thank you for registering with us!";
         } catch (Exception e) {
             System.out.println("ERROR!!!!" + e.toString());
-            ins.errormsg = "Email already exists! Please choose another email.";
+            ins.errormsg = "Insurance Create fail.";
         } finally {
             DbConnectionPools.closeResources(connect, pstmt);
         }

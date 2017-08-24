@@ -65,11 +65,17 @@ public class menuBean implements Serializable {
     }
 
     public static void writeInsurance() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        insuranceBean bean = (insuranceBean) elContext.getELResolver().getValue(elContext, null, "insuranceBean");
+        bean.reset();
         pathCont = "/insurance/insurance_write.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
     
     public static void viewInsurance() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        insuranceBean bean = (insuranceBean) elContext.getELResolver().getValue(elContext, null, "insuranceBean");
+        bean.reset();
         pathCont = "/insurance/insurance_view.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
@@ -118,6 +124,7 @@ public class menuBean implements Serializable {
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
+    
     // Patient Check-In
     public static void newPatient() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();

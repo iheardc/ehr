@@ -8,7 +8,6 @@ package main;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
@@ -41,8 +40,8 @@ public class insuranceBean implements Serializable {
     private List<DynamicInfo> findOlist;
     boolean isShowMore = false;
     boolean isShowMore2 = false;
+    boolean isShowMore3 = false;
     Date date;
-    double dates;
     String g_drg;
 
     //insurance
@@ -70,12 +69,12 @@ public class insuranceBean implements Serializable {
         }
     }
 
-    public String locationinfo(){
+    public String locationinfo() {
         DbDAO dao = new DbDAO();
-        String location=dao.findlocation(selectedIns.location_id);
+        String location = dao.findlocation(selectedIns.location_id);
         return location;
     }
-    
+
     public void registrationInsurance() {
 
         if (selectedP == null) {
@@ -85,7 +84,7 @@ public class insuranceBean implements Serializable {
 
         what_patient_type();
         DbDAO dao = new DbDAO();
-        saveIns = new Insurance(id, selectedP.id, location_id, scheme, date_of_claim, patient_type, patient_type2, patient_type3, detail_type, detail_type2, member_no, serial_no, hosp_record_no, G_DRG, third_visit, spell, cc_code, physician, specialty, specialty_code, date_received, action1, signed1, signed2, action2, signed3, date1, date2, admission_date, discharge_date, health_facility);
+        saveIns = new Insurance(id, selectedP.id, dynamicInfos.locationId, scheme, date_of_claim, patient_type, patient_type2, patient_type3, detail_type, detail_type2, member_no, serial_no, hosp_record_no, G_DRG, third_visit, spell, cc_code, physician, specialty, specialty_code, date_received, action1, signed1, signed2, action2, signed3, date1, date2, admission_date, discharge_date, health_facility);
 
         dao.insertNewInsurance(saveIns);
 
@@ -110,17 +109,25 @@ public class insuranceBean implements Serializable {
     }
 
     public void reset() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        patientBean bean = (patientBean) elContext.getELResolver().getValue(elContext, null, "patientBean");
+        bean.reset();
 //        id=null; 
 //        patient_id=null;
-        selectedP = null;
+        isShowMore = false;
+        findList=null;
         scheme = null;
+        findOlist = null;
+        third_visit = 0;
+        date = null;
+        isShowMore3 = false;
 //        date_of_claim=0;
 //        patient_type=null;
 //        location_id = null;
         patient_type2 = null;
 //        patient_type3=null;
         detail_type = null;
-//        detail_type2=null;
+        detail_type2 = null;
         member_no = null;
         serial_no = null;
         hosp_record_no = null;
@@ -205,6 +212,14 @@ public class insuranceBean implements Serializable {
             return "M";
         } else {
             return "F";
+        }
+    }
+
+    public void selectthird_visit() {
+        if ("ADM".equals(dynamicInfos.status)) {
+            isShowMore3 = true;
+        } else {
+            isShowMore3 = false;
         }
     }
 
@@ -330,12 +345,12 @@ public class insuranceBean implements Serializable {
         for (int i = 0; i < findMlist.size(); i++) {
             totals = totals + findMlist.get(i).total_amt;
         }
-        return Math.floor(totals*100d)/100d;
+        return Math.floor(totals * 100d) / 100d;
     }
 
     public void onDateSelect(SelectEvent event) {
-        dates = Double.parseDouble(Long.toString(date.getTime()));
-        System.out.println(Double.toString(dates));
+        third_visit = Double.parseDouble(Long.toString(date.getTime()));
+        System.out.println(Double.toString(third_visit));
 //        FacesContext facesContext = FacesContext.getCurrentInstance();
 //        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 //        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
@@ -462,14 +477,21 @@ public class insuranceBean implements Serializable {
         this.date = date;
     }
 
-    public double getDates() {
-        return dates;
+    public boolean isIsShowMore3() {
+        return isShowMore3;
     }
 
-    public void setDates(double dates) {
-        this.dates = dates;
+    public void setIsShowMore3(boolean isShowMore3) {
+        this.isShowMore3 = isShowMore3;
     }
 
+//    public double getDates() {
+//        return dates;
+//    }
+//
+//    public void setDates(double dates) {
+//        this.dates = dates;
+//    }
     public String getG_drg() {
         return g_drg;
     }
@@ -579,7 +601,6 @@ public class insuranceBean implements Serializable {
         this.location_id = location_id;
     }
 
-    
     public void setSerial_no(String serial_no) {
         this.serial_no = serial_no;
     }
