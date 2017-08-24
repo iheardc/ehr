@@ -41,6 +41,7 @@ public class insuranceBean implements Serializable {
     boolean isShowMore = false;
     boolean isShowMore2 = false;
     boolean isShowMore3 = false;
+    boolean isShowMore4 = false;
     Date date;
     String g_drg;
 
@@ -115,12 +116,13 @@ public class insuranceBean implements Serializable {
 //        id=null; 
 //        patient_id=null;
         isShowMore = false;
-        findList=null;
+        findList = null;
         scheme = null;
         findOlist = null;
         third_visit = 0;
         date = null;
         isShowMore3 = false;
+        isShowMore4 = false;
 //        date_of_claim=0;
 //        patient_type=null;
 //        location_id = null;
@@ -216,6 +218,7 @@ public class insuranceBean implements Serializable {
     }
 
     public void selectthird_visit() {
+        isShowMore4=true;
         if ("ADM".equals(dynamicInfos.status)) {
             isShowMore3 = true;
         } else {
@@ -483,6 +486,14 @@ public class insuranceBean implements Serializable {
 
     public void setIsShowMore3(boolean isShowMore3) {
         this.isShowMore3 = isShowMore3;
+    }
+
+    public boolean isIsShowMore4() {
+        return isShowMore4;
+    }
+
+    public void setIsShowMore4(boolean isShowMore4) {
+        this.isShowMore4 = isShowMore4;
     }
 
 //    public double getDates() {
