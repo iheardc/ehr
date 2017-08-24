@@ -84,7 +84,7 @@ public class insuranceBean implements Serializable {
 
         what_patient_type();
         DbDAO dao = new DbDAO();
-        saveIns = new Insurance(id, selectedP.id, dynamicInfos.locationId, scheme, date_of_claim, patient_type, patient_type2, patient_type3, detail_type, detail_type2, member_no, serial_no, hosp_record_no, G_DRG, third_visit, spell, cc_code, physician, specialty, specialty_code, date_received, action1, signed1, signed2, action2, signed3, date1, date2, admission_date, discharge_date, health_facility);
+        saveIns = new Insurance(id, selectedP.id, signinBean.locationId, scheme, date_of_claim, patient_type, patient_type2, patient_type3, detail_type, detail_type2, member_no, serial_no, hosp_record_no, G_DRG, third_visit, spell, cc_code, physician, specialty, specialty_code, date_received, action1, signed1, signed2, action2, signed3, date1, date2, admission_date, discharge_date, health_facility);
 
         dao.insertNewInsurance(saveIns);
 
@@ -185,7 +185,7 @@ public class insuranceBean implements Serializable {
         isShowMore = true;
 
         DbDAO dao = new DbDAO();
-        findList = dao.findInsurance(selectedP.id);
+        findList = dao.findInsurance(selectedP.id, signinBean.locationId);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;

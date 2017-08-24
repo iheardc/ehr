@@ -94,7 +94,7 @@ public class DbDAO {
             = "SELECT * FROM patient "
             + "WHERE location_id=? and (id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?)";
     private static final String SEARCH_DYNAMIC_TABLE_WITH_PATIENTID_AND_STATUS_CKO_ADM
-            = "SELECT * FROM outpatient_dynamic WHERE (patient_id=? AND status='CKO') OR (patient_id=? AND status='ADM')";
+            = "SELECT * FROM outpatient_dynamic WHERE (location_id=? AND patient_id=? AND status='CKO') OR (location_id=? AND patient_id=? AND status='ADM')";
     private static final String FIND_INSURMEDICINE
             = "SELECT * FROM insurance_medicine WHERE insurance_id = ?";
     private static final String FIND_INSURINVESTIGATIONS
@@ -105,7 +105,7 @@ public class DbDAO {
             = "SELECT * FROM insurance_procedure WHERE insurance_id = ?";
     private static final String FIND_INSURANCE
             = "SELECT * FROM insurance "
-            + "WHERE patient_id=?";
+            + "WHERE location_id=? and patient_id=?";
     private static final String CHECK_IN_PATIENT
             = "INSERT INTO outpatient_dynamic(patient_id, patient_fn, patient_ln, patient_gender, patient_dob, date, status, location_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String CHECK_OUT_PATIENT
@@ -826,8 +826,10 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(SEARCH_DYNAMIC_TABLE_WITH_PATIENTID_AND_STATUS_CKO_ADM);
-            pstmt.setString(1, findId);
+            pstmt.setString(1, signinBean.locationId);
             pstmt.setString(2, findId);
+            pstmt.setString(3, signinBean.locationId);
+            pstmt.setString(4, findId);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
@@ -870,7 +872,7 @@ public class DbDAO {
         return location_name;
     }
 
-    public List<Insurance> findInsurance(String findId) {
+    public List<Insurance> findInsurance(String findId, String locationid) {
         List<Insurance> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         Connection connect = null;
@@ -878,6 +880,7 @@ public class DbDAO {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_INSURANCE);
             pstmt.setString(1, findId);
+            pstmt.setString(2, locationid);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();

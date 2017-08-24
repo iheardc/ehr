@@ -14,7 +14,7 @@
             <b:navBar brand="Electronic Health Record" brandHref="#" sticky="true" fluid="true"  style="margin: 0px;">
                 <b:navbarLinks pull="left">
                     <b:navCommandLink class="logo" content-style="padding-top: 5px; padding-bottom: 5px;" rendered="#{signinBean.loggedIn}" action="#{menuBean.redirectHome()}" update="content">
-                        <p:graphicImage value="#{signinBean.em.locationLogoImage}" style="height: 40px" cache="false"/> 
+                        <p:graphicImage value="#{signinBean.em.locationLogoImage}" style="height: 40px" cache="false" /> 
                     </b:navCommandLink>  
                     <b:navCommandLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHome()}" rendered="#{signinBean.loggedIn}" update="content"/>
                     <b:navCommandLink href="#" value="About" iconAwesome="fa-comment" />
