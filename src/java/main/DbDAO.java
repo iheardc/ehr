@@ -879,8 +879,8 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_INSURANCE);
-            pstmt.setString(1, findId);
-            pstmt.setString(2, locationid);
+            pstmt.setString(1, locationid);
+            pstmt.setString(2, findId);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
