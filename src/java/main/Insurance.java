@@ -532,7 +532,7 @@ public class Insurance {
     
     }
     public String getAdmission_dateString() {
-        if("01-01-1970".equals(getDateString((long) ((double) admission_date))))
+        if(admission_date==0.0)
         {
             return "";
         }
@@ -540,7 +540,7 @@ public class Insurance {
     }
     
     public String getDischarge_dateString() {
-        if("01-01-1970".equals(getDateString((long) ((double) admission_date))))
+        if(discharge_date==0.0)
         {
             return "";
         }
@@ -548,7 +548,7 @@ public class Insurance {
     }
     
     public String getThird_visitString() {
-        if("01-01-1970".equals(getDateString((long) ((double) admission_date))))
+        if(third_visit==0.0)
         {
             return "";
         }
