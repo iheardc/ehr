@@ -14,7 +14,7 @@
         <f:metadata>
             <f:viewAction action="#{patientBean.reset()}"/>
         </f:metadata>
-        
+
         <p:growl autoUpdate="true" showDetail="true" life="1500"/>
 
         <b:container fluid="true" class="customContainer">
@@ -66,16 +66,16 @@
                                 <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="6">
                                     <!--<p:inputText value="#{patientBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
-<!--                                    <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
+                                    <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
                                         <p:ajax event="dateSelect" listener="#{patientBean.onDateSelect}" />
-                                    </p:calendar>-->
-                                    <b:dateTimePicker value="#{patientBean.findDoB}"
+                                    </p:calendar>
+<!--                                    <b:dateTimePicker value="#{patientBean.findDoB}"
                                                       allow-input-toggle="true"
                                                       show-date="true"
                                                       use-current="false"
                                                       mode="popup" format="DD-MM-YYYY" 
                                                       id="dob"
-                                                      />
+                                                      />-->
                                 </b:column>
                             </div>
                         </b:column>
