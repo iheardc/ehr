@@ -89,7 +89,7 @@ public class DbDAO {
             + "FROM outpatient_dynamic "
             + "WHERE ? <= date and date <= ? "
             + "GROUP BY patient_id) as B on (B.patient_id = P.id) "
-            + "where location_id=? and (id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ? and IFNULL(B.cot,0) <= 0)";
+            + "where location_id=? and (id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and ((? <= date_of_birth and date_of_birth <= ?) or ?) and IFNULL(B.cot,0) <= 0)";
     private static final String FIND_PATIENT
             = "SELECT * FROM patient "
             + "WHERE location_id=? and (id like ? and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?) and date_of_birth like ?)";
@@ -942,7 +942,8 @@ public class DbDAO {
         return list;
     }
 
-    public List<Patient> findPatientWithDate(String locationId, Double date, String findId, String findName, String findDoB) {
+    public List<Patient> findPatientWithDate(String locationId, Double date, String findId, String findName, double findDoB) {
+        String checkFindDob = "0";
         if (findId == null || "".equals(findId)) {
             findId = "%";
         }
@@ -951,8 +952,10 @@ public class DbDAO {
         } else {
             findName = "%" + findName + "%";
         }
-        if (findDoB == null || "".equals(findDoB) || "0".equals(findDoB)) {
-            findDoB = "%";
+        if (findDoB == 0.0) {
+            checkFindDob = "1";
+        }else{
+            checkFindDob = "0";
         }
         List<Patient> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -960,14 +963,16 @@ public class DbDAO {
         try {
             connect = DbConnectionPools.getPoolConnection();
             pstmt = connect.prepareStatement(FIND_PATIENT_WITH_DATE);
-            pstmt.setDouble(1, date - 86400000);
+            pstmt.setDouble(1, date - ONE_DAY_MS);
             pstmt.setDouble(2, date);
             pstmt.setString(3, locationId);
             pstmt.setString(4, findId);
             pstmt.setString(5, findName);
             pstmt.setString(6, findName);
             pstmt.setString(7, findName);
-            pstmt.setString(8, findDoB);
+            pstmt.setDouble(8, findDoB);
+            pstmt.setDouble(9, findDoB + ONE_DAY_MS);
+            pstmt.setString(10, checkFindDob);
             System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
