@@ -40,8 +40,10 @@
                             <div class="form-group">
                                 <p:outputLabel for="upload" value="Logo" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:fileUpload id="upload" fileUploadListener="#{serviceBean.fileUpload}" auto="true" 
+                                    <p:fileUpload id="upload" fileUploadListener="#{signupBean.fileUpload}" auto="true" 
                                                   allowTypes="/(\.|\/)(jpe?g|png|gif)$/"/>
+                                    <br/>
+                                    <p:graphicImage id="upload_pic" value="#{signupBean.uploadImage}" style="width:30%" cache="false"/> 
                                 </b:column>
                             </div>
                         </b:column>

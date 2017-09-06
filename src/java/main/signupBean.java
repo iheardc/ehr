@@ -5,6 +5,7 @@
  */
 package main;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -103,6 +106,7 @@ public class signupBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage("Successfylly registered ", "Your registration has been successfully completed!");
             FacesContext.getCurrentInstance().addMessage(null, message);
+            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 //            return "/admin/create_employee.xhtml?faces-redirect=true";
             menuBean.newEmployee();
         }
@@ -138,6 +142,7 @@ public class signupBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
             FacesMessage message = new FacesMessage("Successfylly registered ", "Your registration has been successfully completed!");
             FacesContext.getCurrentInstance().addMessage(null, message);
+            RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 //            return "/checkin/create_patient.xhtml?faces-redirect=true";
             menuBean.newPatient();
         }
@@ -223,6 +228,12 @@ public class signupBean implements Serializable {
 //        FacesContext facesContext = FacesContext.getCurrentInstance();
 //        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 //        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
+    }
+    
+    public void fileUpload(FileUploadEvent event){
+        service.fileUpload(event);
+        System.out.println("upload!");
+        RequestContext.getCurrentInstance().update("form:upload_pic");
     }
 
     public void cancelPatient() {
@@ -826,6 +837,20 @@ public class signupBean implements Serializable {
         this.selectedLocation = selectedLocation;
     }
     
-    
+    public StreamedContent getUploadImage() throws IOException {
+//        FacesContext context = FacesContext.getCurrentInstance();
+//
+//        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+//            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+//            return new DefaultStreamedContent();
+//        } 
+//        return new DefaultStreamedContent(new ByteArrayInputStream(selectedP.arr));    
+        byte[] arr = service.getData();
+        if (arr == null || arr.length <= 0) {
+            return new DefaultStreamedContent();
+        } else {
+            return new DefaultStreamedContent(new ByteArrayInputStream(arr));
+        }
+    }
 
 }

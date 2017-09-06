@@ -207,7 +207,7 @@ public class DbDAO {
             + "WHERE A.patient_id like ? and A.id not like ? "
             + "";
     private static final String GET_RXNORM_CODES
-            = "select * from rxnorm_code WHERE code like ? or description like ?";
+            = "select * from rxnorm_code WHERE code like ? or description like ? LIMIT 0, 30";
     private static final String GET_HCPCS_CODES
             = "select * from hcpcs_code WHERE code like ? or description like ?";
     private static final String GET_SNOMEDCT_CODES
