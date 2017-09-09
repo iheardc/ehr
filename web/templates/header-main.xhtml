@@ -12,22 +12,24 @@
     <ui:composition>
         <h:form id="header-form">
             <b:navBar brand="Electronic Health Record" brandHref="#" sticky="true" fluid="true"  style="margin: 0px;">
-                <b:navbarLinks styleClass="horizontalMenu" rendered="#{signinBean.loggedIn}">
-                    <b:navCommandLink value="Menu" id="dynaButton" icon="fa fa-bars"/>
-                </b:navbarLinks>
+<!--                <b:navbarLinks styleClass="horizontalMenu" rendered="#{signinBean.loggedIn}">
+                    <b:navCommandLink value="Menu" id="dynaButton2" icon="fa fa-bars"/>
+                </b:navbarLinks>-->
                 <b:navbarLinks pull="left">
                     <b:navCommandLink class="logo" content-style="padding-top: 5px; padding-bottom: 5px;" rendered="#{signinBean.loggedIn}" action="#{menuBean.redirectHome()}" update="content">
                         <p:graphicImage value="#{signinBean.em.locationLogoImage}" style="height: 40px" cache="false" /> 
                     </b:navCommandLink>  
                     <b:navCommandLink value="Home" iconAwesome="fa-home" action="#{menuBean.redirectHome()}" rendered="#{signinBean.loggedIn}" update="content"/>
                     <b:navCommandLink href="#" value="About" iconAwesome="fa-comment" />
-                    <b:navCommandLink href="#" value="Help" iconAwesome="fa-question" />
+                    <b:navCommandLink href="#" onclick="window.open('https://drive.google.com/open?id=0B67FssKXYIKQdldmY1dXaDNsbTg', '_blank')" value="Manual" iconAwesome="fa-question" />
                 </b:navbarLinks>
                 <b:navbarLinks pull="right">
                     <b:navCommandLink value="Hi, #{signinBean.em.fn} (#{signinBean.em.role})" action="#{menuBean.viewEmployeeDemographics()}" update="content" rendered="#{signinBean.loggedIn}"/>
                     <b:navCommandLink value="Logout" iconAwesome="fa-sign-out"  rendered="#{signinBean.loggedIn}" action="#{signinBean.logout()}" immediate="true"/>
                 </b:navbarLinks>
             </b:navBar>
+            
+            <b:commandButton class="btn btn-default" value="Menu" id="dynaButton" icon-awesome="fa-bars" styleClass="horizontalMenu" style="margin-top:1em; margin-left: 1em;" rendered="#{signinBean.loggedIn}"/>
 
             <p:slideMenu overlay="true" trigger="dynaButton" my="left top" at="left bottom" rendered="#{signinBean.loggedIn}">
                 <p:submenu label="User Information"  expanded="false" class="sub-bottom-line">

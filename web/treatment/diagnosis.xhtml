@@ -30,14 +30,14 @@
                     <b:column col-md="11" offset-md="1">
                         <h2>Select a Patient(*)</h2>
                         <hr></hr>
-                        <b:column col-md="12" class="form-horizontal">
-                            <div class="form-group">
-                                <p:outputLabel for="findDocId" value="Doctor ID" class="col-sm-2 control-label"></p:outputLabel>
-                                <b:column col-sm="4">
-                                    <p:inputText value="#{treatmentBean.findDocId}" id="findDocId" autocomplete="off" class="form-control" placeholder="Doctor ID"></p:inputText>
-                                </b:column>
-                            </div>
-                        </b:column>
+                        <!--                        <b:column col-md="12" class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <p:outputLabel for="findDocId" value="Doctor ID" class="col-sm-2 control-label"></p:outputLabel>
+                                                        <b:column col-sm="4">
+                                                            <p:inputText value="#{treatmentBean.findDocId}" id="findDocId" autocomplete="off" class="form-control" placeholder="Doctor ID"></p:inputText>
+                                                        </b:column>
+                                                    </div>
+                                                </b:column>-->
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
@@ -73,9 +73,11 @@
                             <b:column col-md="12" rendered="#{treatmentBean.isShowWFDTable}">
                                 <hr></hr>
 
-                                <p:dataTable var="d" value="#{treatmentBean.findWFDList}" id="searchTable1" paginator="true" rows="10"
+                                <p:dataTable var="d" value="#{treatmentBean.findWFDList}" id="searchTable1" widgetVar="searchTable1" paginator="true" rows="10"
                                              resizableColumns="true"  tableStyleClass="table table-striped" selectionMode="single"
-                                             selection="#{treatmentBean.selectedD}" rowKey="#{d.id}">
+                                             selection="#{treatmentBean.selectedD}" rowKey="#{d.id}"
+                                             emptyMessage="No patient found with given criteria" filteredValue="#{treatmentBean.findWFDFilteredList}"
+                                             >
 
                                     <p:ajax event="rowSelect" listener="#{treatmentBean.onWFDSelectRowSelect}" />
 
@@ -83,11 +85,31 @@
                                         Waiting for Doctor
                                     </f:facet>
 
-                                    <p:column headerText="Patient Name" style="width: 30%" sortBy="#{d.p.name}">
+                                    <p:column headerText="Patient Name" style="width: 20%" sortBy="#{d.p.name}"
+                                              filterBy="#{d.p.name}" filterMatchMode="contains" filterStyle="margin:0px;"
+                                              >
                                         <h:outputText value="#{d.p.name}" />
                                     </p:column>
-                                    <p:column headerText="Nurse Name" style="width: 30%" sortBy="#{d.n.name}">
+                                    <p:column headerText="Nurse Name" style="width: 20%" sortBy="#{d.n.name}"
+                                              filterBy="#{d.n.name}" filterMatchMode="contains" filterStyle="margin:0px;"
+                                              >
                                         <h:outputText value="#{d.n.name}" />
+                                    </p:column>
+                                    <p:column headerText="Doctor Name" style="width: 20%" sortBy="#{d.doc.name}"
+                                              filterBy="#{d.doc.name}" filterMatchMode="exact" filterStyle="margin:0px; width:20%"
+                                              >
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('searchTable1').filter()"  >
+                                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{treatmentBean.allDocName}" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+<!--                                        <f:facet name="filter">
+                                            <p:selectCheckboxMenu label="Doctors" onchange="PF('searchTable1').filter()" panelStyle="width:125px" scrollHeight="150">
+                                                <f:selectItems value="#{treatmentBean.allDocName}" />
+                                            </p:selectCheckboxMenu>
+                                        </f:facet>-->
+                                        <h:outputText value="#{d.doc.name}" />
                                     </p:column>
                                     <p:column headerText="Date" style="width: 40%" sortBy="#{d.date}">
                                         <h:outputText value="#{d.dateString}" />
@@ -815,10 +837,10 @@
                                         <b:column col-md="6">
                                             <p:outputLabel value="#{treatmentBean.ccTempCode}"/>
     <!--<p:inputText id="cc_code" value="#{treatmentBean.ccTempCode}" class="form-control" placeholder="Charge Code" type="text" autocomplete="off"/>-->
-<!--                                            <div class="ui-inputgroup" style="width: 100%;">
-                                                <p:inputText id="cc_code" value="#{treatmentBean.ccTempCode}" placeholder="Charge Code" type="text" autocomplete="off"/>
-                                                <p:commandButton icon="fa fa-question" value="Recommand" styleClass="white-button" style="background-image:none; background-color: #5cb85c; border-color: #4cae4c; color: white; text-shadow: none;"/>  
-                                            </div>-->
+                                            <!--                                            <div class="ui-inputgroup" style="width: 100%;">
+                                                                                            <p:inputText id="cc_code" value="#{treatmentBean.ccTempCode}" placeholder="Charge Code" type="text" autocomplete="off"/>
+                                                                                            <p:commandButton icon="fa fa-question" value="Recommand" styleClass="white-button" style="background-image:none; background-color: #5cb85c; border-color: #4cae4c; color: white; text-shadow: none;"/>  
+                                                                                        </div>-->
                                         </b:column>
                                     </div>
                                 </b:column>

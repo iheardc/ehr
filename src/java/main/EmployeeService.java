@@ -38,6 +38,14 @@ public class EmployeeService {
     public static List<Employee> getFilteredList(String role, String query){
         return new DbDAO().getEmployeeNames(signinBean.locationId, role, query);
     }
+    
+    public static String[] getDoctorNameList(List<Employee> list){
+        String[] strs = new String[list.size()];
+        for(int i=0; i<strs.length; i++){
+            strs[i] = list.get(i).getName();
+        }
+        return strs;
+    }
 
     public static List<Employee> getList() {
         if(list == null || list.size() <= 0){

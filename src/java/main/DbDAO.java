@@ -1804,7 +1804,7 @@ public class DbDAO {
             + "LEFT OUTER JOIN ( "
             + "SELECT * FROM loinc_code "
             + "GROUP BY LOINC_CODE) as E on(E.LOINC_CODE = A.LOINC_CODE) "
-            + "WHERE location_id=? and (status like ? and ifnull(technician_id,'') like ?) "
+            + "WHERE A.location_id=? and (status like ? and ifnull(technician_id,'') like ?) "
             + "GROUP BY A.id";
 
     public List<OrderInfo> getLabOrderList(String locationId, String status, String techId) {
@@ -1853,7 +1853,7 @@ public class DbDAO {
             + "LEFT OUTER JOIN ( "
             + "SELECT * FROM loinc_code "
             + "GROUP BY LOINC_CODE) as E on(E.LOINC_CODE = A.LOINC_CODE) "
-            + "WHERE location_id=? and (status like ? and ifnull(radiologist_id,'') like ?) "
+            + "WHERE A.location_id=? and (status like ? and ifnull(radiologist_id,'') like ?) "
             + "GROUP BY A.id";
 
     public List<OrderInfo> getImagingOrderList(String locationId, String status, String techId) {
@@ -2209,7 +2209,7 @@ public class DbDAO {
             + "LEFT OUTER JOIN ( "
             + "SELECT * FROM employee "
             + "GROUP BY id) as D on(D.id = A.pharmacist_id) "
-            + "WHERE location_id=? and (status like ? and ifnull(pharmacist_id,'') like ?) "
+            + "WHERE A.location_id=? and (status like ? and ifnull(pharmacist_id,'') like ?) "
             + "GROUP BY A.id;";
     public static final String GET_PRESCRIPTION_DETAIL
             = "select A.*, ifnull(B.qty, 0) as current_qty, (ifnull(B.qty, 0) - (A.single_dose * A.num_of_daily_dose * A.total_dosing_days)) as remain_qty, (C.amount * (A.single_dose * A.num_of_daily_dose * A.total_dosing_days)) as coast "

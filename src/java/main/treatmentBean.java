@@ -32,7 +32,9 @@ public class treatmentBean implements Serializable {
     Date date;
 
     private List<DynamicInfo> findWFDList;
+    private List<DynamicInfo> findWFDFilteredList;
     private List<DynamicInfo> findWFDRList;
+    private List<DynamicInfo> findWFDRFilteredList;
     private DynamicInfo selectedD;
 
     // View result table when click Search
@@ -298,7 +300,7 @@ public class treatmentBean implements Serializable {
     public void resetPatientFindItem() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
-        findDocId = sBean.em.id;
+        findDocId = null;//sBean.em.id;
         date = DbDAO.getTodayDate();
         patientStatus = null;
         findWFDList = null;
@@ -572,12 +574,28 @@ public class treatmentBean implements Serializable {
         this.findWFDList = findWFDList;
     }
 
+    public List<DynamicInfo> getFindWFDFilteredList() {
+        return findWFDFilteredList;
+    }
+
+    public void setFindWFDFilteredList(List<DynamicInfo> findWFDFilteredList) {
+        this.findWFDFilteredList = findWFDFilteredList;
+    }
+
     public List<DynamicInfo> getFindWFDRList() {
         return findWFDRList;
     }
 
     public void setFindWFDRList(List<DynamicInfo> findWFDRList) {
         this.findWFDRList = findWFDRList;
+    }
+
+    public List<DynamicInfo> getFindWFDRFilteredList() {
+        return findWFDRFilteredList;
+    }
+
+    public void setFindWFDRFilteredList(List<DynamicInfo> findWFDRFilteredList) {
+        this.findWFDRFilteredList = findWFDRFilteredList;
     }
 
     public DynamicInfo getSelectedD() {
@@ -854,6 +872,10 @@ public class treatmentBean implements Serializable {
 
     public void setPresTempUsage(String presTempUsage) {
         this.presTempUsage = presTempUsage;
+    }
+    
+    public String[] getAllDocName(){
+        return EmployeeService.getDoctorNameList(EmployeeService.getFilteredList("doctor"));
     }
 
 }

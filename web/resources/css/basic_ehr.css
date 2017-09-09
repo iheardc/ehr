@@ -215,6 +215,10 @@ tfoot .ui-state-default{
     display: none;
 }
 
+.ui-datatable .ui-column-filter{
+    margin: 0px;
+}
+
 /* Button */
 .ui-button-text-only .ui-button-text{
     padding:0px;
