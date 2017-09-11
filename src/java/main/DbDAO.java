@@ -1470,6 +1470,32 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
+    
+    public static final String INSERT_NEW_RXNORM_CODE
+            = "INSERT INTO rxnorm_code(code, code_system_OID, description) VALUES(?,?,?)";
+
+    public boolean insertNewRxNORMCode(RxNORM r) {
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        Connection connect = null;
+        try {
+            connect = DbConnectionPools.getPoolConnection();
+            pstmt = connect.prepareStatement(INSERT_NEW_RXNORM_CODE);
+            pstmt.setString(1, r.code);
+            pstmt.setString(2, r.codeSystemOID);
+            pstmt.setString(3, r.description);
+
+            pstmt.executeUpdate();
+
+            result = true;
+
+        } catch (Exception e) {
+            System.out.println("ERROR! " + e.toString());
+        } finally {
+            DbConnectionPools.closeResources(connect, pstmt);
+        }
+        return result;
+    }
 
     public List<RxNORM> getRxNORMCodes(String query) {
         if (query == null || "".equals(query)) {

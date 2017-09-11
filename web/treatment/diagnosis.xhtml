@@ -104,11 +104,11 @@
                                                 <f:selectItems value="#{treatmentBean.allDocName}" />
                                             </p:selectOneMenu>
                                         </f:facet>
-<!--                                        <f:facet name="filter">
-                                            <p:selectCheckboxMenu label="Doctors" onchange="PF('searchTable1').filter()" panelStyle="width:125px" scrollHeight="150">
-                                                <f:selectItems value="#{treatmentBean.allDocName}" />
-                                            </p:selectCheckboxMenu>
-                                        </f:facet>-->
+                                        <!--                                        <f:facet name="filter">
+                                                                                    <p:selectCheckboxMenu label="Doctors" onchange="PF('searchTable1').filter()" panelStyle="width:125px" scrollHeight="150">
+                                                                                        <f:selectItems value="#{treatmentBean.allDocName}" />
+                                                                                    </p:selectCheckboxMenu>
+                                                                                </f:facet>-->
                                         <h:outputText value="#{d.doc.name}" />
                                     </p:column>
                                     <p:column headerText="Date" style="width: 40%" sortBy="#{d.date}">
@@ -731,6 +731,10 @@
                                                     <h:outputText value="#{it.description}" />
                                                 </p:column>
                                             </p:autoComplete>
+
+                                            <b:column col-sm="6" style="margin-top: 1em;">
+                                                <p:commandButton class="btn btn-success" style="background-image:none; background-color: #5cb85c; border-color: #4cae4c; color: white; text-shadow: none;" value="Register New RxNORM Code" oncomplete="PF('rrcDialog').show()"/>
+                                            </b:column>
                                         </b:column>
                                     </div>
                                 </b:column>
@@ -873,6 +877,38 @@
                                     <hr></hr>
                                     <p:commandButton class="btn btn-primary" value="Submit" action="#{treatmentBean.createNewChargeCode()}" style="background-image:none; background-color: #337ab7; border-color: #2e6da4; color: white; text-shadow: none;"/>
                                     <p:commandButton class="btn btn-danger" value="Reset" update="addCC" action="#{treatmentBean.resetNewChargeCode()}" style="background-image:none; background-color: #d9534f; border-color: #d43f3a; color: white; text-shadow: none;"/>
+                                </b:column>
+
+                            </p:column>
+
+                        </p:outputPanel>
+                    </p:dialog>
+                                        
+                    <p:dialog header="Register New RxNORM Code" widgetVar="rrcDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="rrcDetail">
+
+                            <p:column id="addRC">
+
+                                <b:column class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="rrc_code" value="Code" class="col-sm-2" style="text-align: right; margin-right: 0.5em;"/>
+                                        <b:column col-md="6">
+                                            <p:inputText style="width: 100%;" id="rrc_code" value="#{treatmentBean.rrcTempCode}" placeholder="Name" type="text" autocomplete="off" maxlength="40"/>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+                                <b:column class="form-horizontal">
+                                    <div class="form-group">
+                                        <p:outputLabel for="rrc_description" value="Description" class="col-sm-2" style="text-align: right; margin-right: 0.5em;"/>
+                                        <b:column col-md="6">
+                                            <p:inputTextarea style="width: 100%;" id="rrc_description" value="#{treatmentBean.rrcTempDesc}" placeholder="Description"/>
+                                        </b:column>
+                                    </div>
+                                </b:column>
+
+                                <b:column>
+                                    <hr></hr>
+                                    <p:commandButton class="btn btn-primary" value="Submit" action="#{treatmentBean.createNewRxNORMCode()}" style="background-image:none; background-color: #337ab7; border-color: #2e6da4; color: white; text-shadow: none;"/>
                                 </b:column>
 
                             </p:column>

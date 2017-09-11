@@ -59,6 +59,7 @@ public class treatmentBean implements Serializable {
     RxNORM presTempRx;
     int presTempSD, presTempNDD, presTempTDD;
     String presTempUsage;
+    String rrcTempCode, rrcTempDesc;
 
     // Write Visit Summary
     private Date datetime;
@@ -79,6 +80,8 @@ public class treatmentBean implements Serializable {
     List<ChargeCode> chargeCodeList, chargeCodeTempList;
     String ccTempCode, ccTempName, ccTempDesc;
     double ccTempAmount;
+    
+    
 
     public void findDynaPatient() {
 
@@ -244,6 +247,39 @@ public class treatmentBean implements Serializable {
             }
         }
     }
+    
+    public void createNewRxNORMCode(){
+        
+        List<FacesMessage> msgs = new ArrayList<>();
+        if(this.rrcTempCode == null || "".equals(rrcTempCode)){
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Code field is required.");
+            msgs.add(message);
+        }
+        if(this.rrcTempDesc == null || "".equals(rrcTempDesc)){
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Description field is required.");
+            msgs.add(message);
+        }
+        
+        if(msgs.size() <= 0){
+            RxNORM code = new RxNORM(rrcTempCode, "N/A", rrcTempDesc);
+            DbDAO dao = new DbDAO();
+            if(dao.insertNewRxNORMCode(code)){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully", "TODO"));
+                presTempRx = code;
+                resetNewRxNORM();
+                RequestContext.getCurrentInstance().execute("PF('rrcDialog').hide()");     
+                RequestContext.getCurrentInstance().update("form:wpDetail");
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed", "TODO"));
+            }
+        }else{
+            for(FacesMessage msg : msgs){
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+        }
+        
+        
+    }
 
     public String viewFile(String file) throws Exception {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
@@ -346,6 +382,12 @@ public class treatmentBean implements Serializable {
         presTempNDD = 0;
         presTempTDD = 0;
         presTempUsage = null;
+        resetNewRxNORM();
+    }
+    
+    public void resetNewRxNORM(){
+        rrcTempCode = null;
+        rrcTempDesc = null;
     }
 
     public void submitDiagnosis() {
@@ -839,7 +881,8 @@ public class treatmentBean implements Serializable {
     }
 
     public void setPresTempRx(RxNORM presTempRx) {
-        this.presTempRx = presTempRx;
+        if(presTempRx != null)
+            this.presTempRx = presTempRx;
     }
 
     public int getPresTempSD() {
@@ -876,6 +919,22 @@ public class treatmentBean implements Serializable {
     
     public String[] getAllDocName(){
         return EmployeeService.getDoctorNameList(EmployeeService.getFilteredList("doctor"));
+    }
+
+    public String getRrcTempCode() {
+        return rrcTempCode;
+    }
+
+    public void setRrcTempCode(String rrcTempCode) {
+        this.rrcTempCode = rrcTempCode;
+    }
+
+    public String getRrcTempDesc() {
+        return rrcTempDesc;
+    }
+
+    public void setRrcTempDesc(String rrcTempDesc) {
+        this.rrcTempDesc = rrcTempDesc;
     }
 
 }

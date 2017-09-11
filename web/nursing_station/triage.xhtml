@@ -16,7 +16,7 @@
         </f:metadata>
 
         <p:growl autoUpdate="true" showDetail="true" life="1500"/>
-    
+
 
         <b:container fluid="true" class="customContainer">
 
@@ -201,28 +201,57 @@
                                         <b:column col-md="12" class="form-horizontal">
                                             <div class="form-group">
                                                 <p:outputLabel value="Enter Chief Complaint" class="col-sm-2 control-label"></p:outputLabel>
-                                                <!--<b:column col-sm="10">-->
+                                                <b:column col-sm="10">
                                                     <!--<p:inputText id="chief" autocomplete="off" value="#{triageBean.findDocName}" class="form-control" placeholder="Enter SYNOMED-CT code or Description" type="text"></p:inputText>-->
-                                                <p:autoComplete multiple="true"
-                                                                value="#{triageBean.findScodeList}" converter="snomedConverter"
-                                                                completeMethod="#{triageBean.scodeCompleteItem}" var="it"
-                                                                itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
-                                                                class="col-sm-10">
-                                                    <p:ajax event="itemSelect"/>
-                                                    <p:ajax event="itemUnselect" />
-                                                    <p:column style="width: 30%;">
-                                                        <h:outputText value="#{it.code}" />
-                                                    </p:column>
-                                                    <p:column style="width: 70%;">
-                                                        <h:outputText value="#{it.description}" />
-                                                    </p:column>
-                                                </p:autoComplete>
-                                                <!--</b:column>-->
+                                                    <p:autoComplete multiple="true"
+                                                                    value="#{triageBean.findScodeTempList}" converter="snomedConverter"
+                                                                    completeMethod="#{triageBean.scodeCompleteItem}" var="it"
+                                                                    itemLabel="#{it.description}" itemValue="#{it}" forceSelection="true"
+                                                                    class="col-sm-10">
+                                                        <p:ajax event="itemSelect" listener="#{triageBean.onChiefComplaintItemSelect}"/>
+                                                        <p:ajax event="itemUnselect" />
+                                                        <p:column style="width: 30%;">
+                                                            <h:outputText value="#{it.code}" />
+                                                        </p:column>
+                                                        <p:column style="width: 70%;">
+                                                            <h:outputText value="#{it.description}" />
+                                                        </p:column>
+                                                    </p:autoComplete>
+
+                                                    <b:column col-sm="6" style="margin-top: 1em;">
+                                                        <p:commandButton class="btn btn-success" style="width: 100%; text-shadow: none;" value="Enter Custom Chief Complaint" oncomplete="PF('eccDialog').show()"/>
+                                                    </b:column>
+                                                </b:column>
 
                                             </div>
                                         </b:column>
 
+                                        <b:column col-md="12" rendered="#{triageBean.findScodeList.size() > 0}">
+                                            <br/>
+                                            <b:column col-md="11" offset-md="1">
+                                                <h4>Chief Complaint</h4>
+                                                <hr></hr>
+                                                <p:dataTable var="s" value="#{triageBean.findScodeList}" id="chiefComplaintTable" 
+                                                             resizableColumns="true"  tableStyleClass="table table-striped" rowIndexVar="index" >
 
+                                                    <p:column headerText="#" style="width: 5%">
+                                                        <h:outputText value="#{index+1}" />
+                                                    </p:column>
+                                                    <p:column headerText="SNOMED-CT" style="width: 25%" sortBy="#{s.code}">
+                                                        <h:outputText value="#{s.code}" />
+                                                    </p:column>
+                                                    <p:column headerText="Description" style="width: 70%" sortBy="#{s.description}">
+                                                        <h:outputText value="#{s.description}" />
+                                                    </p:column>
+                                                    <p:column style="width:8%;text-align: center">
+                                                        <p:commandButton update="form" icon="fa fa-remove" title="Delete" action="#{triageBean.removeChiefComplaint(index)}">
+                                                        </p:commandButton>
+                                                    </p:column>
+
+                                                </p:dataTable>
+
+                                            </b:column>
+                                        </b:column>
 
                                     </p:column>
 
@@ -409,11 +438,47 @@
 
                     </b:column>
 
+                    <!-- &&&&&&&&&& Dialog &&&&&&&&&&&&-->
+
+                    <p:dialog header="Enter Custom Chief Complaint" widgetVar="eccDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="eccDetail">
+
+                            <b:column col-md="12" class="form-horizontal">
+                                <div class="form-group">
+                                    <!--<p:outputLabel for="custom_cc_text" value="Custom chief complaint" class="col-sm-2 control-label"></p:outputLabel>-->
+                                    <b:column col-sm="12">
+                                        <b:inputTextarea id="custom_cc_text" placeholder="Enter chief complaint" value="#{triageBean.tempScodeText}"/>
+                                    </b:column>
+                                </div>
+                            </b:column>
+
+                            <b:column>
+                                <hr></hr>
+                                <p:commandButton class="btn btn-primary" value="Add" action="#{triageBean.addCustomChiefComplaint()}" style="background-image:none; background-color: #337ab7; border-color: #2e6da4; color: white; text-shadow: none;"/>
+                            </b:column>
+
+<!--                            <b:column col-md="12">
+                                <p:commandButton class="btn btn-primary" value="Add" action="#{triageBean.addCustomChiefComplaint()}"/>
+                            </b:column>-->
+
+                        </p:outputPanel>
+
+                    </p:dialog>
+
                 </h:form>
 
             </b:column>
 
         </b:container>
+
+        <style type="text/css"> 
+
+
+            .dialog-footer {
+                margin: 1em;
+            }
+
+        </style>
 
     </ui:composition>
 

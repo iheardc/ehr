@@ -40,10 +40,11 @@ public class triageBean implements Serializable {
     boolean isShowInjectionInfo;
 
     // Enter Chief Complaint
-    private List<SnomedCT> findScodeList;
+    List<SnomedCT> findScodeList, findScodeTempList;
+    String tempScodeText;
 
     private List<String> specAllItems = new ArrayList<String>();
-    
+
     // Find Doctor
     String findDocName, findDocSpecialty;
     List<Employee> findDocList;
@@ -53,8 +54,8 @@ public class triageBean implements Serializable {
 
     public void findDynaPatient() {
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date)+86400000, signinBean.locationId);
-        
+        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, null, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000, signinBean.locationId);
+
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
         if (dList.size() > 0) {
@@ -75,12 +76,12 @@ public class triageBean implements Serializable {
         }
         isShowWFNTable = findWNFList.size() > 0;
         isShowWFNITable = findWNFIList.size() > 0;
-        
-        if(isShowWFNTable == false && isShowWFNITable == false){
+
+        if (isShowWFNTable == false && isShowWFNITable == false) {
             isShowWFNTable = true;
             isShowWFNITable = true;
         }
-        
+
         selectedD = null;
         resetMoreForm();
 
@@ -179,7 +180,7 @@ public class triageBean implements Serializable {
             }
 //            return "";
         }
-        
+
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
@@ -228,6 +229,9 @@ public class triageBean implements Serializable {
     }
 
     public void resetMoreForm() {
+        findScodeList = new ArrayList<>();
+        findScodeTempList = new ArrayList<>();
+        tempScodeText = null;
         isShowAssignInfo = false;
         isShowInjectionInfo = false;
         findDocName = null;
@@ -240,6 +244,30 @@ public class triageBean implements Serializable {
         bloodPressure = null;
         setAllScode();
         setAllSpecialty();
+    }
+
+    public void onChiefComplaintItemSelect(SelectEvent event) {
+        findScodeList.addAll(findScodeTempList);
+        findScodeTempList.clear();
+        RequestContext.getCurrentInstance().update("form");
+    }
+
+    public void removeChiefComplaint(int index) {
+        if (index < findScodeList.size()) {
+            findScodeList.remove(index);
+        }
+    }
+
+    public void addCustomChiefComplaint() {
+        if (tempScodeText == null || "".equals(tempScodeText)) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Description field is required.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } else {
+            SnomedCT snomedCT = new SnomedCT("N/A", "N/A", tempScodeText);
+            findScodeList.add(snomedCT);
+            tempScodeText = null;
+            RequestContext.getCurrentInstance().update("form");
+        }
     }
 
     private void setAllScode() {
@@ -475,6 +503,22 @@ public class triageBean implements Serializable {
 
     public void setSpecAllItems(List<String> specAllItems) {
         this.specAllItems = specAllItems;
+    }
+
+    public List<SnomedCT> getFindScodeTempList() {
+        return findScodeTempList;
+    }
+
+    public void setFindScodeTempList(List<SnomedCT> findScodeTempList) {
+        this.findScodeTempList = findScodeTempList;
+    }
+
+    public String getTempScodeText() {
+        return tempScodeText;
+    }
+
+    public void setTempScodeText(String tempScodeText) {
+        this.tempScodeText = tempScodeText;
     }
 
 }
