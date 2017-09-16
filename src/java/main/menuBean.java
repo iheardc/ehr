@@ -11,6 +11,8 @@ import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -29,13 +31,40 @@ public class menuBean implements Serializable {
 
     }
 
+    public void keepSessionAlive() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest();
+        request.getSession();
+        System.out.println(request.getSession().getLastAccessedTime());
+        System.out.println(request.getSession().getCreationTime());
+        System.out.println(">>> Session is alive... ");
+        try {
+            RequestContext.getCurrentInstance().update("form");
+            int maxInactiveInterval = request.getSession().getMaxInactiveInterval();
+            System.out.println(maxInactiveInterval);
+            request.getSession().setMaxInactiveInterval(maxInactiveInterval);
+            HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+            System.out.println(request.getSession().getLastAccessedTime());
+            System.out.println(request.getSession().getCreationTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void reset() {
         pathCont = "/home.xhtml";
         pathLeft = "/leftMenu/employee_leftMenu.xhtml";
     }
-    
-    public void showMobileMenu(boolean isShow){
+
+    public void showMobileMenu(boolean isShow) {
         isShowMobileMenu = isShow;
+    }
+
+    public String redirectWelcome() {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        signinBean sbean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
+        System.out.println("Redirect Welcome!");
+        return sbean.logout();
     }
 
     public static void redirectHome() {
@@ -71,7 +100,7 @@ public class menuBean implements Serializable {
         pathCont = "/insurance/insurance_write.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     public static void viewInsurance() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         insuranceBean bean = (insuranceBean) elContext.getELResolver().getValue(elContext, null, "insuranceBean");
@@ -90,7 +119,7 @@ public class menuBean implements Serializable {
         pathCont = "/userInfo/view_employee.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     public static void editEmployee() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
@@ -124,7 +153,6 @@ public class menuBean implements Serializable {
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
 
-    
     // Patient Check-In
     public static void newPatient() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
@@ -176,9 +204,9 @@ public class menuBean implements Serializable {
         pathCont = "/treatment/write_visit_summary.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     // Prescription
-    public static void fulFillPrescription(){
+    public static void fulFillPrescription() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         prescriptionBean bean = (prescriptionBean) elContext.getELResolver().getValue(elContext, null, "prescriptionBean");
         bean.reset();
@@ -186,9 +214,9 @@ public class menuBean implements Serializable {
         pathCont = "/prescription/fulfill_prescription.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     // Order
-    public static void viewLabOrder(){
+    public static void viewLabOrder() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         orderBean bean = (orderBean) elContext.getELResolver().getValue(elContext, null, "orderBean");
         bean.reset();
@@ -196,7 +224,8 @@ public class menuBean implements Serializable {
         pathCont = "/order/view_lab_order.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    public static void viewImagingOrder(){
+
+    public static void viewImagingOrder() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         orderBean bean = (orderBean) elContext.getELResolver().getValue(elContext, null, "orderBean");
         bean.reset();
@@ -222,6 +251,7 @@ public class menuBean implements Serializable {
         pathCont = "/admin/create_employee.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+
     public static void newLocation() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
@@ -229,6 +259,7 @@ public class menuBean implements Serializable {
         pathCont = "/admin/create_location.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
+
     public static void manageLocation() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signupBean bean = (signupBean) elContext.getELResolver().getValue(elContext, null, "signupBean");
@@ -237,16 +268,17 @@ public class menuBean implements Serializable {
         pathCont = "/admin/manage_location.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     //Inventory
-    public static void addClinicalInventory(){
+    public static void addClinicalInventory() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         inventoryBean bean = (inventoryBean) elContext.getELResolver().getValue(elContext, null, "inventoryBean");
         bean.reset();
         pathCont = "/inventory/add_clinical_inventory.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    public static void manageClinicalInventory(){
+
+    public static void manageClinicalInventory() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         inventoryBean bean = (inventoryBean) elContext.getELResolver().getValue(elContext, null, "inventoryBean");
         bean.reset();
@@ -254,7 +286,7 @@ public class menuBean implements Serializable {
         pathCont = "/inventory/manage_clinical_inventory.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }
-    
+
     public static void manageSupplyInventory() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         inventorySupplyBean bean = (inventorySupplyBean) elContext.getELResolver().getValue(elContext, null, "inventorySupplyBean");
@@ -292,10 +324,10 @@ public class menuBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean bean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
 
-        if(!"superadmin".equals(strs) && ("admin".equals(bean.em.role.toLowerCase()) || "superadmin".equals(bean.em.role.toLowerCase()))){
+        if (!"superadmin".equals(strs) && ("admin".equals(bean.em.role.toLowerCase()) || "superadmin".equals(bean.em.role.toLowerCase()))) {
             return true;
         }
-        
+
         if (bean.em.role == null || "".equals(bean.em.role)) {
             return false;
         }

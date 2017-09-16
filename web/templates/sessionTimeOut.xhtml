@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile" 
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+        <h:form prependId="false">
+            <!--            <p:idleMonitor
+                            timeout="#{session.maxInactiveInterval * 1000 - 30000}"
+                            onidle="startIdleMonitor()"
+                            onactive="timeoutDialog.hide()"
+                            />-->
+<!--            <p:idleMonitor
+                timeout="#{session.maxInactiveInterval * 1000 - 30000}"
+                onidle="PF('timeoutDialog').show()"
+                onactive="timeoutDialog.hide()"
+                />-->
+            <p:idleMonitor
+                timeout="#{session.maxInactiveInterval * 1000 - 35000}"
+                onidle="startIdleMonitor()"
+                onactive="PF('timeoutDialog').hide()"
+                />
+
+            <p:dialog id="timeoutSession"
+                      header="Session Timeout"
+                      widgetVar="timeoutDialog"
+                      showEffect="fade" hideEffect="fade"
+                      modal="true"
+                      width="400"
+                      height="110"
+                      closable="false"
+                      draggable="false"
+                      resizable="false"
+                      appendTo="@(body)"
+                      onHide="stopCount()"
+                      onShow="doTimer()">
+                <br />
+                <p>
+                    <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 10px"/> Your session time will be expired in <span id="dialog-countdown" style="font-weight: bold"></span>s.
+<!--                    <p:panel style="padding: 1em;">
+                        Your session time will be expired in <span id="dialog-countdown" style="font-weight: bold"></span>s.
+                    </p:panel>-->
+                </p>
+                <br />
+                <p style="font-weight: bold;">#{msg['move.cursor']}</p>
+            </p:dialog>
+            <p:remoteCommand name="keepAlive" actionListener="#{menuBean.keepSessionAlive}" />
+            <p:remoteCommand name="redirectWelcome" action="#{menuBean.redirectWelcome()}"/>
+        </h:form>
+        <!--        <script type="text/javascript">
+                    var TIME = 30; // in seconds
+                    var maxSesion = TIME
+                    var countTimer = maxSesion;
+                    var processTimer;
+                    var timer_is_on = 0;
+                    var redirectPage = "#{request.contextPath}/";
+        
+                    var countDownDiv = „dialog - countdown“;
+                    var txtCountDown = null;
+                    if (!txtCountDown)
+                        txtCountDown = document.getElementById(countDownDiv);
+        
+                    function startIdleMonitor() {
+                        if (timer_is_on) {
+                            txtCountDown.innerHTML = countTimer;
+                            timeoutDialog.show();
+                        }
+                    }
+                    function timedCount() {
+                        txtCountDown.innerHTML = countTimer;
+                        if (countTimer == 0) {
+                            stopCount();
+                            window.location.href = redirectPage;
+                            return;
+                        }
+                        if (countTimer == TIME)
+                        {
+                        timer_is_on = 1;
+                        }
+                        countTimer = countTimer – 1;
+                        processTimer = setTimeout("timedCount()", 1000);
+                    }
+        
+                    function stopCount() {
+                        clearTimeout(processTimer);
+                        countTimer = maxSesion;
+                        timer_is_on = 0;
+                        keepAlive();
+                    }
+                </script>-->
+        <script type="text/javascript">
+            var TIME = 30; // in seconds
+            var countTimer = TIME;
+            var processTimer;
+            var timer_is_on = 0;
+            var redirectPage = "#{request.contextPath}/";
+
+            var countDownDiv = "dialog-countdown";
+            var txtCountDown = null;
+            if (!txtCountDown)
+                txtCountDown = document.getElementById(countDownDiv);
+
+            function startIdleMonitor() {
+                countTimer = TIME;
+                txtCountDown.innerHTML = countTimer;
+                PF('timeoutDialog').show();
+            }
+            function timedCount() {
+                txtCountDown.innerHTML = countTimer;
+                if (countTimer == 0) {
+                    stopCount();
+//                    window.location.href = redirectPage;
+                    redirectWelcome();
+                    return;
+                }
+                countTimer = countTimer - 1;
+                processTimer = setTimeout("timedCount()", 1000);
+            }
+            function doTimer() {
+                if (!timer_is_on) {
+                    timer_is_on = 1;
+                    timedCount();
+                }
+            }
+            function stopCount() {
+                clearTimeout(processTimer);
+                timer_is_on = 0;
+                keepAlive();
+            }
+        </script>
+    </ui:composition>
+</html>
