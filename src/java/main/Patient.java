@@ -424,6 +424,10 @@ public class Patient {
     public String getEmLN() {
         return emLN;
     }
+    
+    public String getEmName(){
+        return emFN + " " + emLN;
+    }
 
     public void setEmEmail(String emEmail) {
         this.emEmail = emEmail;

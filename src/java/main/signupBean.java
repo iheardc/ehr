@@ -302,6 +302,8 @@ public class signupBean implements Serializable {
         
         locationList = new ArrayList<>();
         selectedLocation = null;
+        
+        service.reset();
 
         System.out.println("Reset all form.");
     }

@@ -267,7 +267,7 @@
                                 <p:outputLabel for="third_visit" value="3rd visit" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
                                     <!--<p:inputText value="#{signupBean.dob}" id="dob" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
-                                    <p:calendar id="third_visit" value="#{insuranceBean.date}" navigator="true" pattern="dd-MM-yyyy" mask="true">
+                                    <p:calendar id="third_visit" value="#{insuranceBean.date}" navigator="true" pattern="dd-MM-yyyy" mask="true" yearRange="c-150:c+10">
                                         <p:ajax event="dateSelect" listener="#{insuranceBean.onDateSelect}" />
                                     </p:calendar>
                                 </b:column>

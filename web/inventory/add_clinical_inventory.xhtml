@@ -126,7 +126,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="add_exp_date" value="Expire Date" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="10">
-                                    <p:calendar id="add_exp_date" value="#{inventoryBean.addTempExpDate}" navigator="true" pattern="dd-MM-yyyy">
+                                    <p:calendar id="add_exp_date" value="#{inventoryBean.addTempExpDate}" navigator="true" pattern="dd-MM-yyyy" yearRange="c-50:c+50">
                                         <!--<p:ajax event="dateSelect" listener="#{signupBean.onDateSelect}" />-->
                                     </p:calendar>
                                 </b:column>

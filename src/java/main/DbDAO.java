@@ -160,7 +160,7 @@ public class DbDAO {
             + "SELECT outpatient_dynamic_id, count(id) as count FROM radiology_order_management "
             + "WHERE status = 'NFC' "
             + "GROUP BY outpatient_dynamic_id) as F on (F.outpatient_dynamic_id = A.id) "
-            + "WHERE location_id=? and (A.status like ? and IFNULL(A.doctor_id,'') like ? and ? <= date and date <= ?) "
+            + "WHERE location_id=? and (A.status like ? and IFNULL(A.doctor_id,'') like ? and ((? <= date and date <= ?) or ?)) "
             + "GROUP BY A.id";
     private static final String FIND_DOCTOR
             = "SELECT * FROM employee WHERE location_id=? and (role='doctor' and (first_name like ? or last_name like ? or concat_ws(' ',first_name,last_name) like ?))";
@@ -860,9 +860,9 @@ public class DbDAO {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                location_name=rs.getString("name");
+                location_name = rs.getString("name");
             }
-            
+
         } catch (Exception e) {
             System.out.println("ERROR!!!! location_name : " + e.toString());
             e.printStackTrace();
@@ -954,7 +954,7 @@ public class DbDAO {
         }
         if (findDoB == 0.0) {
             checkFindDob = "1";
-        }else{
+        } else {
             checkFindDob = "0";
         }
         List<Patient> list = new ArrayList<>();
@@ -1094,11 +1094,15 @@ public class DbDAO {
     }
 
     public List<DynamicInfo> searchPatientInDynamicWithDate(String status, String doctor_id, Double start, Double finish, String locationId) {
+        String checkDate = "0";
         if (status == null || "".equals(status) || "ALL".equals(status)) {
             status = "%";
         }
         if (doctor_id == null || "".equals(doctor_id)) {
             doctor_id = "%";
+        }
+        if (start == null || finish == null) {
+            checkDate = "1";
         }
         List<DynamicInfo> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -1110,8 +1114,15 @@ public class DbDAO {
             pstmt.setString(1, locationId);
             pstmt.setString(2, status);
             pstmt.setString(3, doctor_id);
-            pstmt.setDouble(4, start);
-            pstmt.setDouble(5, finish);
+            if ("1".equals(checkDate)) {
+                pstmt.setDouble(4, 0.0);
+                pstmt.setDouble(5, 0.0);
+                pstmt.setString(6, checkDate);
+            } else {
+                pstmt.setDouble(4, start);
+                pstmt.setDouble(5, finish);
+                pstmt.setString(6, checkDate);
+            }
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1470,7 +1481,7 @@ public class DbDAO {
             DbConnectionPools.closeResources(connect, pstmt);
         }
     }
-    
+
     public static final String INSERT_NEW_RXNORM_CODE
             = "INSERT INTO rxnorm_code(code, code_system_OID, description) VALUES(?,?,?)";
 

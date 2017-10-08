@@ -66,7 +66,7 @@
                                 <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="6">
                                     <!--<p:inputText value="#{patientBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
-                                    <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
+                                    <p:calendar id="dob" value="#{patientBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth" yearRange="c-150:c+10">
                                         <!--<p:ajax event="dateSelect" listener="#{patientBean.onDateSelect}" />-->
                                     </p:calendar>
 <!--                                    <b:dateTimePicker value="#{patientBean.findDoB}"
@@ -84,6 +84,8 @@
                             <div class="form-group">
                                 <b:column col-md="6" offset-md="2">
                                     <p:commandButton class="btn btn-primary" value="Search" action="#{patientBean.findPatientWithDate()}" update=":form:patientData"/>
+                                    <p:commandButton class="btn btn-primary" value="Show All" action="#{patientBean.findPatient()}" update=":form:patientData"/>
+                                    <p:commandButton class="btn btn-danger" value="Clear" action="#{patientBean.reset()}" update="form"/>
                                 </b:column>
                             </div>
                         </b:column>
@@ -164,7 +166,7 @@
 
                             <br></br>
 
-                            <b:column col-md="11" offset-md="1">
+                            <b:column col-md="11" offset-md="1" rendered="false">
 
                                 <h3>Appointment Information</h3>
                                 <hr></hr>
@@ -185,15 +187,15 @@
                     </b:column>
 
 
-                    <p:dialog header="Patient Info" widgetVar="pDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:dialog header="Patient Info" widgetVar="pDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" height="500px" width="400px">
                         <p:outputPanel id="pDetail" style="text-align:center;">
 
-                            <p:panelGrid  columns="2" rendered="#{not empty patientBean.selectedP}" columnClasses="label,value">
+                            <p:panelGrid  columns="2" rendered="#{not empty patientBean.selectedP}" columnClasses="label,value" style="width: 100%;">
 
                                 <h:outputText value=""/>
                                 <p:graphicImage value="#{patientBean.image}" width="100px"  cache="false"/>
 
-                                <h:outputText value="ID: " />
+                                <h:outputText value="Patient ID: " />
                                 <h:outputText value="#{patientBean.selectedP.id}" />
 
                                 <h:outputText value="Email: " />
@@ -231,6 +233,42 @@
 
                                 <h:outputText value="Zip: " />
                                 <h:outputText value="#{patientBean.selectedP.zip}" />
+                                
+                                <h:outputText value="Emergency Name: "/>
+                                <h:outputText value="#{patientBean.selectedP.emName}" />
+                                
+                                <h:outputText value="Emergency Email: "/>
+                                <h:outputText value="#{patientBean.selectedP.emEmail}" />
+                                
+                                <h:outputText value="Emergency Phone: "/>
+                                <h:outputText value="#{patientBean.selectedP.emPhone}" />
+                                
+                                <h:outputText value="Emergency Relationship: "/>
+                                <h:outputText value="#{patientBean.selectedP.emRelationship}" />
+                                
+                                <h:outputText value="Emergency State: "/>
+                                <h:outputText value="#{patientBean.selectedP.emState}" />
+                                
+                                <h:outputText value="Emergency City: "/>
+                                <h:outputText value="#{patientBean.selectedP.emCity}" />
+                                
+                                <h:outputText value="Emergency Zip: "/>
+                                <h:outputText value="#{patientBean.selectedP.emZip}" />
+                                
+                                <h:outputText value="Emergency Address: "/>
+                                <h:outputText value="#{patientBean.selectedP.emAddress}" />
+                                
+                                <h:outputText value="Postal State: "/>
+                                <h:outputText value="#{patientBean.selectedP.posState}" />
+                                
+                                <h:outputText value="Postal City: "/>
+                                <h:outputText value="#{patientBean.selectedP.posCity}" />
+                                
+                                <h:outputText value="Postal Zip: "/>
+                                <h:outputText value="#{patientBean.selectedP.posZip}" />
+                                
+                                <h:outputText value="Postal Address: "/>
+                                <h:outputText value="#{patientBean.selectedP.posAddress}" />
 
                             </p:panelGrid>
                         </p:outputPanel>

@@ -67,7 +67,7 @@
                                 <p:outputLabel for="dob" value="Date of Birth" class="col-sm-2 control-label"></p:outputLabel>
                                 <b:column col-sm="6">
                                     <!--<p:inputText value="#{paymentBean.findDoB}" id="id" autocomplete="off" class="form-control" placeholder="Date of Birth"></p:inputText>-->
-                                    <p:calendar id="dob" value="#{paymentBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth">
+                                    <p:calendar id="dob" value="#{paymentBean.findDoB}" navigator="true" pattern="dd-MM-yyyy" mask="true" placeholder="Date of Birth" yearRange="c-150:c+10">
                                         <!--<p:ajax event="dateSelect" listener="#{paymentBean.onDateSelect}" />-->
                                     </p:calendar>
                                 </b:column>

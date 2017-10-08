@@ -193,6 +193,8 @@ public class menuBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         treatmentBean bean = (treatmentBean) elContext.getELResolver().getValue(elContext, null, "treatmentBean");
         bean.reset();
+        bean.allDate = true;
+        bean.findDynaPatient();
         pathCont = "/treatment/diagnosis.xhtml";
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
     }

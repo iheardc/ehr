@@ -41,6 +41,19 @@
 
                         <b:column col-md="12" class="form-horizontal">
                             <div class="form-group">
+                                <p:outputLabel for="date_switch" value="All Date" class="col-sm-2 control-label" ></p:outputLabel>
+                                <b:column col-sm="6">
+                                    <h:panelGrid columns="1" style="" cellpadding="5">
+                                        <p:inputSwitch value="#{treatmentBean.allDate}" id="date_switch">
+                                            <p:ajax listener="#{treatmentBean.updateDateField}" update="form" />
+                                        </p:inputSwitch>
+                                    </h:panelGrid>
+                                </b:column>
+                            </div>
+                        </b:column>
+
+                        <b:column col-md="12" class="form-horizontal" id="date_field" rendered="#{not treatmentBean.allDate}">
+                            <div class="form-group">
                                 <p:outputLabel for="date" value="Date" class="col-sm-2 control-label" ></p:outputLabel>
                                 <b:column col-sm="6">
                                     <p:calendar id="date" value="#{treatmentBean.date}" pattern="MM/dd/yyyy" style="width: 100%;"/>
@@ -883,7 +896,7 @@
 
                         </p:outputPanel>
                     </p:dialog>
-                                        
+
                     <p:dialog header="Register New RxNORM Code" widgetVar="rrcDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                         <p:outputPanel id="rrcDetail">
 

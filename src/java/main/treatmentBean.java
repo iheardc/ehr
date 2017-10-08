@@ -30,6 +30,7 @@ public class treatmentBean implements Serializable {
     String findDocId;
     String patientStatus;
     Date date;
+    boolean allDate;
 
     private List<DynamicInfo> findWFDList;
     private List<DynamicInfo> findWFDFilteredList;
@@ -86,7 +87,13 @@ public class treatmentBean implements Serializable {
     public void findDynaPatient() {
 
         DbDAO dao = new DbDAO();
-        List<DynamicInfo> dList = dao.searchPatientInDynamicWithDate(patientStatus, findDocId, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000, signinBean.locationId);
+        List<DynamicInfo> dList;
+        if(allDate){
+            dList = dao.searchPatientInDynamicWithDate(patientStatus, findDocId, null, null, signinBean.locationId);
+        }else{
+            dList = dao.searchPatientInDynamicWithDate(patientStatus, findDocId, DbDAO.dateToDouble(date), DbDAO.dateToDouble(date) + 86400000, signinBean.locationId);
+        }
+       
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesMessage message;
@@ -337,6 +344,7 @@ public class treatmentBean implements Serializable {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         signinBean sBean = (signinBean) elContext.getELResolver().getValue(elContext, null, "signinBean");
         findDocId = null;//sBean.em.id;
+        allDate = false;
         date = DbDAO.getTodayDate();
         patientStatus = null;
         findWFDList = null;
@@ -481,6 +489,10 @@ public class treatmentBean implements Serializable {
 
     public void submitDiagnosisWithResult() {
         RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+    }
+    
+    public void updateDateField(){
+        
     }
 
     public List<RxNORM> rxnormCompleteItem(String query) {
@@ -935,6 +947,14 @@ public class treatmentBean implements Serializable {
 
     public void setRrcTempDesc(String rrcTempDesc) {
         this.rrcTempDesc = rrcTempDesc;
+    }
+
+    public boolean isAllDate() {
+        return allDate;
+    }
+
+    public void setAllDate(boolean allDate) {
+        this.allDate = allDate;
     }
 
 }
